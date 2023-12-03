@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { insert, remove, GenerateRandom } from "./ListADT";
 
 export const ListADT = () => {
   return (
@@ -20,6 +21,7 @@ export const ListADT = () => {
             the specific requirements of the application.
           </p>
           <canvas className="bg-black h-55 w-50"></canvas>
+          <p id="linked-list-element"></p>
         </div>
         <div
           className="mw-30 col-2"
@@ -32,10 +34,37 @@ export const ListADT = () => {
   );
 };
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Tooltip } from "bootstrap";
 
 function AlgorithmNavigation() {
+  const [insertValue, setInsertValue] = useState<number | undefined>(undefined);
+  const [removeValue, setRemoveValue] = useState<number | undefined>(undefined);
+  const [randomValue, setRandomValue] = useState<number | undefined>(undefined);
+
+  // const linkedList = new LinkedList();
+
+  const handleInsertClick = () => {
+    if (insertValue !== undefined) {
+      insert(insertValue);
+      setInsertValue(undefined);
+    }
+  };
+
+  const handleRemoveClick = () => {
+    if (removeValue !== undefined) {
+      remove(removeValue);
+      setRemoveValue(undefined);
+    }
+  };
+
+  const handleRandomClick = () => {
+    if (randomValue !== undefined) {
+      GenerateRandom(randomValue);
+      setRandomValue(undefined);
+    }
+  };
+
   useEffect(() => {
     var tooltipTriggerList = [].slice.call(
       document.querySelectorAll('[data-bs-toggle="tooltip"]')
@@ -76,7 +105,8 @@ function AlgorithmNavigation() {
           className="w-50 btn btn-secondary"
           data-bs-toggle="tooltip"
           data-bs-placement="left"
-          title="Enter an integer to be inserted in a list. Do not enter repeated integers."
+          title="Enter an integer to be inserted in the list ADT"
+          onClick={handleInsertClick}
         >
           Insert
         </button>
@@ -84,6 +114,8 @@ function AlgorithmNavigation() {
           type="number"
           aria-label="node-1"
           className="w-30 form-control border border-dark"
+          value={insertValue || ""}
+          onChange={(e) => setInsertValue(Number(e.target.value))}
         />
       </div>
 
@@ -93,7 +125,8 @@ function AlgorithmNavigation() {
           className="w-50 btn btn-secondary"
           data-bs-toggle="tooltip"
           data-bs-placement="left"
-          title="Enter an integer to be deleted from the list."
+          title="Enter an integer to be deleted from the list ADT"
+          onClick={handleRemoveClick}
         >
           Remove
         </button>
@@ -101,6 +134,28 @@ function AlgorithmNavigation() {
           type="number"
           aria-label="node-1"
           className="w-30 form-control border border-dark"
+          value={removeValue || ""}
+          onChange={(e) => setRemoveValue(Number(e.target.value))}
+        />
+      </div>
+
+      <div className="input-group w-80">
+        <button
+          type="button"
+          className="w-50 btn btn-primary border border-dark"
+          data-bs-toggle="tooltip"
+          data-bs-placement="left"
+          title="Generate a list ADT data structure consisting of given number of elements"
+          onClick={handleRandomClick}
+        >
+          Random
+        </button>
+        <input
+          type="number"
+          aria-label="node-1"
+          className="w-30 form-control border border-dark"
+          value={randomValue || ""}
+          onChange={(e) => setRandomValue(Number(e.target.value))}
         />
       </div>
     </div>

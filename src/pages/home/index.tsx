@@ -16,6 +16,11 @@ export const HomeMenu = () => {
         binary search trees, B+ trees, B++ trees, threaded trees (single and
         double), AVL trees and their data-flow.
       </p>
+      <span>
+        NOTE: This is not an implementation of the data structure itself in
+        typescript, it is a visualization of how these data structures work.
+      </span>
+
       <p>
         Additionally, this is also an attempt in learning typescript and react
         frameworks for building interactive web applications (मज्जा आली ह्या
@@ -25,8 +30,8 @@ export const HomeMenu = () => {
         For your reference, you can find my classroom notes containing content
         from my engineering syllabus, covering OOP, DS, ML, Maths, and more{" "}
         <a href="https://github.com/adimail/classroom">here</a>. I primarily
-        work with Python and C++, and currently, I am delving into the Rust
-        programming language to build memory-safe applications.
+        work with Python and C++, and currently, I am learning Rust programming
+        language to build memory-safe applications.
       </p>
     </motion.div>
   );

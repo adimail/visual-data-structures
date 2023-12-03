@@ -1,23 +1,24 @@
+import { motion } from "framer-motion";
+
 export const BinarySearchTree = () => {
   return (
-    <div>
+    <motion.div
+      initial={{ opacity: 0, x: -50 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.8, ease: [0.68, -0.55, 0.27, 1.55] }}
+    >
       <h5>Binary search tree</h5>
       <hr />
       <div className="d-flex col-12">
         <div className="col-10">
           <p>
-            Path finding algorithms build on top of graph search algorithms and
-            explore routes between nodes, starting at one node and traversing
-            through relationships until the destination has been reached. Lorem
-            ipsum dolor sit amet consectetur adipisicing elit. Quae laudantium
-            aut dolore quo doloremque officiis minus temporibus tenetur beatae.
-            Mollitia ab at aperiam libero reiciendis impedit modi animi quae
-            asperiores provident ex suscipit tempore eos odio eligendi fuga nisi
-            exercitationem saepe corporis eveniet, veritatis fugiat sint soluta
-            est? Libero ducimus illo quas quae temporibus asperiores atque
-            assumenda aliquid molestias cum iste iusto distinctio, quibusdam
-            voluptatum dolorum ullam unde corporis blanditiis quisquam vel,
-            nostrum perferendis quia fugiat ea. Eos, alias libero.
+            A Binary Search Tree (BST) is a binary tree data structure where
+            each node has at most two children, and the left child is smaller,
+            and the right child is greater than the node. This structure enables
+            efficient search, insertion, and deletion operations. BSTs find
+            applications in symbol tables, databases, and compilers due to their
+            balanced nature, providing logarithmic time complexity for these
+            operations.
           </p>
           <canvas className="bg-black h-55 w-50"></canvas>
         </div>
@@ -28,7 +29,7 @@ export const BinarySearchTree = () => {
           <AlgorithmNavigation />
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

@@ -1,28 +1,34 @@
+import { motion } from "framer-motion";
+
 export const HomeMenu = () => {
   return (
-    <div>
+    <motion.div
+      initial={{ opacity: 0, scale: 0.5, x: -50 }}
+      animate={{ opacity: 1, scale: 1, x: 0 }}
+      transition={{ duration: 1.1, ease: "easeInOut" }}
+    >
       <h3>Home</h3>
       <hr />
       <p>
-        Welcome. This page is an extension of the second year Btech data
-        structures and algorithmns subject to visualise the data structures like
-        Linked lists, list ADTs trees, graphs, binary search trees, B+ trees,
-        B++ trees, threaded trees (single and double), AVL trees and their
-        data-flow.
+        Welcome to this corner of the Internet. This page is an extension of the
+        second-year B.Tech Data Structures and Algorithms course to visualise
+        the data structures such as Linked lists, list ADTs trees, graphs,
+        binary search trees, B+ trees, B++ trees, threaded trees (single and
+        double), AVL trees and their data-flow.
       </p>
       <p>
-        Moreover, this is also an attempt in learning typescript and react
+        Additionally, this is also an attempt in learning typescript and react
         frameworks for building interactive web applications (मज्जा आली ह्या
         project वरती काम करताना)
       </p>
       <p>
-        FYI, you can found my classroom notes with content from my engineering
-        syllabus for OOP, DS, ML, Maths and more{" "}
-        <a href="https://github.com/adimail/classroom">here</a>. I primiarly
-        work in python and cpp and currently I am learning Rust programming
-        language to build memory safe applications
+        For your reference, you can find my classroom notes containing content
+        from my engineering syllabus, covering OOP, DS, ML, Maths, and more{" "}
+        <a href="https://github.com/adimail/classroom">here</a>. I primarily
+        work with Python and C++, and currently, I am delving into the Rust
+        programming language to build memory-safe applications.
       </p>
-    </div>
+    </motion.div>
   );
 };
 

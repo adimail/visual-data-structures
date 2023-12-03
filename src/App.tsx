@@ -1,13 +1,9 @@
 import "./App.css";
 import { Menu } from "antd";
-import { Route, Routes, useNavigate } from "react-router-dom";
-import PathFinder from "./pages/path";
-import BinarySearchTree from "./pages/bst";
-import Sorting from "./pages/sort";
-import HomeMenu from "./pages/home";
-import ListADT from "./pages/list-adt";
-import LinkedList from "./pages/ll";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useEffect, useRef } from "react";
 import PageFooter from "./components/pagefooter";
+import AnimatedRouts from "./components/AnimatedRouts";
 
 interface MenuItem {
   key: string;
@@ -62,16 +58,18 @@ function SideMenu() {
 }
 
 function Content() {
+  const location = useLocation();
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (contentRef.current) {
+      contentRef.current.scrollTop = 0;
+    }
+  }, [location.pathname]);
+
   return (
-    <div className="w-100 mx-4">
-      <Routes>
-        <Route path="/" element={<HomeMenu />}></Route>
-        <Route path="list-adt" element={<ListADT />}></Route>
-        <Route path="ll" element={<LinkedList />}></Route>
-        <Route path="bst" element={<BinarySearchTree />}></Route>
-        <Route path="path" element={<PathFinder />}></Route>
-        <Route path="sort" element={<Sorting />}></Route>
-      </Routes>
+    <div className="w-100 mx-4 fade-transition" ref={contentRef}>
+      <AnimatedRouts />
     </div>
   );
 }

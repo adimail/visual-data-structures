@@ -25,7 +25,7 @@ const ReloadConfirmationModal: React.FC<ReloadConfirmationModalProps> = ({
         <Button variant="secondary" onClick={onClose}>
           Cancel
         </Button>
-        <Button variant="primary" onClick={onConfirm}>
+        <Button variant="btn btn-primary active" onClick={onConfirm} active>
           Confirm
         </Button>
       </Modal.Footer>

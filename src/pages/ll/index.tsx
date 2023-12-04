@@ -1,7 +1,15 @@
 import { motion } from "framer-motion";
 import { AlgorithmNavigation } from "./AlgorithmNavigation";
-import { useState } from "react";
-import { pop, push, pushFront, popFront, reverse, size } from "./algorithms";
+import { useState, useRef } from "react";
+import {
+  pop,
+  push,
+  pushFront,
+  popFront,
+  reverse,
+  removeElement,
+  insertAfter,
+} from "./algorithms";
 import LinkedListComponent from "./LinkedList";
 
 const initialHead: SLHead = {
@@ -18,7 +26,87 @@ type SLNode = {
 type SLHead = SLNode | null;
 
 const LinkedList = () => {
+  const [userInput, setUserInput] = useState<string>("");
+  const [insertValue, setInsertValue] = useState<number | undefined>(undefined);
+  const [removeValue, setRemoveValue] = useState<number | undefined>(undefined);
+  const [randomValue, setRandomValue] = useState<number | undefined>(undefined);
+
   const [head, setHead] = useState<SLHead>(initialHead);
+  const targetValueInputRef = useRef<HTMLInputElement>(null);
+  const valueToInsertInputRef = useRef<HTMLInputElement>(null);
+
+  const handlePush = () => {
+    const inputValue = parseInt(userInput, 10);
+    if (!isNaN(inputValue)) {
+      push(head, setHead, inputValue);
+    } else {
+      console.error("Invalid input. Please enter a valid number.");
+    }
+  };
+
+  const handlePop = () => {
+    pop(head, setHead);
+  };
+
+  const handlePushFront = () => {
+    const inputValue = parseInt(userInput, 10);
+
+    if (!isNaN(inputValue)) {
+      pushFront(head, setHead, inputValue);
+    } else {
+      console.error("Invalid input. Please enter a valid number.");
+    }
+  };
+
+  const handleRemove = () => {
+    const inputValue = parseInt(userInput, 10);
+    if (!isNaN(inputValue)) {
+      removeElement(head, setHead, inputValue);
+    } else {
+      console.error("Invalid input. Please enter a valid number.");
+    }
+  };
+
+  const handleInsertAfter = () => {
+    const targetValue = targetValueInputRef.current?.value;
+    const valueToInsert = valueToInsertInputRef.current?.value;
+
+    if (targetValue !== undefined && valueToInsert !== undefined) {
+      const parsedTargetValue = parseFloat(targetValue);
+      const parsedValueToInsert = parseFloat(valueToInsert);
+
+      if (!isNaN(parsedTargetValue) && !isNaN(parsedValueToInsert)) {
+        handleInsertAfterInternal(parsedTargetValue, parsedValueToInsert);
+      } else {
+        console.error("Invalid input. Please enter valid numbers.");
+      }
+    } else {
+      console.error("Invalid input. Please enter valid numbers.");
+    }
+  };
+
+  const handleInsertAfterInternal = (
+    targetValue: number,
+    valueToInsert: number
+  ) => {
+    if (!isNaN(targetValue) && !isNaN(valueToInsert)) {
+      insertAfter(head, setHead, targetValue, valueToInsert);
+    } else {
+      console.error("Invalid input. Please enter valid numbers.");
+    }
+  };
+
+  const handlePopFront = () => {
+    popFront(head, setHead);
+  };
+
+  const handleReverse = () => {
+    setHead(reverse(head));
+  };
+
+  const handleClear = () => {
+    setHead(null);
+  };
 
   return (
     <motion.div
@@ -30,56 +118,32 @@ const LinkedList = () => {
       <hr />
       <div className="d-flex col-12">
         <div className="col-10">
-          {/* <p>
-            A linked list is a linear data structure where elements are stored
-            in nodes, and each node points to the next node in the sequence.
-            Unlike arrays, linked lists dynamically allocate memory for
-            elements, allowing for efficient insertions and deletions. However,
-            random access is less efficient compared to arrays. Types of linked
-            lists include singly linked lists and doubly linked lists.
-          </p> */}
-          <nav className="gap-2 d-flex flex-row">
-            <button
-              className="btn btn-secondary"
-              onClick={() => push(head, setHead, size(head) + 1)}
-            >
-              Push
-            </button>
-            <button
-              className="btn btn-secondary"
-              onClick={() => pop(head, setHead)}
-            >
-              Pop
-            </button>
-            <button
-              className="btn btn-secondary"
-              onClick={() => pushFront(head, setHead, size(head) - 1)}
-            >
-              Push Start
-            </button>
-            <button
-              className="btn btn-secondary"
-              onClick={() => popFront(head, setHead)}
-            >
-              Pop Start
-            </button>
-            <button
-              className="btn btn-secondary"
-              onClick={() => setHead(reverse(head))}
-            >
-              Reverse
-            </button>
-            <button className="btn btn-secondary" onClick={() => setHead(null)}>
-              Clear
-            </button>
-          </nav>
           <LinkedListComponent head={head} />
         </div>
         <div
           className="mw-30 col-2"
           style={{ maxWidth: "400px", minWidth: "150px" }}
         >
-          <AlgorithmNavigation />
+          <AlgorithmNavigation
+            head={head}
+            setHead={setHead}
+            insertValue={insertValue}
+            setInsertValue={setInsertValue}
+            removeValue={removeValue}
+            setRemoveValue={setRemoveValue}
+            randomValue={randomValue}
+            setRandomValue={setRandomValue}
+            onPush={handlePush}
+            onPop={handlePop}
+            onRemove={handleRemove}
+            onPushFront={handlePushFront}
+            onPopFront={handlePopFront}
+            onReverse={handleReverse}
+            onClear={handleClear}
+            onInsertAfter={handleInsertAfter}
+            userInput={userInput}
+            setUserInput={setUserInput}
+          />
         </div>
       </div>
     </motion.div>

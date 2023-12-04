@@ -1,12 +1,12 @@
-import { motion } from 'framer-motion';
-import styles from './Node.module.css';
+import { motion } from "framer-motion";
+import styles from "./Node.module.css";
 
 type Props = {
-  value?: number;
+  value?: number | string;
 };
 
 export default function Node({ value }: Props) {
-  const isNumber = typeof value === 'number';
+  const isNumber = typeof value === "number";
   return (
     <motion.div
       className={styles.node_container}
@@ -16,7 +16,7 @@ export default function Node({ value }: Props) {
       exit={{ y: -50, opacity: 0 }}
     >
       <p className={styles.node}>
-        <span>{value ?? 'Null'}</span>
+        <span>{value ?? "Null"}</span>
         {isNumber && <span className={styles.spacer} />}
       </p>
       {isNumber && <div className={styles.arrow} />}

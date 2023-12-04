@@ -8,11 +8,11 @@ const size = (head: SLHead) => {
   return count;
 };
 
-const push = (head: SLHead, setHead: SLSetHead, value: number) => {
+const push = (head: SLHead, setHead: SLSetHead, userInput: number) => {
   let headCopy = head;
   const newNode = {
     id: crypto.randomUUID(),
-    value,
+    value: userInput,
     next: null,
   };
   if (!headCopy) {
@@ -80,4 +80,44 @@ const listToArray = (head: SLHead) => {
   return arr;
 };
 
-export { size, push, pop, pushFront, popFront, reverse, listToArray };
+const removeElement = (head: SLHead, setHead: SLSetHead, value: number) => {
+  let current = head;
+  let prev = null;
+
+  while (current !== null) {
+    if (current.value === value) {
+      if (prev === null) {
+        setHead(current.next);
+      } else {
+        prev.next = current.next;
+      }
+      return;
+    }
+    prev = current;
+    current = current.next;
+  }
+  console.error(`Element with value ${value} not found in the linked list.`);
+};
+
+
+const insertAfter = (head: SLHead, setHead: SLSetHead, targetValue: number, valueToInsert: number) => {
+  let current = head;
+
+  while (current !== null) {
+    if (current.value === targetValue) {
+      const newNode: SLNode = {
+        id: crypto.randomUUID(),
+        value: valueToInsert,
+        next: current.next,
+      };
+      current.next = newNode;
+      setHead(newNode);
+      return;
+    }
+    current = current.next;
+  }
+  console.error(`Target element with value ${targetValue} not found in the linked list.`);
+};
+
+
+export { size, push, pop, pushFront, popFront, reverse, listToArray, removeElement, insertAfter };

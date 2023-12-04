@@ -34,8 +34,8 @@ function SideMenu() {
 
   const menuItems: MenuItem[] = [
     { key: "/", label: "Home" },
-    { key: "list-adt", label: "List ADT" },
     { key: "ll", label: "Linked List" },
+    { key: "list-adt", label: "List ADT" },
     { key: "sort", label: "Sorting" },
     { key: "path", label: "Path finding" },
     { key: "bst", label: "Binary search tree" },

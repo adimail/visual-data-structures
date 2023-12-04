@@ -1,9 +1,25 @@
-import { useEffect, useState } from "react";
-import { Tooltip } from "bootstrap";
 import { motion } from "framer-motion";
-import { LinkedListClass } from "./LinkedList";
+import { AlgorithmNavigation } from "./AlgorithmNavigation";
+import { useState } from "react";
+import { pop, push, pushFront, popFront, reverse, size } from "./algorithms";
+import LinkedListComponent from "./LinkedList";
 
-export const LinkedList = () => {
+const initialHead: SLHead = {
+  id: "1",
+  value: 1,
+  next: null,
+};
+
+type SLNode = {
+  id: string;
+  value: number;
+  next: SLNode | null;
+};
+type SLHead = SLNode | null;
+
+const LinkedList = () => {
+  const [head, setHead] = useState<SLHead>(initialHead);
+
   return (
     <motion.div
       initial={{ opacity: 0, x: -50 }}
@@ -14,16 +30,50 @@ export const LinkedList = () => {
       <hr />
       <div className="d-flex col-12">
         <div className="col-10">
-          <p>
+          {/* <p>
             A linked list is a linear data structure where elements are stored
             in nodes, and each node points to the next node in the sequence.
             Unlike arrays, linked lists dynamically allocate memory for
             elements, allowing for efficient insertions and deletions. However,
             random access is less efficient compared to arrays. Types of linked
             lists include singly linked lists and doubly linked lists.
-          </p>
-          <canvas className="bg-black h-55 w-50"></canvas>
-          <p id="linked-list-component"></p>
+          </p> */}
+          <nav className="gap-2 d-flex flex-row">
+            <button
+              className="btn btn-secondary"
+              onClick={() => push(head, setHead, size(head) + 1)}
+            >
+              Push
+            </button>
+            <button
+              className="btn btn-secondary"
+              onClick={() => pop(head, setHead)}
+            >
+              Pop
+            </button>
+            <button
+              className="btn btn-secondary"
+              onClick={() => pushFront(head, setHead, size(head) - 1)}
+            >
+              Push Start
+            </button>
+            <button
+              className="btn btn-secondary"
+              onClick={() => popFront(head, setHead)}
+            >
+              Pop Start
+            </button>
+            <button
+              className="btn btn-secondary"
+              onClick={() => setHead(reverse(head))}
+            >
+              Reverse
+            </button>
+            <button className="btn btn-secondary" onClick={() => setHead(null)}>
+              Clear
+            </button>
+          </nav>
+          <LinkedListComponent head={head} />
         </div>
         <div
           className="mw-30 col-2"
@@ -36,129 +86,4 @@ export const LinkedList = () => {
   );
 };
 
-function AlgorithmNavigation() {
-  const [insertValue, setInsertValue] = useState<number | undefined>(undefined);
-  const [removeValue, setRemoveValue] = useState<number | undefined>(undefined);
-  const [randomValue, setRandomValue] = useState<number | undefined>(undefined);
-
-  const linkedList = new LinkedListClass();
-
-  const handleInsertClick = () => {
-    if (insertValue !== undefined) {
-      linkedList.insert(insertValue);
-      setInsertValue(undefined);
-    }
-  };
-
-  const handleRemoveClick = () => {
-    if (removeValue !== undefined) {
-      linkedList.remove(removeValue);
-      setRemoveValue(undefined);
-    }
-  };
-
-  const handleRandomClick = () => {
-    if (randomValue !== undefined) {
-      linkedList.generateRandom(randomValue);
-      setRandomValue(undefined);
-    }
-  };
-
-  useEffect(() => {
-    var tooltipTriggerList = [].slice.call(
-      document.querySelectorAll('[data-bs-toggle="tooltip"]')
-    );
-    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-      return new Tooltip(tooltipTriggerEl);
-    });
-
-    return () => {
-      tooltipList.forEach((tooltip) => tooltip.dispose());
-    };
-  }, []);
-
-  return (
-    <div className="gap-2 d-flex flex-column">
-      <div className="input-group">
-        <button
-          type="button"
-          className="btn btn-warning border border-dark"
-          data-bs-toggle="tooltip"
-          data-bs-placement="left"
-          title="Select the type of linked list you would like to construct"
-        >
-          Type
-        </button>
-        <select
-          className="border border-black form-select"
-          id="inputGroupSelect01"
-        >
-          <option value="singly-ll">Singly</option>
-          <option value="doubly-ll">Doubly</option>
-          <option value="circular-ll">Circular</option>
-        </select>
-      </div>
-
-      <div className="input-group w-80">
-        <button
-          type="button"
-          className="w-50 btn btn-secondary"
-          data-bs-toggle="tooltip"
-          data-bs-placement="left"
-          title="Enter an integer to be inserted at the tail of linked list."
-          onClick={handleInsertClick}
-        >
-          Insert
-        </button>
-        <input
-          type="number"
-          aria-label="node-1"
-          className="w-30 form-control border border-dark"
-          value={insertValue || ""}
-          onChange={(e) => setInsertValue(Number(e.target.value))}
-        />
-      </div>
-
-      <div className="input-group w-80">
-        <button
-          type="button"
-          className="w-50 btn btn-secondary"
-          data-bs-toggle="tooltip"
-          data-bs-placement="left"
-          title="Enter an integer to be deleted from the linked list."
-          onClick={handleRemoveClick}
-        >
-          Remove
-        </button>
-        <input
-          type="number"
-          aria-label="node-1"
-          className="w-30 form-control border border-dark"
-          value={removeValue || ""}
-          onChange={(e) => setRemoveValue(Number(e.target.value))}
-        />
-      </div>
-
-      <div className="input-group w-80">
-        <button
-          type="button"
-          className="w-50 btn btn-primary border border-dark"
-          data-bs-toggle="tooltip"
-          data-bs-placement="left"
-          title="Generate a binary tree consisting of given number of nodes"
-          onClick={handleRandomClick}
-        >
-          Random
-        </button>
-        <input
-          type="number"
-          aria-label="node-1"
-          className="w-30 form-control border border-dark"
-          value={randomValue || ""}
-          onChange={(e) => setRandomValue(Number(e.target.value))}
-        />
-      </div>
-    </div>
-  );
-}
 export default LinkedList;

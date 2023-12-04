@@ -1,0 +1,49 @@
+.node_container {
+  display: flex;
+  align-items: center;
+  margin-right: 4px;
+}
+
+.node {
+  display: grid;
+  background-color: #fff;
+  color: #000;
+  border-radius: 2.5px;
+  font-size: 1.2rem;
+  overflow: hidden;
+}
+
+.node:has(.spacer) {
+  grid-template-columns: 1fr 20px;
+}
+
+.node:last-child {
+  background-color: #18a72b;
+}
+
+.node span {
+  padding: 2px 10px;
+}
+
+.spacer {
+  border-left: 1px solid #000;
+  background-color: #b2aaaa;
+}
+
+.arrow {
+  width: 1.5rem;
+  height: 3px;
+  position: relative;
+  background-color: #b2aaaa;
+}
+
+.arrow::after {
+  content: '';
+  display: block;
+  position: absolute;
+  top: -5.5px;
+  right: -4px;
+  border-top: 7px solid transparent;
+  border-bottom: 7px solid transparent;
+  border-left: 7px solid #b2aaaa;
+}

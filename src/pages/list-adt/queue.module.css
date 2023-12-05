@@ -1,0 +1,10 @@
+.queue {
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    align-self: center;
+    justify-content: center;
+  }
+  

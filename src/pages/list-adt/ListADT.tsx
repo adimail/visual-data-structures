@@ -1,13 +1,39 @@
-// LinkedList.ts
+import { listToArray } from "./algorithms";
+import Node from "./Node";
+import StackStyles from "./stack.module.css";
+import QueueStyles from "./queue.module.css";
+import { AnimatePresence, motion } from "framer-motion";
 
-export function insert(data: number): void {
-  console.log("Insert: ", data);
-}
+type Props = {
+  head: SLHead;
+};
 
-export function remove(data: number): void {
-  console.log("Remove: ", data);
-}
+const ListADTStack: React.FC<Props> = ({ head }) => {
+  return (
+    <motion.div className={StackStyles.stack}>
+      <AnimatePresence mode="popLayout" initial={false}>
+        {head &&
+          listToArray(head).map((node) => (
+            <Node key={node.id} value={node.value} />
+          ))}
+        <Node />
+      </AnimatePresence>
+    </motion.div>
+  );
+};
 
-export function GenerateRandom(data: number): void {
-  console.log("Generate list ADT of ", data, "elements");
-}
+const ListADTQueue: React.FC<Props> = ({ head }) => {
+  return (
+    <motion.div className={QueueStyles.queue}>
+      <AnimatePresence mode="popLayout" initial={false}>
+        {head &&
+          listToArray(head).map((node) => (
+            <Node key={node.id} value={node.value} />
+          ))}
+        <Node />
+      </AnimatePresence>
+    </motion.div>
+  );
+};
+
+export { ListADTStack, ListADTQueue };

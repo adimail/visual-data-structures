@@ -1,6 +1,7 @@
-.linkedList {
+.stack {
   height: 100%;
   display: flex;
+  flex-direction: column;
   flex-wrap: wrap;
   align-items: center;
   align-self: center;

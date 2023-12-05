@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { AlgorithmNavigation } from "./AlgorithmNavigation";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
   pop,
   push,
@@ -30,10 +30,30 @@ const LinkedList = () => {
   const [insertValue, setInsertValue] = useState<number | undefined>(undefined);
   const [removeValue, setRemoveValue] = useState<number | undefined>(undefined);
   const [randomValue, setRandomValue] = useState<number | undefined>(undefined);
+  const [size, setSize] = useState<number>(0);
 
   const [head, setHead] = useState<SLHead>(initialHead);
   const targetValueInputRef = useRef<HTMLInputElement>(null);
   const valueToInsertInputRef = useRef<HTMLInputElement>(null);
+
+  const calculateSize = (head: SLHead): number => {
+    let headCopy = head;
+    let count = 0;
+    while (headCopy) {
+      count++;
+      headCopy = headCopy.next;
+    }
+    return count;
+  };
+
+  const updateSize = () => {
+    const newSize = calculateSize(head);
+    setSize(newSize);
+  };
+
+  useEffect(() => {
+    updateSize();
+  }, [head]);
 
   const handlePush = () => {
     const inputValue = parseInt(userInput, 10);
@@ -116,6 +136,7 @@ const LinkedList = () => {
     >
       <h5>Linked List</h5>
       <hr />
+      <p>Size of the Linked List: {size}</p>
       <div className="d-flex col-12">
         <div className="col-10">
           <LinkedListComponent head={head} />

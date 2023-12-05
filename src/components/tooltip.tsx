@@ -16,7 +16,7 @@ const InfoTooltip: React.FC<InfoTooltipProps & { placement?: string }> = ({
       const tooltip = new Tooltip(targetRef.current, {
         title: text,
         trigger: "manual",
-        placement: "top", // Set the placement option
+        placement: "top", // placement option
       });
 
       return () => {

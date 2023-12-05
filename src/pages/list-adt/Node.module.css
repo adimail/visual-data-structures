@@ -1,0 +1,31 @@
+.node_container {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  flex-direction: row;
+  margin-right: 2rem;
+  scale: 1.3;
+}
+
+.node {
+  margin-top: 15px;
+  width: 6rem;
+  display: grid;
+  background-color: #e27171;
+  color: #000;
+  border-radius: 2.5px;
+  font-size: 1.2rem;
+  overflow: hidden;
+}
+
+.node:hover{
+  scale: 1.2;
+}
+
+.node:has(.spacer) {
+  grid-template-columns: 1fr 20px;
+}
+
+.node:last-child {
+  background-color: #df6d21;
+}

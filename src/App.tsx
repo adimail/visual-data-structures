@@ -23,7 +23,6 @@ function App() {
           <Content />
         </div>
       </div>
-
       <PageFooter />
     </>
   );

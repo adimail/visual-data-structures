@@ -90,7 +90,7 @@ export function AlgorithmNavigation({
       <hr />
       <nav className="gap-2 d-flex flex-column">
         <input
-          className="form-control border-dark"
+          className="form-control"
           type="number"
           placeholder="Enter an element"
           value={userInput}
@@ -125,13 +125,13 @@ export function AlgorithmNavigation({
           title="Target: Element after which you want to insert another element. Data: The value you want to insert after specified"
         >
           <input
-            className="form-control border-dark"
+            className="form-control"
             type="number"
             placeholder="Target"
             ref={targetValueInputRef}
           ></input>
           <input
-            className="form-control border-dark"
+            className="form-control"
             type="number"
             placeholder="Data"
             ref={valueToInsertInputRef}

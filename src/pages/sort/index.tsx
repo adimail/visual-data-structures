@@ -1,10 +1,34 @@
-import { Tooltip } from "bootstrap";
 import { motion } from "framer-motion";
-import React from "react";
-import SortingVisualizer from "./src/Pages/SortingVisualizer";
 import { useEffect, useState } from "react";
 
+import AlgorithmNavigation from "./AlgirithmNavigation";
+import { normalize } from "./src/util/utils";
+import BarChart from "./src/Components/BarChart";
+import Controls from "./src/Components/Controls";
+import { algorithms } from "./src/Algorithms";
+import { defaultSettings } from "./src/util/constants";
+import { TraceEntry, generateRandomNumbers } from "./src/util/Trace";
+
 export const Sorting = () => {
+  const [step, setStep] = useState(0);
+  const [animation, setAnimation] = useState(true);
+  const [numbers, setNumbers] = useState(
+    generateRandomNumbers(defaultSettings.size, defaultSettings.range)
+  );
+  const [algorithm, setAlgorithm] = useState(defaultSettings.algorithm);
+  const [trace, setTrace] = useState<TraceEntry[]>([]);
+
+  useEffect(() => {
+    if (numbers) {
+      const trace = algorithms[algorithm].default([...numbers]);
+      setTrace(trace);
+    }
+  }, [numbers, algorithm, setTrace]);
+
+  useEffect(() => {
+    setAnimation(algorithms[algorithm].animateMovements ?? true);
+  }, [algorithm]);
+
   return (
     <motion.div
       initial={{ opacity: 0, x: -50 }}
@@ -15,100 +39,56 @@ export const Sorting = () => {
       <hr />
       <div className="d-flex col-12">
         <div className="col-10 border-none">
-          <SortingVisualizer />
+          <div>
+            {"Total number of comparisms: "}
+            {step} / {trace?.length - 1}
+            <BarChart
+              trace={trace?.[step]}
+              numbers={numbers}
+              animation={animation}
+            />
+            <div
+              className="progress bg-secondary mx-5"
+              role="progressbar"
+              aria-valuemin="0"
+              aria-valuemax="100"
+            >
+              <div
+                className="progress-bar bg-success"
+                style={{
+                  width: `${normalize(step, 0, trace?.length - 1 || 0)}%`,
+                  color: "black",
+                  fontWeight: "bold",
+                }}
+              >
+                {normalize(step, 0, trace?.length - 1 || 0).toFixed(1)}%
+              </div>
+            </div>
+            <br />
+          </div>
         </div>
         <div
           className="mw-30 col-2"
           style={{ maxWidth: "400px", minWidth: "150px" }}
         >
           <AlgorithmNavigation />
+          <br />
+          <Controls
+            step={step}
+            setStep={setStep}
+            algorithm={algorithm}
+            setAlgorithm={setAlgorithm}
+            numbers={numbers}
+            setNumbers={setNumbers}
+            trace={trace}
+            setTrace={setTrace}
+            animation={animation}
+            setAnimation={setAnimation}
+          />
         </div>
       </div>
     </motion.div>
   );
 };
-
-function AlgorithmNavigation() {
-  useEffect(() => {
-    var tooltipTriggerList = [].slice.call(
-      document.querySelectorAll('[data-bs-toggle="tooltip"]')
-    );
-    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-      return new Tooltip(tooltipTriggerEl);
-    });
-
-    return () => {
-      tooltipList.forEach((tooltip) => tooltip.dispose());
-    };
-  }, []);
-  const [speed, setSpeed] = useState(1);
-
-  const handleSpeedChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSpeed(parseFloat(event.target.value));
-  };
-
-  return (
-    <div className="gap-2 d-flex flex-column">
-      <div className="input-group">
-        <label
-          className="border border-dark btn btn-warning"
-          htmlFor="inputGroupSelect01"
-          data-bs-toggle="tooltip"
-          data-bs-placement="left"
-          title="Select an sorting algorithm for your visualization"
-        >
-          Algorithm
-        </label>
-        <select
-          className="border border-black  form-select"
-          id="inputGroupSelect01"
-        >
-          <option value="rs">Selection Sort</option>
-          <option value="bs">Bubble sort</option>
-          <option value="is">Insertion sort</option>
-          <option value="hs">Heap sort</option>
-          <option value="qs">Quick sort</option>
-          <option value="ms">Merge sort</option>
-        </select>
-      </div>
-      <button
-        className="btn btn-success btn-auto-width mx-1"
-        type="button"
-        data-bs-toggle="tooltip"
-        data-bs-placement="left"
-        title="Click here to sort the graph in ascending order"
-      >
-        Start
-      </button>
-      <div>
-        <label htmlFor="speedValue" className="form-label">
-          Speed: {speed.toFixed(1)}
-        </label>
-        <input
-          type="range"
-          className="form-range"
-          min="0.5"
-          max="10"
-          step="0.1"
-          id="speed"
-          value={speed}
-          onChange={handleSpeedChange}
-        />
-      </div>
-
-      <div className="input-group">
-        <button
-          type="button"
-          className="btn btn-primary border border-dark"
-          data-bs-toggle="tooltip"
-          data-bs-placement="left"
-          title="Generate a list of random numbers for sorting"
-        >
-          Random
-        </button>
-      </div>
-    </div>
-  );
-}
 
 export default Sorting;

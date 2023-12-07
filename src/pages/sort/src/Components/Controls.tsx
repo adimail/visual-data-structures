@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 
 import ExtendedControls from "./ExtendedControls";
 
-import { normalize, scaleValue } from "../util/utils";
+import { scaleValue } from "../util/utils";
 import { defaultSettings } from "../util/constants";
 import { SortItem, TraceEntry, generateRandomNumbers } from "../util/Trace";
 
@@ -19,14 +19,7 @@ interface ControlsProps {
   setAnimation: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const Controls = ({
-  step,
-  setStep,
-  algorithm,
-  setAlgorithm,
-  setNumbers,
-  trace,
-}: ControlsProps) => {
+const Controls = ({ step, setStep, setNumbers, trace }: ControlsProps) => {
   const intervalId = useRef<undefined | number>(undefined);
   const [isSorting, setIsSorting] = useState(false);
   const [speed, setSpeed] = useState(defaultSettings.speed);
@@ -149,18 +142,26 @@ const Controls = ({
 
   return (
     <>
-      <div className="control-panel">
-        <button onClick={toggleSorting}>Toggle start and stop</button>
-        <button onClick={() => skip(-32)}>Backward</button>
-        <button onClick={() => skip(32)}>Forward</button>
-        <input
-          type="range"
-          value={normalize(step, 0, trace?.length - 1 || 0)}
-        />
+      <div className="control-panel gap-3 d-flex flex-column">
+        <button className="btn btn-success" onClick={toggleSorting}>
+          Toggle start and stop
+        </button>
+        <div className="d-flex gap-3">
+          <button
+            className="btn btn-outline-danger p-2 flex-fill"
+            onClick={() => skip(-32)}
+          >
+            {"< Backward"}
+          </button>
+          <button
+            className="btn btn-outline-danger p-2 flex-fill"
+            onClick={() => skip(32)}
+          >
+            {"Forward >"}
+          </button>
+        </div>
       </div>
       <ExtendedControls
-        algorithm={algorithm}
-        setAlgorithm={setAlgorithm}
         size={size}
         setSize={setSize}
         speed={speed}

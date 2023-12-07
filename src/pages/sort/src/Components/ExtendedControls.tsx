@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 
 interface ExtendedControls {
-  algorithm: string;
-  setAlgorithm: React.Dispatch<React.SetStateAction<string>>;
   size: number;
   setSize: React.Dispatch<React.SetStateAction<number>>;
   speed: number;
@@ -13,8 +11,6 @@ interface ExtendedControls {
 }
 
 const Controls = ({
-  // algorithm,
-  // setAlgorithm,
   size,
   setSize,
   speed,
@@ -33,16 +29,13 @@ const Controls = ({
   }, [sizeBuffer, size]);
 
   return (
-    <div className="d-flex">
-      <div
-        style={{
-          marginBottom: "8px",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "flex-end",
-        }}
-      >
-        <button onClick={generateArray} disabled={isSorting}>
+    <div className="d-flex flex-column">
+      <div>
+        <button
+          className="btn btn-secondary w-100 mt-3"
+          onClick={generateArray}
+          disabled={isSorting}
+        >
           Generate random array
         </button>
       </div>

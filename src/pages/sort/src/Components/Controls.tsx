@@ -26,14 +26,12 @@ const Controls = ({
   setAlgorithm,
   setNumbers,
   trace,
-  animation,
-  setAnimation,
 }: ControlsProps) => {
   const intervalId = useRef<undefined | number>(undefined);
   const [isSorting, setIsSorting] = useState(false);
   const [speed, setSpeed] = useState(defaultSettings.speed);
   const [size, setSize] = useState(defaultSettings.size);
-  const [minMax, setMinMax] = useState(defaultSettings.range);
+  const [minMax] = useState(defaultSettings.range);
 
   const skip = useCallback(
     (number: number) => {
@@ -92,7 +90,10 @@ const Controls = ({
 
     const _speed = scaleValue(speed, [0.25, 4], [300, 0]);
 
-    intervalId.current = setInterval(() => autoIncrement(_speed), _speed);
+    intervalId.current = window.setInterval(
+      () => autoIncrement(_speed),
+      _speed
+    );
   }, [autoIncrement, speed]);
 
   const toggleSorting = useCallback(() => {
@@ -140,9 +141,7 @@ const Controls = ({
         }
       }
     };
-
     document.addEventListener("keydown", handleKeyDown);
-
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
     };
@@ -152,40 +151,23 @@ const Controls = ({
     <>
       <div className="control-panel">
         <button onClick={toggleSorting}>Toggle start and stop</button>
-        <button onClick={() => skip(-25)}>Backward</button>
-        <button onClick={() => skip(25)}>Forward</button>
-        <button>Generate random Array</button>
-        <input type="radio" />
+        <button onClick={() => skip(-32)}>Backward</button>
+        <button onClick={() => skip(32)}>Forward</button>
         <input
           type="range"
           value={normalize(step, 0, trace?.length - 1 || 0)}
         />
-        <select
-          className="border border-black  form-select"
-          id="inputGroupSelect01"
-        >
-          <option value="hs">Selection sort</option>
-          <option value="qs">Quick sort</option>
-          <option value="bs">Bubble sort</option>
-          <option value="is">Insertion sort</option>
-          <option value="ms">Merge sort</option>
-        </select>
       </div>
       <ExtendedControls
         algorithm={algorithm}
         setAlgorithm={setAlgorithm}
-        setStep={setStep}
         size={size}
         setSize={setSize}
-        minMax={minMax}
-        setMinMax={setMinMax}
         speed={speed}
         setSpeed={setSpeed}
         isSorting={isSorting}
         generateArray={generateArray}
         restartSorting={restartSorting}
-        animation={animation}
-        setAnimation={setAnimation}
       />
     </>
   );

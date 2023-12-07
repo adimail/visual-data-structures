@@ -34,21 +34,21 @@ const useStyles = (props: StyleProps) => ({
       const { state } = props;
 
       if (!state) {
-        return "#000"; // Replace with your default color
+        return "#31EB1E";
       }
 
       if (state.a) {
-        return "#AAA"; // Replace with your color for state.a
+        return "#C1604B ";
       } else if (state.b) {
-        return "#BBB"; // Replace with your color for state.b
+        return "#C1D100";
       } else if (state.c) {
-        return "#CCC"; // Replace with your color for state.c
+        return "#51D51C";
       } else if (state.d) {
-        return "#DDD"; // Replace with your color for state.d
+        return "#27D1B0";
       } else if (state.sorted) {
-        return "#EEE"; // Replace with your color for sorted state
+        return "#198754";
       } else {
-        return "#000"; // Replace with your default color
+        return "#568087";
       }
     })(),
 
@@ -57,13 +57,6 @@ const useStyles = (props: StyleProps) => ({
     lineHeight: "16px",
     marginRight: props.state?.marginLeft ? "15px" : "0",
     marginLeft: props.state?.marginRight ? "15px" : "0",
-
-    transition: "transform 125ms ease-in-out",
-    transformOrigin: "bottom center",
-    "&:hover": {
-      transform: "scale(1.1)",
-    },
-
     border: "1px solid #000",
     borderTopLeftRadius: "5px",
     borderTopRightRadius: "5px",
@@ -73,7 +66,7 @@ const useStyles = (props: StyleProps) => ({
       borderTopRightRadius: "2px",
 
       "&:hover": {
-        transform: "scale(1.03)",
+        transform: "scale(1.5)",
       },
     },
   },
@@ -83,7 +76,7 @@ const useStyles = (props: StyleProps) => ({
     whiteSpace: "nowrap",
     textAlign: "center" as const,
     width: "100%",
-    marginTop: "8px", // Replace with your desired margin
+    marginTop: "8px",
   } as React.CSSProperties,
 });
 

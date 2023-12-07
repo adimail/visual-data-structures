@@ -25,7 +25,6 @@ const classes = {
 };
 
 const BarChart = ({ trace, numbers }: BarChartProps) => {
-  // const classes = useStyles();
   const barChartRef = useRef(null);
 
   const { width } = useResize(barChartRef);

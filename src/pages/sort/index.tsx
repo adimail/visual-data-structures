@@ -1,9 +1,8 @@
-import { useState } from "react";
-import { useEffect } from "react";
 import { Tooltip } from "bootstrap";
 import { motion } from "framer-motion";
 import React from "react";
 import SortingVisualizer from "./src/Pages/SortingVisualizer";
+import { useEffect, useState } from "react";
 
 export const Sorting = () => {
   return (
@@ -14,8 +13,15 @@ export const Sorting = () => {
     >
       <h5>Sorting Algorithmns</h5>
       <hr />
-      <SortingVisualizer />
       <div className="d-flex col-12">
+        <div className="col-10 border-none">
+          {/* <BarChart
+            trace={trace?.[step]}
+            numbers={numbers}
+            animation={animation}
+          /> */}
+          <SortingVisualizer />
+        </div>
         <div
           className="mw-30 col-2"
           style={{ maxWidth: "400px", minWidth: "150px" }}
@@ -62,12 +68,12 @@ function AlgorithmNavigation() {
           className="border border-black  form-select"
           id="inputGroupSelect01"
         >
+          <option value="rs">Selection Sort</option>
           <option value="bs">Bubble sort</option>
           <option value="is">Insertion sort</option>
           <option value="hs">Heap sort</option>
           <option value="qs">Quick sort</option>
           <option value="ms">Merge sort</option>
-          <option value="rs">Radix sort</option>
         </select>
       </div>
       <button
@@ -94,55 +100,17 @@ function AlgorithmNavigation() {
           onChange={handleSpeedChange}
         />
       </div>
-      <div className="input-group w-80">
-        <button
-          type="button"
-          className="w-50 btn btn-secondary border border-dark"
-          data-bs-toggle="tooltip"
-          data-bs-placement="left"
-          title="Insert non-negative integers in the range of 1-50. You can also give input numbers seperated by commas, for e.g. 32,68, 11"
-        >
-          Insert
-        </button>
-        <input
-          type="number"
-          aria-label="node-1"
-          className="w-30 form-control border border-dark"
-        />
-      </div>
 
-      <div className="input-group w-80">
+      <div className="input-group">
         <button
           type="button"
-          className="w-50 btn btn-secondary border border-dark"
+          className="btn btn-primary border border-dark"
           data-bs-toggle="tooltip"
           data-bs-placement="left"
-          title="Remove elements from the list. You can also give input numbers seperated by commas, for e.g. 32,68, 11"
-        >
-          Remove
-        </button>
-        <input
-          type="number"
-          aria-label="node-1"
-          className="w-30 form-control border border-dark"
-        />
-      </div>
-
-      <div className="input-group w-80">
-        <button
-          type="button"
-          className="w-50 btn btn-primary border border-dark"
-          data-bs-toggle="tooltip"
-          data-bs-placement="left"
-          title="Generate random numbers in the range of (1-50) for sorting, given the number of numbers by the user"
+          title="Generate a list of random numbers for sorting"
         >
           Random
         </button>
-        <input
-          type="number"
-          aria-label="node-1"
-          className="w-30 form-control border border-dark"
-        />
       </div>
     </div>
   );

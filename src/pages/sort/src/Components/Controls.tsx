@@ -1,25 +1,32 @@
+import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-
 import ExtendedControls from "./ExtendedControls";
-
 import { scaleValue } from "../util/utils";
 import { defaultSettings } from "../util/constants";
 import { SortItem, TraceEntry, generateRandomNumbers } from "../util/Trace";
+import { algorithms } from "../Algorithms";
 
 interface ControlsProps {
   step: number;
   setStep: React.Dispatch<React.SetStateAction<number>>;
   algorithm: string;
   setAlgorithm: React.Dispatch<React.SetStateAction<string>>;
-  numbers: SortItem[];
   setNumbers: React.Dispatch<React.SetStateAction<SortItem[]>>;
+  numbers: SortItem[];
   trace: TraceEntry[];
   setTrace: React.Dispatch<React.SetStateAction<TraceEntry[]>>;
   animation: boolean;
   setAnimation: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const Controls = ({ step, setStep, setNumbers, trace }: ControlsProps) => {
+const Controls = ({
+  step,
+  setStep,
+  setAlgorithm,
+  setNumbers,
+  trace,
+  numbers,
+}: ControlsProps) => {
   const intervalId = useRef<undefined | number>(undefined);
   const [isSorting, setIsSorting] = useState(false);
   const [speed, setSpeed] = useState(defaultSettings.speed);
@@ -64,13 +71,10 @@ const Controls = ({ step, setStep, setNumbers, trace }: ControlsProps) => {
           } else {
             setIsSorting(false);
             clearInterval(intervalId.current);
-
             return s;
           }
         });
-
       increase();
-
       if (_speed < 40) {
         increase();
       }
@@ -143,6 +147,37 @@ const Controls = ({ step, setStep, setNumbers, trace }: ControlsProps) => {
   return (
     <>
       <div className="control-panel gap-3 d-flex flex-column">
+        <div className="input-group">
+          <label
+            className="border border-dark btn btn-warning"
+            htmlFor="algorithmSelector"
+          >
+            Algorithm
+          </label>
+          <select
+            className="border border-black  form-select"
+            id="algorithmSelector"
+            onChange={(event) => {
+              setAlgorithm(event.target.value);
+              setStep(0);
+            }}
+            disabled={isSorting}
+          >
+            {Object.entries(algorithms).map(([value, { name }], key) => (
+              <option
+                value={value}
+                key={key}
+                data-bs-toggle="tooltip"
+                data-bs-placement="left"
+                title={`Total number of comparisms: ${
+                  algorithms[value].default([...numbers]).length - 1
+                }`}
+              >
+                {name}
+              </option>
+            ))}
+          </select>
+        </div>
         <button className="btn btn-success" onClick={toggleSorting}>
           Toggle start and stop
         </button>

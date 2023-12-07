@@ -136,9 +136,9 @@ const LinkedList = () => {
     >
       <h5>Linked List</h5>
       <hr />
-      <p>Size of the Linked List: {size}</p>
       <div className="d-flex col-12">
         <div className="col-10">
+          <p>Size of the Linked List: {size}</p>
           <LinkedListComponent head={head} />
         </div>
         <div

@@ -1,7 +1,6 @@
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 
-import AlgorithmNavigation from "./AlgirithmNavigation";
 import { normalize } from "./src/util/utils";
 import BarChart from "./src/Components/BarChart";
 import Controls from "./src/Components/Controls";
@@ -71,7 +70,6 @@ export const Sorting = () => {
           className="mw-30 col-2"
           style={{ maxWidth: "400px", minWidth: "150px" }}
         >
-          <AlgorithmNavigation />
           <br />
           <Controls
             step={step}

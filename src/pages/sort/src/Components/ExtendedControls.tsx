@@ -40,24 +40,15 @@ const Controls = ({
         </button>
       </div>
 
-      <div className="d-flex flex-column">
-        <p>Size</p>
-        <input
-          type="range"
-          value={size}
-          onChange={(e) => {
-            setSizeBuffer(Number(e.target.value));
-          }}
-          min={11}
-          max={111}
-          disabled={isSorting}
-        />
-        <span>{size}</span>
-      </div>
+      <br />
 
       <div className="d-flex flex-column">
-        <p>Speed</p>
+        <div className="d-flex justify-content-between">
+          <p>Speed</p>
+          <span>{speed}</span>
+        </div>
         <input
+          className="form-range"
           type="range"
           value={speed}
           onChange={(e) => {
@@ -67,9 +58,27 @@ const Controls = ({
           min={1}
           step={0.1}
           max={11}
+        />
+      </div>
+
+      <br />
+
+      <div className="d-flex flex-column">
+        <div className="d-flex justify-content-between">
+          <p>Size</p>
+          <span>{size}</span>
+        </div>
+        <input
+          className="form-range"
+          type="range"
+          value={size}
+          onChange={(e) => {
+            setSizeBuffer(Number(e.target.value));
+          }}
+          min={11}
+          max={111}
           disabled={isSorting}
         />
-        <span>{speed}</span>
       </div>
     </div>
   );

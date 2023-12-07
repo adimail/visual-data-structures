@@ -156,20 +156,20 @@ const LinkedList = () => {
     >
       <h5>List ADT - Abstract Data Type</h5>
       <hr />
-      <p>
-        {size === 0 ? (
-          <>
-            Data structure is empty.
-            <br />
-            Add elements using the control panel to the right of the page.
-          </>
-        ) : (
-          `Size of the ${listType}: ${size}`
-        )}
-      </p>
 
       <div className="d-flex col-12">
         <div className="col-10">
+          <p>
+            {size === 0 ? (
+              <>
+                Data structure is empty.
+                <br />
+                Add elements using the control panel to the right of the page.
+              </>
+            ) : (
+              `Size of the ${listType}: ${size}`
+            )}
+          </p>
           {listType === "Stack" && <ListADTStack head={head} />}
           {listType === "Queue" && <ListADTQueue head={head} />}
         </div>

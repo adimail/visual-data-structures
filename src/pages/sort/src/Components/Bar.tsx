@@ -60,15 +60,6 @@ const useStyles = (props: StyleProps) => ({
     border: "1px solid #000",
     borderTopLeftRadius: "5px",
     borderTopRightRadius: "5px",
-
-    "@media (max-width: 600px)": {
-      borderTopLeftRadius: "2px",
-      borderTopRightRadius: "2px",
-
-      "&:hover": {
-        transform: "scale(1.5)",
-      },
-    },
   },
   text: {
     userSelect: "none",

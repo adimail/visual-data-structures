@@ -15,11 +15,6 @@ export const Sorting = () => {
       <hr />
       <div className="d-flex col-12">
         <div className="col-10 border-none">
-          {/* <BarChart
-            trace={trace?.[step]}
-            numbers={numbers}
-            animation={animation}
-          /> */}
           <SortingVisualizer />
         </div>
         <div

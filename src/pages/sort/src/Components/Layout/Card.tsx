@@ -6,17 +6,7 @@ interface CardProps {
   topPadding?: number;
 }
 
-interface StyleProps {
-  bottomPadding: number;
-  topPadding: number;
-}
-
-const Card = ({ children, bottomPadding = 3, topPadding = 3 }: CardProps) => {
-  const cardStyles: StyleProps = {
-    bottomPadding,
-    topPadding,
-  };
-
+const Card = ({ children, bottomPadding = 3, topPadding = 5 }: CardProps) => {
   return (
     <div
       style={{
@@ -26,7 +16,6 @@ const Card = ({ children, bottomPadding = 3, topPadding = 3 }: CardProps) => {
         paddingLeft: "24px",
         paddingRight: "24px",
         margin: "8px",
-        border: "1px solid #000",
       }}
     >
       {children}

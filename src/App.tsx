@@ -38,6 +38,7 @@ function SideMenu() {
     { key: "sort", label: "Sorting" },
     { key: "path", label: "Path finding" },
     { key: "bst", label: "Binary search tree" },
+    { key: "hashing", label: "Hashing Algoithm" },
   ];
 
   return (

@@ -23,8 +23,7 @@ export const HomeMenu = () => {
 
       <p>
         Additionally, this is also an attempt in learning typescript and react
-        framework for building interactive web applications (मज्जा आली ह्या
-        project वरती काम करताना)
+        framework for building interactive web applications
       </p>
       <p>
         For your reference, you can find my classroom notes containing content

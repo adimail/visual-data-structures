@@ -1,5 +1,4 @@
-import { useEffect, useRef } from "react";
-import { Tooltip, InfoTooltip } from "../../components/tooltip";
+import { useRef } from "react";
 
 interface AlgorithmNavigationProps {
   head: SLHead;
@@ -55,19 +54,6 @@ export function AlgorithmNavigation({
     }
   };
 
-  useEffect(() => {
-    var tooltipTriggerList = [].slice.call(
-      document.querySelectorAll('[data-bs-toggle="tooltip"]')
-    );
-    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-      return new Tooltip(tooltipTriggerEl);
-    });
-
-    return () => {
-      tooltipList.forEach((tooltip) => tooltip.dispose());
-    };
-  }, []);
-
   return (
     <div className="gap-2 d-flex flex-column justify-content-center">
       <div className="d-flex">
@@ -85,7 +71,6 @@ export function AlgorithmNavigation({
             <option value="circular-ll">Circular</option>
           </select>
         </div>
-        <InfoTooltip text="Select the type of linked list you would like to construct" />
       </div>
       <hr />
       <nav className="gap-2 d-flex flex-column">

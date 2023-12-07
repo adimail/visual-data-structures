@@ -161,7 +161,7 @@ const LinkedList = () => {
           <>
             Data structure is empty.
             <br />
-            Add elements using the push button on the right side of the page.
+            Add elements using the control panel to the right of the page.
           </>
         ) : (
           `Size of the ${listType}: ${size}`

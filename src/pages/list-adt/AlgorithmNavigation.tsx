@@ -63,7 +63,7 @@ export function AlgorithmNavigation({
             <option value="Queue">Queue</option>
           </select>
         </div>
-        <InfoTooltip text="Select the type of linked list you would like to construct" />
+        <InfoTooltip text="Select the type of list ADT you would like to simulate" />
       </div>
       <hr />
       <nav className="gap-2 d-flex flex-column">

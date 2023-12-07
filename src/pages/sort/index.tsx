@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { Tooltip } from "bootstrap";
 import { motion } from "framer-motion";
+import React from "react";
+import SortingVisualizer from "./src/Pages/SortingVisualizer";
 
 export const Sorting = () => {
   return (
@@ -12,19 +14,8 @@ export const Sorting = () => {
     >
       <h5>Sorting Algorithmns</h5>
       <hr />
+      <SortingVisualizer />
       <div className="d-flex col-12">
-        <div className="col-10">
-          <p>
-            Sorting is a fundamental operation in computer science, essential
-            for organizing data in a specific order. It involves arranging
-            elements in a sequence, such as numbers or strings, according to a
-            predefined criterion. Common sorting algorithms include Bubble Sort,
-            Insertion Sort, Merge Sort, and Quick Sort, each with its advantages
-            and drawbacks. The choice of algorithm depends on factors like data
-            size, complexity, and specific requirements.
-          </p>
-          <canvas className="bg-black h-55 w-50"></canvas>
-        </div>
         <div
           className="mw-30 col-2"
           style={{ maxWidth: "400px", minWidth: "150px" }}

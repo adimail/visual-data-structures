@@ -11,23 +11,21 @@ export const HomeMenu = () => {
       <h3>Home</h3>
       <hr />
       <p>
-        Welcome to this corner of the Internet, an extension of the second-year
-        B.Tech Data Structures and Algorithms course to visualise various data
-        structures such as Linked{" "}
+        Welcome to this simulation site, an extension of Engineering Data
+        Structures and Algorithms syllabus to simulate data flow of{" "}
         <i>
-          lists, list ADTs, trees, graphs, binary search trees, B+ trees, B++
-          trees, threaded trees (single and double), AVL trees,{" "}
+          Linked lists, list ADTs, Sorting Algorithms, binary search trees, AVL
+          trees, B+ trees, and pathfinding Algorithms{" "}
         </i>
-        and their data flow.
       </p>
 
       <p>
-        Additionally, this is also an attempt in learning typescript and react
+        Additionally, this is also my attempt in learning typescript and react
         framework for building interactive web applications
       </p>
       <p>
         For your reference, you can find my classroom notes containing content
-        from my engineering syllabus, covering OOP, DS, ML, Maths, and more{" "}
+        from my engineering syllabus{" "}
         <a href="https://github.com/adimail/classroom">here</a>.
       </p>
       <span>

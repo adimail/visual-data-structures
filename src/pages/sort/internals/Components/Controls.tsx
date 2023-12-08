@@ -17,6 +17,7 @@ interface ControlsProps {
   setTrace: React.Dispatch<React.SetStateAction<TraceEntry[]>>;
   animation: boolean;
   setAnimation: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const Controls = ({
@@ -26,6 +27,7 @@ const Controls = ({
   setNumbers,
   trace,
   numbers,
+  setShowModal,
 }: ControlsProps) => {
   const intervalId = useRef<undefined | number>(undefined);
   const [isSorting, setIsSorting] = useState(false);
@@ -148,12 +150,12 @@ const Controls = ({
     <>
       <div className="control-panel gap-3 d-flex flex-column">
         <div className="input-group">
-          <label
+          <button
             className="border border-dark btn btn-warning"
-            htmlFor="algorithmSelector"
+            onClick={() => setShowModal(true)}
           >
             Algorithm
-          </label>
+          </button>
           <select
             className="border border-black  form-select"
             id="algorithmSelector"

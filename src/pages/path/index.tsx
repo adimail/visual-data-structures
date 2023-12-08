@@ -12,15 +12,16 @@ export const PathFinder = () => {
       <hr />
       <div className="d-flex col-12">
         <div className="col-10">
-          <p>
-            Pathfinding is the process of determining a path between two points
-            in a graph or grid. It is a common problem in computer science and
-            finds applications in various fields, including robotics, gaming,
-            and network routing. Algorithms like Dijkstra's algorithm, A*
-            algorithm, and Breadth-First Search (BFS) are commonly used for
-            pathfinding, each with its strengths and weaknesses.
-          </p>
-          <canvas className="bg-black h-55 w-50"></canvas>
+          <div>
+            <svg
+              className="bg-dark h-100 w-100"
+              id="shortestPathSvg"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <g id="gedge"></g>
+              <g id="gvertex"></g>
+            </svg>
+          </div>
         </div>
         <div
           className="mw-30 col-2"

@@ -36,8 +36,8 @@ function SideMenu() {
     { key: "ll", label: "Linked List" },
     { key: "list-adt", label: "List ADT" },
     { key: "sort", label: "Sorting" },
-    { key: "path", label: "Path finding" },
     { key: "bst", label: "Binary search tree" },
+    { key: "path", label: "Path finding" },
     { key: "hashing", label: "Hashing Algoithm" },
   ];
 

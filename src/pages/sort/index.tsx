@@ -9,7 +9,7 @@ import { algorithms } from "./internals/Algorithms";
 import { defaultSettings } from "./internals/util/constants";
 import { TraceEntry, generateRandomNumbers } from "./internals/util/Trace";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Modal, Button } from "react-bootstrap";
+import { Modal } from "react-bootstrap";
 
 export const Sorting = () => {
   const [step, setStep] = useState(0);
@@ -52,7 +52,6 @@ export const Sorting = () => {
       <hr />
       <div className="d-flex col-12">
         <div className="col-10 border-none">
-          {/* <div>{currentAlgorithm.algorithm}</div> */}
           <div>
             <div>
               {"Total number of comparisms: "}

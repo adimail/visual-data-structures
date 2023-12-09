@@ -14,7 +14,8 @@ input {
     width: 500px;
 }
 .tree ul {
-    padding-top: 20px; position: relative;
+    padding-top: 20px; 
+    position: relative;
     transition: all 0.5s;
     -webkit-transition: all 0.5s;
     -moz-transition: all 0.5s;
@@ -64,7 +65,8 @@ input {
 }
 .tree ul ul::before{
     content: '';
-    position: absolute; top: 0; left: 50%;
+    position: absolute; 
+    top: 0; left: 50%;
     border-left: 2px solid #6e6e6e;
     width: 0; height: 20px;
 }
@@ -73,7 +75,7 @@ input {
     text-decoration: none;
     color:black;
     font-family: arial, verdana, tahoma;
-    font-size: 18px;
+    font-size: 1.2rem;
     display: inline-block;
 
     transition: all 0.5s;

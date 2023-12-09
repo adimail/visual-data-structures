@@ -47,6 +47,16 @@ class TreeTraversalVisualizer extends React.Component<
     this.handleMaxNodesChange = this.handleMaxNodesChange.bind(this);
   }
 
+  removeNode() {
+    const valueToRemove = parseInt(this.state.lastAddedToTree);
+    if (!isNaN(valueToRemove)) {
+      this.state.tree.delete(valueToRemove);
+      this.setState({ nodes: this.state.nodes - 1 });
+    } else {
+      alert("Enter a valid number to remove from the tree!");
+    }
+  }
+
   generateTree() {
     let newTree = new TreeBackEnd();
     for (let i = 0; i < this.state.maxNodes; i++) {
@@ -201,15 +211,28 @@ class TreeTraversalVisualizer extends React.Component<
               <button
                 type="button"
                 className="w-50 btn btn-secondary border border-dark "
-                data-bs-toggle="tooltip"
-                data-bs-placement="left"
-                title="Insert a node to the binary tree"
                 onClick={this.handleSubmit}
               >
                 Insert
               </button>
               <input
-                aria-label="node-1"
+                className="w-30 form-control border border-dark "
+                type="number"
+                placeholder="Integer"
+                value={this.state.lastAddedToTree}
+                onChange={this.handleChange}
+              />
+            </div>
+
+            <div className="input-group w-80">
+              <button
+                type="button"
+                className="w-50 btn btn-secondary border border-dark "
+                onClick={() => this.removeNode()}
+              >
+                Remove
+              </button>
+              <input
                 className="w-30 form-control border border-dark "
                 type="number"
                 placeholder="Integer"

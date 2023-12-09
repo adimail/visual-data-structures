@@ -17,6 +17,63 @@ class TreeBackEnd {
     this.insertHelper(this.head, value);
   }
 
+  delete(value: number): void {
+    if (this.head === null) {
+      return;
+    }
+
+    let parentNode: NodeBackEnd | null = null;
+    let currentNode: NodeBackEnd | null = this.head;
+
+    while (currentNode !== null && currentNode.value !== value) {
+      parentNode = currentNode;
+
+      if (value < currentNode.value) {
+        currentNode = currentNode.left;
+      } else {
+        currentNode = currentNode.right;
+      }
+    }
+
+    if (currentNode === null) {
+      return;
+    }
+
+    if (currentNode.left === null && currentNode.right === null) {
+      if (parentNode === null) {
+        this.head = null;
+      } else if (parentNode.left === currentNode) {
+        parentNode.left = null;
+      } else {
+        parentNode.right = null;
+      }
+    } else if (currentNode.left !== null && currentNode.right !== null) {
+      const successor = this.findMin(currentNode.right);
+      this.delete(successor.value);
+      currentNode.value = successor.value;
+    } else {
+      // Node has one child
+      const childNode = currentNode.left ?? currentNode.right;
+
+      if (parentNode === null) {
+        // Deleting the root node
+        this.head = childNode;
+      } else if (parentNode.left === currentNode) {
+        parentNode.left = childNode;
+      } else {
+        parentNode.right = childNode;
+      }
+    }
+  }
+
+  private findMin(node: NodeBackEnd): NodeBackEnd {
+    let current = node;
+    while (current.left !== null) {
+      current = current.left;
+    }
+    return current;
+  }
+
   private insertHelper(node: NodeBackEnd, value: number): void {
     if (value > node.value) {
       if (node.right === null) {

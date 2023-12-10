@@ -1,13 +1,13 @@
 import { motion } from "framer-motion";
 
-export const Hashing = () => {
+export const Dijkstra = () => {
   return (
     <motion.div
       initial={{ opacity: 0, x: -50 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.8, ease: [0.68, -0.55, 0.27, 1.55] }}
     >
-      <h5>Path Finding Algorithm</h5>
+      <h5>Dijkstra's algorithm</h5>
       <hr />
       <div className="d-flex col-12">
         <div className="col-10">
@@ -65,7 +65,7 @@ function AlgorithmNavigation() {
           className="border border-black  form-select"
           id="inputGroupSelect01"
         >
-          <option value="bs">dijkstra's algorithm</option>
+          <option value="bs">Dijkstra's algorithm</option>
           <option value="is">A* Algorithm</option>
           <option value="hs">Depth First Search</option>
           <option value="hs">Breadth First Search</option>
@@ -123,4 +123,4 @@ function AlgorithmNavigation() {
     </div>
   );
 }
-export default Hashing;
+export default Dijkstra;

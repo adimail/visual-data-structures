@@ -5,6 +5,13 @@ import { scaleValue } from "../util/utils";
 import { defaultSettings } from "../util/constants";
 import { SortItem, TraceEntry, generateRandomNumbers } from "../util/Trace";
 import { algorithms } from "../Algorithms";
+import {
+  BsFillPlayFill,
+  BsFillPauseFill,
+  BsFillRewindFill,
+  BsFillFastForwardFill,
+} from "react-icons/bs";
+import "./style.css";
 
 interface ControlsProps {
   step: number;
@@ -18,6 +25,7 @@ interface ControlsProps {
   animation: boolean;
   setAnimation: React.Dispatch<React.SetStateAction<boolean>>;
   setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
+  currentAlgorithm: string;
 }
 
 const Controls = ({
@@ -180,22 +188,14 @@ const Controls = ({
             ))}
           </select>
         </div>
-        <button className="btn btn-success" onClick={toggleSorting}>
-          Toggle start and stop
-        </button>
-        <div className="d-flex gap-3">
-          <button
-            className="btn btn-outline-danger p-2 flex-fill"
-            onClick={() => skip(-32)}
-          >
-            {"< Backward"}
-          </button>
-          <button
-            className="btn btn-outline-danger p-2 flex-fill"
-            onClick={() => skip(32)}
-          >
-            {"Forward >"}
-          </button>
+        <div className="d-flex justify-content-around">
+          <BsFillRewindFill className="button" onClick={() => skip(-32)} />
+          {isSorting ? (
+            <BsFillPauseFill className="button" onClick={toggleSorting} />
+          ) : (
+            <BsFillPlayFill className="button" onClick={toggleSorting} />
+          )}
+          <BsFillFastForwardFill className="button" onClick={() => skip(32)} />
         </div>
       </div>
       <ExtendedControls

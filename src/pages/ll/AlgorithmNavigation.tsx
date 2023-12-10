@@ -20,6 +20,7 @@ interface AlgorithmNavigationProps {
   onInsertAfter: (targetValue: number, valueToInsert: number) => void;
   userInput: string;
   setUserInput: React.Dispatch<React.SetStateAction<string>>;
+  onAddMultipleValues: (values: number[]) => void;
 }
 
 export function AlgorithmNavigation({
@@ -33,9 +34,33 @@ export function AlgorithmNavigation({
   userInput,
   setUserInput,
   onRemove,
+  onAddMultipleValues,
 }: AlgorithmNavigationProps) {
   const targetValueInputRef = useRef<HTMLInputElement>(null);
   const valueToInsertInputRef = useRef<HTMLInputElement>(null);
+  const arrayInputRef = useRef<HTMLInputElement>(null);
+
+  const handleAddMultipleValues = () => {
+    const arrayInput = arrayInputRef.current?.value;
+
+    if (arrayInput) {
+      const valuesArray = arrayInput
+        .split(",")
+        .map((value) => parseFloat(value.trim()));
+
+      if (valuesArray.every((value) => !isNaN(value))) {
+        onAddMultipleValues(valuesArray);
+      } else {
+        console.error(
+          "Invalid input. Please enter valid numbers separated by commas."
+        );
+      }
+    } else {
+      console.error(
+        "Invalid input. Please enter valid numbers separated by commas."
+      );
+    }
+  };
 
   const handleInsertAfter = () => {
     const targetValue = targetValueInputRef.current?.value;
@@ -89,6 +114,24 @@ export function AlgorithmNavigation({
       </div>
       <hr />
       <nav className="gap-2 d-flex flex-column">
+        <div className="input-group w-80">
+          <button
+            type="button"
+            className="w-50 btn btn-secondary border border-dark"
+            onClick={handleAddMultipleValues}
+            data-bs-toggle="tooltip"
+            data-bs-placement="left"
+            title="Enter integers seperated by commas."
+          >
+            Insert Array
+          </button>
+          <input
+            ref={arrayInputRef}
+            className="w-30 form-control border border-dark"
+            type="text"
+            placeholder="Integers separated by comma"
+          />
+        </div>
         <input
           className="form-control border-dark"
           type="number"
@@ -96,7 +139,7 @@ export function AlgorithmNavigation({
           value={userInput}
           data-bs-toggle="tooltip"
           data-bs-placement="left"
-          title="Enter an integer here and you have the option to append it to either the start or the end of the linked list. Additionally, you can choose to remove that particular element from the list."
+          title="Enter an integer and you have options to insert it at the End or Start of the linked list. Also you can delete an element from here."
           onChange={(e) => setUserInput(e.target.value)}
         ></input>
         <div className="d-flex gap-3">

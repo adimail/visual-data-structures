@@ -158,17 +158,20 @@ const LinkedList = () => {
       <hr />
 
       <div className="d-flex col-12">
-        <div className="col-10">
-          <p>
-            {size === 0 ? (
-              <>
-                Data structure is empty.
-                <br />
-                Add elements using the control panel to the right of the page.
-              </>
-            ) : (
-              `Size of the ${listType}: ${size}`
-            )}
+        <div className="col-10 gap-3">
+          <p className="d-flex gap-4">
+            <div>
+              {size === 0 ? (
+                <>
+                  Data structure is empty.
+                  <br />
+                  Add elements using the control panel to the right of the page.
+                </>
+              ) : (
+                `Size of the ${listType}: ${size}`
+              )}
+            </div>
+            {listType === "Stack" && `Top: ${head?.value}`}
           </p>
           {listType === "Stack" && <ListADTStack head={head} />}
           {listType === "Queue" && <ListADTQueue head={head} />}

@@ -56,7 +56,6 @@ interface TreeTraversalVisualizerState {
   leafNodes: number;
   treeHeight: number;
   searchValue: string;
-  arrayInput: string;
   showModal: boolean;
   inOrderTraversal: number[];
   preOrderTraversal: number[];
@@ -78,7 +77,6 @@ class TreeTraversalVisualizer extends React.Component<
       treeSize: 0,
       leafNodes: 1,
       searchValue: "",
-      arrayInput: "",
       treeHeight: 1,
       showModal: true,
       inOrderTraversal: [],
@@ -92,10 +90,6 @@ class TreeTraversalVisualizer extends React.Component<
 
   handleChangeSearch(event: ChangeEvent<HTMLInputElement>) {
     this.setState({ searchValue: event.target.value });
-  }
-
-  handleChangeArray(event: ChangeEvent<HTMLInputElement>) {
-    this.setState({ arrayInput: event.target.value });
   }
 
   toggleModal = () => {
@@ -125,13 +119,14 @@ class TreeTraversalVisualizer extends React.Component<
       newTree.insert(Math.floor(Math.random() * 100) + 1);
     }
     const treeHeight = newTree.calculateTreeHeight(newTree.head);
-    this.setState({
+
+    this.setState((prevState) => ({
       tree: newTree,
-      nodes: this.state.tree.size(),
+      nodes: prevState.nodes, // Make sure to preserve other state properties
       treeSize: newTree.size(),
       leafNodes: newTree.countLeafNodes(),
       treeHeight: treeHeight,
-    });
+    }));
   }
 
   handleChange(event: ChangeEvent<HTMLInputElement>) {
@@ -139,33 +134,7 @@ class TreeTraversalVisualizer extends React.Component<
   }
 
   handleSubmit(event: FormEvent) {
-    if (this.state.arrayInput) {
-      // Split the array input string into an array of values
-      const values = this.state.arrayInput
-        .split(",")
-        .map((value) => parseInt(value.trim()));
-
-      // Check if the values are valid numbers
-      if (values.every((value) => !isNaN(value))) {
-        // Insert each value into the tree
-        values.forEach((value) => {
-          if (this.state.nodes < this.state.maxNodes) {
-            this.state.tree.insert(value);
-            this.setState({
-              leafNodes: this.state.tree.countLeafNodes(),
-              treeSize: this.state.tree.size(),
-              treeHeight: this.state.tree.calculateTreeHeight(
-                this.state.tree.head
-              ),
-            });
-          }
-        });
-      } else {
-        alert(
-          "Invalid values in the array. Please enter valid numbers separated by commas."
-        );
-      }
-    } else if (
+    if (
       parseInt(this.state.lastAddedToTree) &&
       this.state.nodes < this.state.maxNodes
     ) {
@@ -178,7 +147,7 @@ class TreeTraversalVisualizer extends React.Component<
     } else {
       let message =
         this.state.nodes === this.state.maxNodes
-          ? `Tree can hold only ${this.state.maxNodes} nodes. Adjust the MAX_NODES property using the slider on control panel`
+          ? `Tree can hold only ${this.state.maxNodes} nodes. Adjust the MAX_NODES property using the slider on control pannel`
           : "Enter a number, please!";
       alert(message);
     }
@@ -328,23 +297,6 @@ class TreeTraversalVisualizer extends React.Component<
                 className="w-50 btn btn-secondary border border-dark "
                 onClick={this.handleSubmit}
               >
-                Insert Array
-              </button>
-              <input
-                className="w-30 form-control border border-dark "
-                type="text"
-                placeholder="Integers separated by comma"
-                value={this.state.arrayInput}
-                onChange={(e) => this.handleChangeArray(e)}
-              />
-            </div>
-
-            <div className="input-group w-80">
-              <button
-                type="button"
-                className="w-50 btn btn-secondary border border-dark "
-                onClick={this.handleSubmit}
-              >
                 Insert
               </button>
               <input
@@ -445,188 +397,155 @@ class TreeTraversalVisualizer extends React.Component<
           onHide={this.toggleModal}
         >
           <Modal.Header closeButton>
-            <Modal.Title>Binary Search Tree</Modal.Title>
+            <Modal.Title>AVL Tree</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <div className="d-flex flex-column">
+              <h4>
+                Has few bugs, will fix soon! Send a PR over github{" "}
+                <a href="https://github.com/adimail/visual-data-structures">
+                  here
+                </a>{" "}
+                to help me build a AVL tree
+              </h4>
+              <br />
+              <br />
+              <br />
+              <br />
               <p>
-                The binary search tree also follows the properties of the binary
-                search. In binary search, all the elements in an array must be
-                in sorted order. We calculate the middle element in the binary
-                search in which the left part of the middle element contains the
-                value lesser than the middle value, and the right part of the
-                middle element contains the values greater than the middle
-                value. In Binary Search Tree, the middle element becomes the
-                root node, the right part becomes the right subtree, and the
-                left part becomes the left subtree. Therefore, we can say that
-                the binary search tree is a combination of a binary tree and
-                binary search.
+                An AVL tree is a self-balancing binary search tree where the
+                difference between heights of left and right subtrees cannot be
+                more than one. This difference is known as a balance factor. In
+                the AVL tree,{" "}
+                <strong>
+                  the values of balance factor could be either -1, 0 or 1.
+                </strong>
               </p>
-              Binary Search Tree is a node-based binary tree data structure
-              which has the following properties:
+              <p>
+                In order to perform this balancing, we perform the following
+                rotations on the unbalanced/imbalanced Binary Search Tree to
+                make it an AVL tree.
+              </p>
               <ol>
-                <li>
-                  The left subtree of a node contains only nodes with keys
-                  lesser than the nodes key.
-                </li>
-                <li>
-                  The right subtree of a node contains only nodes with keys
-                  greater than the nodes key.
-                </li>
-                <li>
-                  The left and right subtree each must also be a binary search
-                  tree.
-                </li>
+                <li>Left Rotation</li>
+                <li>Right Rotation</li>
+                <li>Left Right Rotation</li>
+                <li>Right Left Rotation</li>
               </ol>
             </div>
-            <hr />
-            <h5>This Tree</h5>
-            <div className="d-flex">
-              <div className="container d-flex gap-4">
-                <div>
-                  <h6>{`Number of nodes:`}</h6>
-                  <h6>{`Leaf Nodes:`}</h6>
-                  <h6>{`Tree Height:`}</h6>{" "}
-                </div>
-                <div>
-                  <h6>{this.state.treeSize}</h6>
-                  <h6>{this.state.leafNodes}</h6>
-                  <h6>{this.state.treeHeight}</h6>{" "}
-                </div>
-              </div>
-
-              <div className="container d-flex gap-4">
-                <div>
-                  <h6>{`Inorder Traversal:`}</h6>
-                  <h6>{`Pre-order Traversal:`}</h6>
-                  <h6>{`Post-order Traversal:`}</h6>{" "}
-                </div>
-                <div>
-                  <h6>{"Left -> Root -> Right"}</h6>
-                  <h6>{"Root -> Left -> Right"}</h6>
-                  <h6>{"Left -> Right -> Root"}</h6>
-                </div>
-              </div>
-            </div>
-            <hr />
-            <h5>Properties of binary search tree</h5>
-            <div>
-              <ul>
-                <li>
-                  The maximum number of nodes at level ‘n’ of a binary tree is 2{" "}
-                  <sup>n</sup>
-                </li>
-                <li>
-                  The Maximum number of nodes in a binary tree of height ‘h’ is
-                  2 <sup>h</sup> – 1:
-                </li>
-                <li>
-                  In a Binary Tree with N nodes, the minimum possible height or
-                  the minimum number of levels is Log2(N+1):
-                </li>
-                <li>
-                  A Binary Tree with L leaves has at least | Log2L |+ 1 levels
-                </li>
-                <li>
-                  In a non-empty binary tree, if n is the total number of nodes
-                  and e is the total number of edges, then e = n-1
-                </li>
-              </ul>
-              <p>
-                Each node of a Binary Search Tree (BST) stores a piece of data.
-                Part of that data is the key by which the BST is organized. Each
-                node in the BST has below it a left subtree and a right subtree.
-                <br />
-                <ul>
-                  <li>
-                    The topmost node is called the <strong>root</strong>
-                  </li>
-                  <li>
-                    node with no subtrees is called a <strong>leaf</strong>
-                  </li>
-                  <li>
-                    For a node, x, with key, k, every key in x's left subtree is
-                    less than or equal to k, and every key in x's right subtree
-                    is greater than or equal to k.
-                  </li>
-                </ul>
-                Note that the definition permits duplicate keys. Some BSTs don't
-                permit duplicate keys. Whether to permit duplicate keys depends
-                upon the application that uses the BST.
-              </p>
+            <div className="d-flex justify-content-center">
               <img
-                src="https://www.mit.edu/~6.005/sp11/psets/ps2/Figure%201.png" // Replace with the actual URL to your image
-                alt="Sorting Algorithm Image"
-                style={{ display: "block", margin: "auto", width: "60%" }}
+                src="https://qph.cf2.quoracdn.net/main-qimg-33982a51424452d19d8c7fcecc338266"
+                alt=""
               />
             </div>
             <hr />
-            <h5>Implementing a BST</h5>
+            <h5>A BST is a data structure composed of nodes.</h5>
+            <p>It has the following guarantees:</p>
+            <ul>
+              <li>Each tree has a root node (at the top)</li>
+              <li>The root node has zero, one, or two child nodes</li>
+              <li>Each child node has zero, one, or two child nodes</li>
+              <li>Each node has up to two children</li>
+              <li>
+                For each node, its left descendants are less than the current
+                node, which is less than the right descendants
+              </li>
+            </ul>
+
+            <hr />
+
+            <h5>AVL trees have an additional guarantee:</h5>
             <p>
-              <ul>
-                <li>
-                  The navigation can be done recursively roughly as:
-                  <ol>
-                    <li>if this node is NULL then return false</li>
-                    <li>
-                      else if this node's key matches the search key then copy
-                      the item at this node and return true
-                    </li>
-                    <li>
-                      else if this node's key is less than the search key then
-                      recursively search the right subtree
-                    </li>
-                    <li>else recursively search the left subtree</li>
-                  </ol>
-                </li>
-                <li>
-                  Insertion <br />
-                  Insert can uses a very similar navigation through the tree as
-                  search. However, for variety we can see how insert can be
-                  implemented iteratively:
-                  <ol>
-                    <li>
-                      special case if the tree is empty --- allocate a leaf node
-                      and make root point to it
-                    </li>
-                    <li>otherwise, make a pointer, t, to the root</li>
-                    <li>
-                      While t is not NULL and the key of t is not a match with
-                      the insert key
-                      <ol>
-                        <li>
-                          if t's key is less than the insert key then let t
-                          point to its right child
-                        </li>
-                        <li>
-                          if t's key is greater than the insert key then let t
-                          point to its left child
-                        </li>
-                      </ol>
-                    </li>
-                    <li>
-                      if a match was not found than allocate a new leaf for the
-                      insertion.
-                    </li>
-                  </ol>
-                </li>
-                <li>
-                  Deletion <br />
-                  There are three cases we need to consider for deletion:
-                  <ol>
-                    <li>Deleting a leaf --- simply remove it:</li>
-                    <li>
-                      Deleting a node with one child --- remove it and move its
-                      child (the subtree rooted at its child) up
-                    </li>
-                    <li>
-                      Deleting a node with two children --- swap with the
-                      smallest keyed-child in its right subtree, then remove
-                    </li>
-                  </ol>
-                </li>
-              </ul>
+              The difference between the depth of right and left sub-trees
+              cannot be more than one. This difference is called the balance
+              factor.
             </p>
+            <p>
+              In order to maintain this guarantee, an implementation of an AVL
+              will include an algorithm to rebalance the tree when adding an
+              additional element would upset this guarantee.
+            </p>
+
+            <p>
+              AVL trees have a worst case lookup, insert, and delete time of
+              O(log n), where n is the number of nodes in the tree. The worst
+              case space complexity is O(n).
+            </p>
+            <hr />
+            <h5>AVL Insertion Process</h5>
+            <p>
+              Insertion in an AVL tree is similar to insertion in a binary
+              search tree. But after inserting and element, you need to fix the
+              AVL properties using left or right rotations:
+            </p>
+            <ul>
+              <li>
+                If there is an imbalance in the left child's right sub-tree,
+                perform a left-right rotation
+              </li>
+              <li>
+                If there is an imbalance in the left child's left sub-tree,
+                perform a right rotation
+              </li>
+              <li>
+                If there is an imbalance in the right child's right sub-tree,
+                perform a left rotation
+              </li>
+              <li>
+                If there is an imbalance in the right child's left sub-tree,
+                perform a right-left rotation
+              </li>
+            </ul>
+            <hr />
+            <h5>AVL Tree Rotations</h5>
+            <p>
+              In AVL trees, after each operation like insertion and deletion,
+              the balance factor of every node needs to be checked. If every
+              node satisfies the balance factor condition, then the operation
+              can be concluded. Otherwise, the tree needs to be rebalanced using
+              rotation operations.
+            </p>
+
+            <p>
+              There are four rotations and they are classified into two types:
+            </p>
+            <ol>
+              <li>
+                <strong>Left Rotation (LL Rotation):</strong> In left rotations,
+                every node moves one position to the left from the current
+                position.
+                <img
+                  src="https://raw.githubusercontent.com/HebleV/valet_parking/master/images/avl_left_rotation.jpg"
+                  alt=""
+                />
+              </li>
+              <li>
+                <strong>Right Rotation (RR Rotation): </strong> In right
+                rotations, every node moves one position to right from the
+                current position.
+                <img
+                  src="https://raw.githubusercontent.com/HebleV/valet_parking/master/images/avl_right_rotation.jpg"
+                  alt=""
+                />
+              </li>
+              <li>
+                <strong>Left-Right Rotation (LR Rotation): </strong> Left-right
+                rotations are a combination of a single left rotation followed
+                by a single right rotation. First, every node moves one position
+                to the left, then one position to the right from the current
+                position.
+              </li>
+              <li>
+                <strong>Right-Left Rotation (RL Rotation): </strong> Right-left
+                rotations are a combination of a single right rotation followed
+                by a single left rotation. First, every node moves one position
+                to the right then, then one position to the left from the
+                current position.
+              </li>
+            </ol>
+
+            <h5>Properties</h5>
           </Modal.Body>
         </Modal>
       </div>

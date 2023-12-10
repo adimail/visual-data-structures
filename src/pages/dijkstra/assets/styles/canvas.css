@@ -1,0 +1,59 @@
+.DroppableArea {
+    position: relative;
+    width: 800px;
+    height: 400px;
+}
+
+.RA-Container {
+    width: 800px;
+}
+
+.DraggableNode {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+
+    border: black solid 2px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: move;
+}
+
+.DraggableNode span {
+    color: black;
+    font-weight: bold;
+}
+
+.left-arrow {
+    position: fixed;
+    top: 375px;
+    left: 17.5rem;
+}
+
+.right-arrow {
+    position: fixed;
+    top: 375px;
+    right: 17.5rem;
+}
+
+@media (max-width: 1600px) {
+    .left-arrow {
+        left: 8rem;
+    }
+
+    .right-arrow {
+        right: 8rem;
+    }
+}
+
+@media (max-height: 900px) {
+    .left-arrow {
+        top: 50%;
+    }
+
+    .right-arrow {
+        top: 50%;
+    }
+}

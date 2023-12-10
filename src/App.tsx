@@ -14,7 +14,7 @@ function App() {
   return (
     <>
       <h2 className="text-primary py-2 text-center bg-dark">
-        Data structure Visualizer
+        Data structure Playground
       </h2>
 
       <div className="d-flex flex-column flex-grow-1">
@@ -37,6 +37,8 @@ function SideMenu() {
     { key: "list-adt", label: "List ADT" },
     { key: "sort", label: "Sorting" },
     { key: "bst", label: "Binary search tree" },
+    { key: "avl", label: "Avl Tree" },
+    { key: "dijkstra", label: "Dijkstra's algorithm" },
     { key: "path", label: "Path finding" },
     { key: "hashing", label: "Hashing Algoithm" },
   ];

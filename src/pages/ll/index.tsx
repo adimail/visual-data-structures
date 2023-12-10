@@ -128,6 +128,12 @@ const LinkedList = () => {
     setHead(null);
   };
 
+  const handleAddMultipleValues = (values: number[]) => {
+    values.forEach((value) => {
+      push(head, setHead, value);
+    });
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, x: -50 }}
@@ -161,6 +167,7 @@ const LinkedList = () => {
             onPopFront={handlePopFront}
             onReverse={handleReverse}
             onClear={handleClear}
+            onAddMultipleValues={handleAddMultipleValues}
             onInsertAfter={handleInsertAfter}
             userInput={userInput}
             setUserInput={setUserInput}

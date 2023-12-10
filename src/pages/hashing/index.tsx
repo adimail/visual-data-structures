@@ -12,15 +12,12 @@ export const Hashing = () => {
       <div className="d-flex col-12">
         <div className="col-10">
           <p>
-            A Binary Search Tree (BST) is a binary tree data structure where
-            each node has at most two children, and the left child is smaller,
-            and the right child is greater than the node. This structure enables
-            efficient search, insertion, and deletion operations. BSTs find
-            applications in symbol tables, databases, and compilers due to their
-            balanced nature, providing logarithmic time complexity for these
-            operations.
+            Hashing is a technique that is used to quickly identify a specific
+            value within a given array. It works by creating a unique hash code
+            for each element in the array and then stores the hash code in lieu
+            of the actual element. This allows for very fast data access as the
+            index value behaves as a key for the data value.
           </p>
-          <canvas className="bg-black h-55 w-50"></canvas>
         </div>
         <div
           className="mw-30 col-2"
@@ -53,25 +50,6 @@ function AlgorithmNavigation() {
 
   return (
     <div className="gap-2 d-flex flex-column">
-      <div className="input-group ">
-        <button
-          type="button"
-          className="border border-dark btn btn-warning"
-          data-bs-toggle="tooltip"
-          data-bs-placement="left"
-          title="Select the Tree Traversal Technique"
-        >
-          Transverse
-        </button>
-        <select
-          className="border border-black  form-select"
-          id="inputGroupSelect01"
-        >
-          <option value="bs">Inorder</option>
-          <option value="is">Pre-order</option>
-          <option value="hs">Pre-order</option>
-        </select>
-      </div>
       <div className="input-group w-80">
         <button
           type="button"

@@ -16,12 +16,12 @@ Required: Node.js Version 18+
 
 ## Code snippets
 
-![Home Page](src\assets\ss\home.png)
-![Linked List](src\assets\ss\ll.png)
-![List ADT](src\assets\ss\l-adt.png)
-![Sorting Algorithm](src\assets\ss\sort.png)
-![Binary Search Tree](src\assets\ss\bst.png)
-![AVL Tree](src\assets\ss\avl.png)
+![Home Page](src/assets/ss/home.png)
+![Linked List](src/assets/ss/ll.png)
+![List ADT](src/assets/ss/l-adt.png)
+![Sorting Algorithm](src/assets/ss/sort.png)
+![Binary Search Tree](src/assets/ss/bst.png)
+![AVL Tree](src/assets/ss/avl.png)
 
 ## How to use this site
 

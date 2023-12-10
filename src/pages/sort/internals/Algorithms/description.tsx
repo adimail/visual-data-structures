@@ -1,3 +1,5 @@
+import { ReactElement } from "react";
+
 export const algorithmDisplayNames: Record<
   string,
   {

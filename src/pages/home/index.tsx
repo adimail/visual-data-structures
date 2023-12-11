@@ -13,9 +13,9 @@ export const HomeMenu = () => {
       <div className="d-flex align-items-center">
         <div style={{ flex: 4 }}>
           <p>
-            Welcome to Data Structure Playground. You can use this static site
-            as a simulator to visualize the Data Structures and Algorithms such
-            as{" "}
+            Welcome to the Data Structure Playground. You can use this static
+            site as a simulator to visualize Data Structures and Algorithms,
+            such as{" "}
             <i>
               Linked lists, list ADTs, Sorting Algorithms, binary search trees,
               AVL trees, B+ trees, pathfinding Algorithms, and Hashing
@@ -28,9 +28,10 @@ export const HomeMenu = () => {
             <a href="https://github.com/adimail/classroom">here</a>.
           </p>
           <p>
-            To get better experience, you can zoom out using{" "}
-            <code>ctrl + -</code> so that all content can fit on single page
-            including the nacvigation bar and control panel
+            To get a better experience, you can zoom out using{" "}
+            <code>ctrl + -</code> so that all content can fit on a single page,
+            including the navigation bar and control panel. Use a desktop for
+            the best experience.
           </p>
           <p>
             NOTE: This is not an implementation of the data structure itself in
@@ -46,22 +47,22 @@ export const HomeMenu = () => {
       </div>
 
       <hr />
-      <h6>Developers note</h6>
+      <h6>Developer's Note</h6>
       <p>
-        This project is my attempt in learning typescript and react framework
+        This project is my attempt to learn TypeScript and the React framework
         for building interactive web applications.
       </p>
       <p>
-        Tools used in building this includes React as the frontend framework,
-        bootstrap for UI (modals, tooltips, buttons, progress-bars and icons),
-        framer motion for animations, animejs and immer.
+        Tools used in building this include React as the frontend framework,
+        Bootstrap for UI (modals, tooltips, buttons, progress-bars, and icons),
+        Framer Motion for animations, Anime.js, and Immer.
       </p>
       <p>
-        You can raise any notable issues{" "}
+        You can report any notable issues{" "}
         <a href="https://github.com/adimail/visual-data-structures/issues">
           here
         </a>{" "}
-        and help contribute to this project.
+        and contribute to this project.
       </p>
       <p></p>
     </motion.div>

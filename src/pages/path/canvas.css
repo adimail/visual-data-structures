@@ -1,0 +1,48 @@
+.DroppableArea {
+    position: relative;
+    width: 95%;
+    height: 32rem;
+    margin-right: 30px;
+}
+
+.starting-node{
+    fill: rgb(145, 105, 53);
+}
+
+.canvas {
+    width: 100%;
+    height: 35rem;
+    box-shadow: 0 0 10px rgba(70, 70, 70, 0.4);
+    border-radius: 9px;
+  }
+  
+
+.DraggableNode {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+
+    border: black solid 2px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: move;
+}
+
+.DraggableNode span {
+    color: black;
+    font-weight: bold;
+}
+
+.left-arrow {
+    position: fixed;
+    top: 375px;
+    left: 17.5rem;
+}
+
+.right-arrow {
+    position: fixed;
+    top: 375px;
+    right: 17.5rem;
+}

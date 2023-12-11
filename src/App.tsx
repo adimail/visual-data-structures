@@ -14,7 +14,7 @@ function App() {
   return (
     <>
       <h2 className="text-primary py-2 text-center bg-dark">
-        Data structure Playground
+        Data structure visualizer
       </h2>
 
       <div className="d-flex flex-column flex-grow-1">

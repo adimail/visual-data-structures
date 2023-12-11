@@ -39,23 +39,28 @@ const DijkstrasAlgorithmCanvas: React.FC = () => {
   };
 
   useEffect(() => {
-    // ursa major, cause why not. I love stars
+    // Orion constellation, cause why not. I love stars
     const initialNodes: Node[] = [
-      { id: "A", x: 36, y: 40 },
-      { id: "S", x: 230, y: 40 },
-      { id: "K", x: 420, y: 100 },
-      { id: "s", x: 680, y: 140 },
-      { id: "I", x: 630, y: 280 },
-      { id: "H", x: 460, y: 260 },
+      { id: "A", x: 68, y: 68 },
+      { id: "S", x: 239, y: 24 },
+      { id: "N", x: 97, y: 340 },
+      { id: "C", x: 543, y: 122 },
+      { id: "O", x: 546, y: 229 },
+      { id: "F", x: 539, y: 346 },
+      { id: "a", x: 1000, y: 52 },
+      { id: "H", x: 963, y: 429 },
     ];
 
     const initialEdges: Edge[] = [
-      { id: "SA", startNodeId: "S", endNodeId: "A", weight: 2 },
-      { id: "SK", startNodeId: "S", endNodeId: "K", weight: 2 },
-      { id: "Ks", startNodeId: "K", endNodeId: "s", weight: 2 },
-      { id: "sI", startNodeId: "s", endNodeId: "I", weight: 2 },
-      { id: "HI", startNodeId: "H", endNodeId: "I", weight: 2 },
-      { id: "KH", startNodeId: "K", endNodeId: "H", weight: 2 },
+      { id: "SC", startNodeId: "S", endNodeId: "C", weight: 4 },
+      { id: "Ca", startNodeId: "C", endNodeId: "a", weight: 6 },
+      { id: "CO", startNodeId: "C", endNodeId: "O", weight: 1 },
+      { id: "FO", startNodeId: "F", endNodeId: "O", weight: 1 },
+      { id: "AS", startNodeId: "A", endNodeId: "S", weight: 2 },
+      { id: "AN", startNodeId: "A", endNodeId: "N", weight: 3 },
+      { id: "NF", startNodeId: "N", endNodeId: "F", weight: 7 },
+      { id: "aH", startNodeId: "a", endNodeId: "H", weight: 9 },
+      { id: "HF", startNodeId: "H", endNodeId: "F", weight: 6 },
     ];
 
     setNodes(initialNodes);

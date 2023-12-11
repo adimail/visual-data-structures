@@ -1,12 +1,17 @@
 .DroppableArea {
     position: relative;
-    width: 800px;
-    height: 400px;
+    width: 95%;
+    height: 32rem;
+    margin-right: 30px;
 }
 
-.RA-Container {
-    width: 800px;
-}
+.canvas {
+    width: 100%;
+    height: 32rem;
+    box-shadow: 0 0 10px rgba(70, 70, 70, 0.4);
+    border-radius: 9px;
+  }
+  
 
 .DraggableNode {
     position: absolute;
@@ -36,24 +41,4 @@
     position: fixed;
     top: 375px;
     right: 17.5rem;
-}
-
-@media (max-width: 1600px) {
-    .left-arrow {
-        left: 8rem;
-    }
-
-    .right-arrow {
-        right: 8rem;
-    }
-}
-
-@media (max-height: 900px) {
-    .left-arrow {
-        top: 50%;
-    }
-
-    .right-arrow {
-        top: 50%;
-    }
 }

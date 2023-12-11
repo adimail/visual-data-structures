@@ -17,6 +17,7 @@ function AnimatedRouts() {
     <AnimatePresence>
       <Routes location={location} key={location.pathname}>
         <Route path="/" element={<HomeMenu />} />
+        <Route path="visual-data-structures" element={<HomeMenu />} />
         <Route path="list-adt" element={<ListADT />} />
         <Route path="ll" element={<LinkedList />} />
         <Route path="bst" element={<BinarySearchTreePage />} />
@@ -25,6 +26,17 @@ function AnimatedRouts() {
         <Route path="dijkstra" element={<Dijkstra />} />
         <Route path="hashing" element={<Hashing />} />
         <Route path="avl" element={<AVLTreePage />} />
+        <Route path="visual-data-structures/list-adt" element={<ListADT />} />
+        <Route path="visual-data-structures/ll" element={<LinkedList />} />
+        <Route
+          path="visual-data-structures/bst"
+          element={<BinarySearchTreePage />}
+        />
+        <Route path="visual-data-structures/path" element={<PathFinder />} />
+        <Route path="visual-data-structures/sort" element={<Sorting />} />
+        <Route path="visual-data-structures/dijkstra" element={<Dijkstra />} />
+        <Route path="visual-data-structures/hashing" element={<Hashing />} />
+        <Route path="visual-data-structures/avl" element={<AVLTreePage />} />
       </Routes>
     </AnimatePresence>
   );

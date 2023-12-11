@@ -48,13 +48,13 @@ export const HomeMenu = () => {
       <hr />
       <h6>Developers note</h6>
       <p>
-        This project my attempt in learning typescript and react framework for
-        building interactive web applications.
+        This project is my attempt in learning typescript and react framework
+        for building interactive web applications.
       </p>
       <p>
         Tools used in building this includes React as the frontend framework,
-        bootstrap for UI (modals, tooltips, buttons, and icons), framer motion
-        for animations, animejs and immer.
+        bootstrap for UI (modals, tooltips, buttons, progress-bars and icons),
+        framer motion for animations, animejs and immer.
       </p>
       <p>
         You can raise any notable issues{" "}

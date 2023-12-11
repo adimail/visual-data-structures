@@ -19,6 +19,7 @@ export const Hashing = () => {
             weight. Weights can be anything measured, such as time, distance,
             capacity, or cost.
           </p>
+          <h2>Work in progress...</h2>
         </div>
         <div
           className="mw-30 col-2"

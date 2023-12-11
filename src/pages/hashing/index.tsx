@@ -18,6 +18,7 @@ export const Hashing = () => {
             of the actual element. This allows for very fast data access as the
             index value behaves as a key for the data value.
           </p>
+          <h2>Work in progress...</h2>
         </div>
         <div
           className="mw-30 col-2"

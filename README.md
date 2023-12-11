@@ -34,10 +34,10 @@ Please excuse the poor structure of my code and components. I am a beginner who'
    - Quick Sort
    - Merge Sort
    - Bubble Sort
-4. **Binary Search Tree:** Perform CRUD operations, calculate size, leaf nodes, tree height, and get in-order, pre-order, post-order, depth-first, and breadth-first traversal. Insert multiple elements at once.
-5. **AVL Tree:** Work in progress for balancing. Perform CRUD operations, but note that the tree is currently unbalanced.
-6. **Dijkstra's Path Finding Algorithm:** Click on the canvas to add nodes, select nodes to add edges, adjust weights and delete nodes and edges. Tip: Press `Ctrl + Enter` to connect nodes. This was the first reason for me to build a data structure visualizer project. I was tired of building adjacency matrix and lists on console using cpp, so my goal is to complete this project before my 3rd semester ends.
-   **Inspiration:** Came across [visualgo](https://visualgo.net/en) and was inspired by their educational visualizations. Planning to visualize hashing algorithms for beginners.
+4. Binary Search Tree: We can perform CURD operations on the tree, calculate the size, number of leaf nodes, tree height, get its in-order, pre-order, post-order, depth-first and breadth-first traversal. You can also insert multiple elements at one time.
+5. _AVL tree: The tree is not yet balanced and I am working on the rotation algorithm. You can still perform CURD operations, but the load factor goes beyond the desired range and tree is unbalanced_
+6. _Dijkstra's Path Finding Algorithm: This was the first reason for me to build a data structure visualizer project. I was tired of building adjacency matrix and lists on console using cpp, so my goal is to complete this project before my 3rd semester ends. Currently working on dragable node and canvas_
+7. _I came across [visualgo](https://visualgo.net/en) where I was quite attracted to their educational visualizations, and thought hashing algorithms can also be visualized to help better understand them for begineers_
 
 ## To-Do List
 
@@ -46,9 +46,7 @@ Please excuse the poor structure of my code and components. I am a beginner who'
 - Hashing algorithm
 - Implement "Insert after" function in linked list
 - Implement Doubly and circular linked list
-- Integrate the Howler library for adding sound effects in the sorting visualizer
-- Fix bugs in the dragable node component (Dijkstra's Algorithm)
-- Implement Dijkstra's Algorithm
+- Figure out howler library to add sound effects in sorting visualizer
 
 ## Contributing
 

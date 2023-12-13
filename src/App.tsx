@@ -71,11 +71,23 @@ function Content() {
     }
   }, [location.pathname]);
 
-  return (
-    <div className="w-100 mx-4 fade-transition" ref={contentRef}>
-      <AnimatedRouts />
-    </div>
-  );
+  const is404 =
+    location.pathname !== "/visual-data-structures/" &&
+    !location.pathname.startsWith("/visual-data-structures/");
+
+  if (is404) {
+    return (
+      <div>
+        <p>Page you are looking for does not exist</p>
+      </div>
+    );
+  } else {
+    return (
+      <div className="w-100 mx-4 fade-transition">
+        <AnimatedRouts />
+      </div>
+    );
+  }
 }
 
 export default App;

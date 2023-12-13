@@ -10,6 +10,8 @@ interface DraggableNodeProps {
   onClick: (selected: boolean, ctrlKey: boolean) => void;
   disableDragging?: boolean;
   startingNode: boolean;
+  highlighted: boolean;
+  currentNode: string | null;
 }
 
 const DraggableNode: React.FC<DraggableNodeProps> = ({
@@ -21,6 +23,8 @@ const DraggableNode: React.FC<DraggableNodeProps> = ({
   onClick,
   disableDragging = false,
   startingNode,
+  highlighted,
+  currentNode,
 }) => {
   const nodeRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -67,27 +71,28 @@ const DraggableNode: React.FC<DraggableNodeProps> = ({
   }, [onDrag, isDragging, dragOffset]);
 
   const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
-    // Check if the Ctrl key is pressed
     const ctrlKey = event.ctrlKey || event.metaKey;
-
-    // Call the parent component's onClick function with selected and ctrlKey
     onClick(!selected, ctrlKey);
-
-    // Prevent the default behavior of the click event
     event.preventDefault();
   };
 
   return (
     <div
-      className={`DraggableNode ${startingNode ? "starting-node" : ""}`}
+      className={`DraggableNode ${startingNode ? "starting-node" : ""} ${
+        highlighted ? "highlighted-node" : ""
+      } ${currentNode === nodeId ? "current-node" : ""}`}
       onClick={handleClick}
       ref={nodeRef}
       style={{
-        backgroundColor: startingNode
-          ? "orange"
-          : selected
-          ? "lightblue"
-          : "#fff",
+        backgroundColor:
+          currentNode === nodeId
+            ? "lightblue"
+            : startingNode
+            ? "orange"
+            : selected
+            ? "lightblue"
+            : "#fff",
+        border: highlighted ? "2px solid red" : "1px solid black",
         left: x,
         top: y,
         position: "absolute",
@@ -95,7 +100,7 @@ const DraggableNode: React.FC<DraggableNodeProps> = ({
       }}
       draggable={!disableDragging}
     >
-      <span>{nodeId}</span>
+      <span>{currentNode === nodeId ? <strong>{nodeId}</strong> : nodeId}</span>
     </div>
   );
 };

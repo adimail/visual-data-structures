@@ -11,6 +11,20 @@ import Dijkstra from "../pages/dijkstra";
 import { Route, Routes, useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 
+function NotFound() {
+  return (
+    <div className="container">
+      <h3>Page you are looking for does not exist</h3>
+      <br />
+      <p>
+        Click{" "}
+        <a href="https://adimail.github.io/visual-data-structures/"> Here </a>
+        to return to home menu
+      </p>
+    </div>
+  );
+}
+
 function AnimatedRouts() {
   const location = useLocation();
   return (
@@ -37,6 +51,7 @@ function AnimatedRouts() {
         <Route path="visual-data-structures/dijkstra" element={<Dijkstra />} />
         <Route path="visual-data-structures/hashing" element={<Hashing />} />
         <Route path="visual-data-structures/avl" element={<AVLTreePage />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </AnimatePresence>
   );

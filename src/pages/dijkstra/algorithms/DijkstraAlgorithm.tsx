@@ -10,10 +10,7 @@ interface DijkstraResult {
 }
 
 // Update the distance vector for each node in the network
-export const dijkstraAlgorithm = (
-  graph: any,
-  startNode: string
-): DijkstraResult => {
+const dijkstraAlgorithm = (graph: any, startNode: string): DijkstraResult => {
   const convertedGraph = convertCanvasGraphOutput(graph);
   return dijkstra(convertedGraph, startNode);
 };
@@ -179,3 +176,6 @@ export function convertCanvasGraphOutput(graph: any): Graph {
 
   return newGraph;
 }
+
+export type { DijkstraResult };
+export { dijkstraAlgorithm };

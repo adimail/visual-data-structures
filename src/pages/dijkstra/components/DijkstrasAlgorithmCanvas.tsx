@@ -1,18 +1,25 @@
 import { useEffect } from "react";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import { Tooltip } from "bootstrap";
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, SetStateAction, Dispatch } from "react";
 import DraggableNode from "./dragablenode";
-import Edge from "./edge"; // assuming this is the correct path
+import Edge from "./edge";
 import "../canvas.css";
-
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Modal } from "react-bootstrap";
+import { FaArrowRight, FaArrowLeft } from "react-icons/fa";
 
 interface Node {
   id: string;
   x: number;
   y: number;
+}
+
+interface DijkstraResult {
+  distances: { [key: string]: number };
+  path: string[];
+  prev: { [key: string]: string | undefined };
+  steps: { table: any[]; text: string }[];
 }
 
 interface Edge {
@@ -22,6 +29,174 @@ interface Edge {
   weight: number;
 }
 
+interface Graph {
+  [key: string]: { [key: string]: number };
+}
+
+const initialNodes: Node[] = [
+  { id: "S", x: 230, y: 40 },
+  { id: "H", x: 460, y: 260 },
+  { id: "I", x: 630, y: 280 },
+  { id: "A", x: 36, y: 40 },
+  { id: "K", x: 420, y: 100 },
+  { id: "s", x: 680, y: 140 },
+];
+
+const initialEdges: Edge[] = [
+  { id: "SA", startNodeId: "S", endNodeId: "A", weight: 2 },
+  { id: "Ks", startNodeId: "K", endNodeId: "s", weight: 2 },
+  { id: "HI", startNodeId: "H", endNodeId: "I", weight: 2 },
+  { id: "SK", startNodeId: "S", endNodeId: "K", weight: 2 },
+  { id: "sI", startNodeId: "s", endNodeId: "I", weight: 2 },
+  { id: "KH", startNodeId: "K", endNodeId: "H", weight: 2 },
+];
+
+function convertCanvasGraphOutput(graph: any): Graph {
+  let nodes = graph.nodes;
+  let edges = graph.edges;
+  let newGraph: Graph = {};
+
+  for (let i = 0; i < nodes.length; i++) {
+    const currentNodeId = nodes[i].id;
+    newGraph[currentNodeId] = {};
+  }
+
+  for (let j = 0; j < edges.length; j++) {
+    let currentEdge = edges[j];
+
+    newGraph[currentEdge.startNodeId][currentEdge.endNodeId] =
+      currentEdge.weight;
+    newGraph[currentEdge.endNodeId][currentEdge.startNodeId] =
+      currentEdge.weight;
+  }
+
+  return newGraph;
+}
+
+const dijkstraAlgorithm = (graph: any, startNode: string) => {
+  const convertedGraph = convertCanvasGraphOutput(graph);
+  return dijkstra(convertedGraph, startNode);
+};
+
+function calculateMinDistance(
+  queue: string[],
+  distances: { [key: string]: number }
+): string | undefined {
+  let min_distance = Infinity;
+  let min_node: string | undefined = undefined;
+
+  for (let node of queue) {
+    if (distances[node] < min_distance) {
+      min_node = node;
+      min_distance = distances[node];
+    }
+  }
+
+  return min_node;
+}
+
+function dijkstra_path_calculator(
+  startNode: string,
+  graph: Graph,
+  prev: { [key: string]: string | undefined }
+): string[] {
+  let path: string[] = [];
+
+  for (const node in graph) {
+    let path_string = ``;
+    if (node === startNode) {
+      path_string = node;
+    } else {
+      let temp_node = node;
+      path_string = ` ${temp_node} `;
+      while (startNode !== temp_node) {
+        temp_node = prev[temp_node]!;
+        if (temp_node === undefined) {
+          temp_node = startNode;
+        }
+        path_string += ` ${temp_node} `;
+      }
+    }
+    path.push(path_string);
+  }
+
+  return path;
+}
+
+function dijkstra(graph: Graph, startNode: string) {
+  let distances: { [key: string]: number } = {};
+  let visited: { [key: string]: boolean } = {};
+  let queue: string[] = [];
+  let prev: { [key: string]: string | undefined } = {};
+
+  let table: any[] = [];
+  let steps: { table: any[]; text: string }[] = [];
+
+  for (const node in graph) {
+    distances[node] = Infinity;
+    visited[node] = false;
+    prev[node] = undefined;
+    queue.push(node);
+  }
+  distances[startNode] = 0;
+
+  while (queue.length) {
+    let currentNode = calculateMinDistance(queue, distances)!;
+    queue.splice(queue.indexOf(currentNode), 1);
+
+    if (visited[currentNode]) continue;
+
+    visited[currentNode] = true;
+
+    let neighbor_text = ``;
+    for (let neighbor in graph[currentNode]) {
+      let distance = distances[currentNode] + graph[currentNode][neighbor];
+
+      if (distance < distances[neighbor]) {
+        neighbor_text +=
+          `We find that the distance from ${currentNode} to ${neighbor} is closer than` +
+          ` the value in the table therefore we changed value ${distances[neighbor]} to ${distance}. ` +
+          `Explanation: We do this ` +
+          `by comparing the shortest distance to ${neighbor} in the table compared to the closest distance ` +
+          `to ${neighbor} from ${currentNode} + distance to ${currentNode}.` +
+          `\n\n`;
+
+        distances[neighbor] = distance;
+        prev[neighbor] = currentNode;
+      }
+    }
+    table = [
+      Object.keys(distances),
+      Object.values(visited),
+      Object.values(distances),
+      Object.values(prev),
+    ];
+    let text =
+      `Currently, we are evaluating node ${currentNode} and we updated the table accordingly. We have ` +
+      `visited the neighbors of ${currentNode} which are ${Object.keys(
+        graph[currentNode]
+      )}. `;
+
+    if (neighbor_text.length > 0) {
+      text = text + `\n\n` + neighbor_text;
+    } else {
+      text =
+        text +
+        `\n\nWe did not find that the distance from ${currentNode} to its neighbors` +
+        ` (${Object.keys(
+          graph[currentNode]
+        )}) is closer than the values already in the table, therefore we ` +
+        `did not change any values in the table`;
+    }
+
+    steps.push({ table, text });
+  }
+
+  const path = dijkstra_path_calculator(startNode, graph, prev);
+
+  return { distances, path, prev, steps };
+}
+
 const DijkstrasAlgorithmCanvas: React.FC = () => {
   const [showModal, setShowModal] = useState(true);
   const [nodes, setNodes] = useState<Node[]>([]);
@@ -29,35 +204,110 @@ const DijkstrasAlgorithmCanvas: React.FC = () => {
   const [selectedNodes, setSelectedNodes] = useState<string[]>([]);
   const [selectedWeight, setSelectedWeight] = useState<number | null>(null);
   const [selectedStartNode, setSelectedStartNode] = useState<string | null>(
-    null
+    "S"
   );
 
-  const handleStartNodeChange = (
-    event: React.ChangeEvent<HTMLSelectElement>
-  ) => {
-    setSelectedStartNode(event.target.value);
+  const [dijkstraResult, setDijkstraResult] = useState<DijkstraResult>({
+    distances: {},
+    path: [],
+    prev: {},
+    steps: [],
+  });
+  const [currentStep, setCurrentStep] = useState<number>(0);
+  const [isAlgorithmRunning, setIsAlgorithmRunning] = useState(false);
+  const [selectedEdgeIds, setSelectedEdgeIds] = useState<string[]>([]);
+  const [dijkstraPath, setDijkstraPath] = useState<string[]>([]);
+  const [nodeSteps, setNodeSteps] = useState<string[]>([]);
+  const [deltaValues, setDeltaValues]: [
+    boolean[],
+    Dispatch<SetStateAction<boolean[]>>
+  ] = useState<boolean[]>([]);
+  const [hasFreeNodes, setHasFreeNodes] = useState<boolean>(true);
+  const [activeTable, setActiveTable] = useState<"currentStep" | "finalPath">(
+    "currentStep"
+  );
+  const [currentNode, setCurrentNode] = useState<string | null>(null);
+
+  const updateFreeNodesStatus = () => {
+    const connectedNodes = new Set<string>();
+
+    edges.forEach((edge) => {
+      connectedNodes.add(edge.startNodeId);
+      connectedNodes.add(edge.endNodeId);
+    });
+
+    const freeNodesExist = nodes.some((node) => !connectedNodes.has(node.id));
+
+    setHasFreeNodes(freeNodesExist);
   };
 
   useEffect(() => {
-    // ursa major, cause why not. I love stars
-    const initialNodes: Node[] = [
-      { id: "A", x: 36, y: 40 },
-      { id: "S", x: 230, y: 40 },
-      { id: "K", x: 420, y: 100 },
-      { id: "s", x: 680, y: 140 },
-      { id: "I", x: 630, y: 280 },
-      { id: "H", x: 460, y: 260 },
-    ];
+    updateFreeNodesStatus();
+  }, [nodes, edges]);
 
-    const initialEdges: Edge[] = [
-      { id: "SA", startNodeId: "S", endNodeId: "A", weight: 2 },
-      { id: "SK", startNodeId: "S", endNodeId: "K", weight: 2 },
-      { id: "Ks", startNodeId: "K", endNodeId: "s", weight: 2 },
-      { id: "sI", startNodeId: "s", endNodeId: "I", weight: 2 },
-      { id: "HI", startNodeId: "H", endNodeId: "I", weight: 2 },
-      { id: "KH", startNodeId: "K", endNodeId: "H", weight: 2 },
-    ];
+  const findEdgeById = (edgeId: string): Edge | undefined => {
+    return edges.find(
+      (edge) =>
+        edge.id === edgeId || edge.id === edgeId.split("").reverse().join("")
+    );
+  };
 
+  const selectEdge = (edgeId: string) => {
+    const edge = findEdgeById(edgeId);
+
+    if (edge && !selectedEdgeIds.includes(edge.id)) {
+      setSelectedEdgeIds([...selectedEdgeIds, edge.id]);
+    }
+  };
+
+  const deselectEdge = (edgeId: string) => {
+    const edge = findEdgeById(edgeId);
+
+    if (edge) {
+      const updatedSelectedEdgeIds = selectedEdgeIds.filter(
+        (id) => id !== edge.id
+      );
+      setSelectedEdgeIds(updatedSelectedEdgeIds);
+    }
+  };
+
+  const graphEditingMode = () => {
+    return Object.keys(dijkstraResult).length === 0;
+  };
+
+  useEffect(() => {
+    if (!graphEditingMode() && edges.length > 0) {
+      edges.forEach((edge) => {
+        if (edge.id) {
+          deselectEdge(edge.id);
+        }
+      });
+    }
+  }, [currentStep, edges]);
+
+  const convertNodesAndEdgesToGraph = (): Graph => {
+    const graph: Graph = {};
+
+    nodes.forEach((node) => {
+      graph[node.id] = {};
+    });
+
+    edges.forEach((edge) => {
+      graph[edge.startNodeId][edge.endNodeId] = edge.weight;
+      graph[edge.endNodeId][edge.startNodeId] = edge.weight;
+    });
+
+    return graph;
+  };
+
+  const calculateResult = () => {
+    const currentGraph = convertNodesAndEdgesToGraph();
+    const result = dijkstraAlgorithm(currentGraph, selectedStartNode || "");
+    setDijkstraResult(result);
+    setCurrentStep(0);
+  };
+
+  useEffect(() => {
     setNodes(initialNodes);
     setEdges(initialEdges);
     setSelectedStartNode("S");
@@ -121,7 +371,6 @@ const DijkstrasAlgorithmCanvas: React.FC = () => {
       }
 
       if (event.ctrlKey) {
-        // Handle Ctrl key separately
         switch (event.key) {
           case "ArrowUp":
             moveSelectedNodes(0, -5 * 5);
@@ -291,6 +540,44 @@ const DijkstrasAlgorithmCanvas: React.FC = () => {
     };
   }, [connectNodes]);
 
+  const generateDeltaValues = (
+    table: any[],
+    action: "backward" | "forward"
+  ) => {
+    const newDeltaValues = table[1];
+    const currentSteps = nodeSteps;
+
+    if (action === "backward") {
+      setSelectedNodes([nodeSteps[currentStep - 1]]);
+      setDeltaValues(newDeltaValues);
+    } else {
+      if (nodeSteps.length !== nodes.length) {
+        if (deltaValues.length === 0) {
+          for (let i = 0; i < newDeltaValues.length; i++) {
+            if (newDeltaValues[i] === true) {
+              const letter = table[0][i] as string;
+              setSelectedNodes([letter]);
+              currentSteps.push(letter);
+              setNodeSteps(currentSteps);
+              break;
+            }
+          }
+        } else {
+          const intersection = newDeltaValues.findIndex(
+            (element: any[], index: number) => element !== newDeltaValues[index]
+          );
+          const letter = table[0][intersection];
+          setSelectedNodes([letter]);
+          currentSteps.push(letter);
+          setNodeSteps(currentSteps);
+        }
+        setDeltaValues(newDeltaValues);
+      } else {
+        setSelectedNodes([nodeSteps[currentStep + 1]]);
+      }
+    }
+  };
+
   return (
     <div className="d-flex col-12">
       <div className="canvas-container col-10">
@@ -378,14 +665,18 @@ const DijkstrasAlgorithmCanvas: React.FC = () => {
               onDrag={(x, y) => {
                 updateNodePosition(node.id, x, y);
               }}
+              currentNode={currentNode}
               selected={selectedNodes.includes(node.id)}
               startingNode={selectedStartNode === node.id}
+              highlighted={currentNode === node.id}
               x={node.x}
               y={node.y}
             />
           ))}
+
           <div className="d-flex justify-content-between">
             <div className="d-flex flex-column gap-0">
+              <h1>{currentNode}</h1>
               <i>Use arrow keys to move selected nodes</i>
               <i>
                 press <code>del</code> to delete selected nodes
@@ -401,106 +692,309 @@ const DijkstrasAlgorithmCanvas: React.FC = () => {
 
       <div className=" col-2" style={{ maxWidth: "400px", minWidth: "150px" }}>
         <div className="gap-2 d-flex flex-column">
-          <label>Select Starting Node:</label>
-          <select
-            className="form-select"
-            value={selectedStartNode || ""}
-            onChange={handleStartNodeChange}
-          >
-            <option value="" disabled>
-              Choose a starting node
-            </option>
-            {nodes.map((node) => (
-              <option key={node.id} value={node.id}>
-                Node {node.id}
-              </option>
-            ))}
-          </select>
-          <button
-            className="btn btn-success border border-dark"
-            onClick={addRandomNode}
-          >
-            Add Random node
-          </button>
-          <hr />
-          <button
-            className="btn btn-primary border border-dark"
-            onClick={connectNodes}
-            data-bs-toggle="tooltip"
-            data-bs-placement="left"
-            title="Enter the weight between the edges"
-            disabled={!(selectedNodes.length === 2)}
-          >
-            Connect (ctrl+Enter)
-          </button>
-          {selectedNodes.length === 2 ? (
-            <label>Edge {selectedNodes.join("")}</label>
+          {!isAlgorithmRunning ? (
+            <button
+              className="btn btn-outline-success border border-dark btn-lg"
+              disabled={hasFreeNodes}
+              onClick={() => {
+                if (nodes.length > 2) {
+                  setIsAlgorithmRunning((prev) => !prev);
+                  if (isAlgorithmRunning) {
+                    calculateResult();
+                  } else {
+                    const result = dijkstraAlgorithm(
+                      { edges, nodes },
+                      selectedStartNode
+                    );
+                    const steps = result.steps;
+                    const path = result.path;
+
+                    setSelectedNodes([]);
+                    setDijkstraResult(steps);
+                    setDijkstraPath(path);
+
+                    generateDeltaValues(steps[0].table, "forward");
+                    setSelectedStartNode(null);
+                  }
+                }
+              }}
+            >
+              Calculate Result
+            </button>
           ) : (
-            <label>No edge detected</label>
+            <button
+              className="btn btn-secondary border border-dark btn-lg"
+              onClick={() => {
+                setIsAlgorithmRunning((prev) => !prev);
+                setDijkstraResult({});
+                setDijkstraPath([]);
+                setCurrentStep(0);
+                setSelectedEdgeIds([]);
+                setSelectedNodes([]);
+                setEdges(initialEdges);
+                setNodes(initialNodes);
+                setNodeSteps([]);
+                setDeltaValues([]);
+                setSelectedStartNode("S");
+              }}
+            >
+              Go back to editing mode
+            </button>
           )}
 
-          <div className="input-group w-80">
-            <button
-              type="button"
-              className="w-40 btn btn-primary border border-dark "
-              onClick={() => connectNodes()}
-              data-bs-toggle="tooltip"
-              data-bs-placement="left"
-              title="Enter the weight between the edges"
-              disabled={!(selectedNodes.length === 2)}
-            >
-              Connect Edges
-            </button>
-            <input
-              type="number"
-              aria-label="node-1"
-              placeholder="weight"
-              className="w-30 form-control border border-dark"
-              value={selectedWeight || ""}
-              onChange={(e) => setSelectedWeight(parseInt(e.target.value))}
-            />
-          </div>
-          <hr />
-          <button
-            className="btn btn-warning border border-dark btn-small"
-            onClick={() => deleteEdge(selectedNodes.join(""))}
-            disabled={selectedNodes.length !== 2}
-            data-bs-toggle="tooltip"
-            data-bs-placement="left"
-            title={`Delete selected Edge`}
-          >
-            Delete Edge {selectedNodes.length === 2 && selectedNodes.join("")}
-          </button>
-
-          <button
-            className="btn btn-warning border border-dark btn-small"
-            onClick={() => deleteSelectedNodes()}
-            disabled={selectedNodes.length === 0}
-            data-bs-toggle="tooltip"
-            data-bs-placement="left"
-            title={`Delete ${selectedNodes.length} ${
-              selectedNodes.length > 1 ? "nodes" : "node"
-            }`}
-          >
-            Delete {selectedNodes.length > 0 && selectedNodes.length} Node
-            {selectedNodes.length !== 1 && "s"}
-          </button>
-
-          <button
-            className="btn btn-danger border border-dark"
-            onClick={deleteGraph}
-          >
-            Delete Graph
-          </button>
-
           <hr />
 
-          <button
-            className="btn btn-success border border-dark"
-            onClick={toggleModal}
-          >
-            About
-          </button>
+          {!graphEditingMode() && isAlgorithmRunning ? (
+            <div className="d-flex flex-column gap-4">
+              <div className="btn-group">
+                <button
+                  className={`btn btn-outline-success ${
+                    activeTable === "currentStep" ? "active" : ""
+                  }`}
+                  onClick={() => setActiveTable("currentStep")}
+                >
+                  Current Step
+                </button>
+                <button
+                  className={`btn btn-outline-success ${
+                    activeTable === "finalPath" ? "active" : ""
+                  }`}
+                  onClick={() => setActiveTable("finalPath")}
+                >
+                  Final Path
+                </button>
+              </div>
+
+              <div>
+                {activeTable === "currentStep" && (
+                  <div>
+                    <div className="d-flex justify-content-between">
+                      <button
+                        disabled={currentStep === 0}
+                        onClick={() => {
+                          setCurrentStep((prevStep) =>
+                            Math.max(prevStep - 1, 0)
+                          );
+                          setCurrentNode(
+                            dijkstraResult[currentStep - 1].currentNode
+                          );
+                          generateDeltaValues(
+                            dijkstraResult[currentStep - 1].table,
+                            "backward"
+                          );
+                        }}
+                      >
+                        <FaArrowLeft />
+                      </button>
+                      <label>
+                        {currentStep + 1} / {dijkstraResult.length}
+                      </label>
+                      <button
+                        disabled={currentStep === dijkstraResult.length - 1}
+                        onClick={() => {
+                          setCurrentStep((prevStep) =>
+                            Math.min(prevStep + 1, dijkstraResult.length - 1)
+                          );
+                          setCurrentNode(
+                            dijkstraResult[currentStep + 1].currentNode
+                          );
+                          generateDeltaValues(
+                            dijkstraResult[currentStep + 1].table,
+                            "forward"
+                          );
+                        }}
+                      >
+                        <FaArrowRight />
+                      </button>
+                    </div>
+                    <table className={"table"}>
+                      <thead>
+                        <tr>
+                          <th>Node</th>
+                          <th>Visited?</th>
+                          <th>Distance</th>
+                          <th>Previous</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {dijkstraResult[currentStep].table[0].map(
+                          (_: any, index: number) => {
+                            if (dijkstraResult[currentStep].table[3][index]) {
+                              selectEdge(
+                                dijkstraResult[currentStep].table[0][index] +
+                                  dijkstraResult[currentStep].table[3][index]
+                              );
+                            }
+
+                            return (
+                              <tr key={index}>
+                                <td>
+                                  {dijkstraResult[currentStep].table[0][index]}
+                                </td>
+                                <td>
+                                  {dijkstraResult[currentStep].table[1][index]
+                                    ? "true"
+                                    : "false"}
+                                </td>
+                                <td>
+                                  {dijkstraResult[currentStep].table[2][index]}
+                                </td>
+                                <td>
+                                  {dijkstraResult[currentStep].table[3][
+                                    index
+                                  ] ?? "none"}
+                                </td>
+                              </tr>
+                            );
+                          }
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+
+                {activeTable === "finalPath" && (
+                  <>
+                    <table className={"table"}>
+                      <thead>
+                        <tr>
+                          <th>Node</th>
+                          <th>Final Path</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {dijkstraResult[currentStep].table[0].map(
+                          (_: any, index: number) => {
+                            return (
+                              <tr key={index}>
+                                <td>
+                                  {dijkstraResult[currentStep].table[0][index]}
+                                </td>
+                                <td>{dijkstraPath[index]}</td>
+                              </tr>
+                            );
+                          }
+                        )}
+                      </tbody>
+                    </table>
+                  </>
+                )}
+              </div>
+            </div>
+          ) : (
+            <div className="gap-2 d-flex flex-column">
+              <div className="select">
+                <label>Select Starting Node:</label>
+                <div className="select">
+                  <select
+                    id="starting-node"
+                    onChange={(e) => setSelectedStartNode(e.target.value)}
+                    required={true}
+                    value={selectedStartNode || "A"}
+                    className="form-select"
+                  >
+                    <option disabled value="">
+                      Select starting node
+                    </option>
+                    {nodes.map((node) => (
+                      <option key={node.id} value={node.id}>
+                        {node.id}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              <button
+                className="btn btn-success border border-dark"
+                onClick={addRandomNode}
+              >
+                Add Random node
+              </button>
+
+              <hr />
+              <button
+                className="btn btn-primary border border-dark"
+                onClick={connectNodes}
+                data-bs-toggle="tooltip"
+                data-bs-placement="left"
+                title="Enter the weight between the edges"
+                disabled={!(selectedNodes.length === 2)}
+              >
+                Connect (ctrl+Enter)
+              </button>
+
+              {selectedNodes.length === 2 ? (
+                <label>Edge {selectedNodes.join("")}</label>
+              ) : (
+                <label>No edge detected</label>
+              )}
+
+              <div className="input-group w-80">
+                <button
+                  type="button"
+                  className="w-40 btn btn-primary border border-dark "
+                  onClick={() => connectNodes()}
+                  data-bs-toggle="tooltip"
+                  data-bs-placement="left"
+                  title="Enter the weight between the edges"
+                  disabled={!(selectedNodes.length === 2)}
+                >
+                  Connect Edges
+                </button>
+                <input
+                  type="number"
+                  aria-label="node-1"
+                  placeholder="weight"
+                  className="w-30 form-control border border-dark"
+                  value={selectedWeight || ""}
+                  onChange={(e) => setSelectedWeight(parseInt(e.target.value))}
+                />
+              </div>
+              <hr />
+              <button
+                className="btn btn-warning border border-dark btn-small"
+                onClick={() => deleteEdge(selectedNodes.join(""))}
+                disabled={selectedNodes.length !== 2}
+                data-bs-toggle="tooltip"
+                data-bs-placement="left"
+                title={`Delete selected Edge`}
+              >
+                Delete Edge{" "}
+                {selectedNodes.length === 2 && selectedNodes.join("")}
+              </button>
+
+              <button
+                className="btn btn-warning border border-dark btn-small"
+                onClick={() => deleteSelectedNodes()}
+                disabled={selectedNodes.length === 0}
+                data-bs-toggle="tooltip"
+                data-bs-placement="left"
+                title={`Delete ${selectedNodes.length} ${
+                  selectedNodes.length > 1 ? "nodes" : "node"
+                }`}
+              >
+                Delete {selectedNodes.length > 0 && selectedNodes.length} Node
+                {selectedNodes.length !== 1 && "s"}
+              </button>
+
+              <button
+                className="btn btn-danger border border-dark"
+                onClick={deleteGraph}
+              >
+                Delete Graph
+              </button>
+
+              <hr />
+
+              <button
+                className="btn btn-success border border-dark"
+                onClick={toggleModal}
+              >
+                About
+              </button>
+            </div>
+          )}
         </div>
       </div>
 

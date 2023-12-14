@@ -7,9 +7,11 @@ import Edge from "./edge";
 import "../canvas.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Modal } from "react-bootstrap";
-import { FaArrowRight, FaArrowLeft, IoArrowUndo } from "react-icons/fa";
+import { FaArrowRight, FaArrowLeft } from "react-icons/fa";
+import { initialNodes, initialEdges } from "./initialNodes";
+import { dijkstraAlgorithm } from "./dijkstraAlgorithm";
 
-interface Node {
+export interface Node {
   id: string;
   x: number;
   y: number;
@@ -22,184 +24,15 @@ interface DijkstraResult {
   steps: { table: any[]; text: string }[];
 }
 
-interface Edge {
+export interface Edge {
   id: string;
   startNodeId: string;
   endNodeId: string;
   weight: number;
 }
 
-interface Graph {
+export interface Graph {
   [key: string]: { [key: string]: number };
-}
-
-const initialNodes: Node[] = [
-  { id: "A", x: 68, y: 68 },
-  { id: "S", x: 239, y: 24 },
-  { id: "N", x: 97, y: 340 },
-  { id: "C", x: 543, y: 122 },
-  { id: "O", x: 546, y: 205 },
-  { id: "F", x: 539, y: 289 },
-  { id: "a", x: 1000, y: 52 },
-  { id: "H", x: 963, y: 429 },
-];
-
-const initialEdges: Edge[] = [
-  { id: "SC", startNodeId: "S", endNodeId: "C", weight: 4 },
-  { id: "Ca", startNodeId: "C", endNodeId: "a", weight: 6 },
-  { id: "CO", startNodeId: "C", endNodeId: "O", weight: 1 },
-  { id: "FO", startNodeId: "F", endNodeId: "O", weight: 1 },
-  { id: "AS", startNodeId: "A", endNodeId: "S", weight: 2 },
-  { id: "AN", startNodeId: "A", endNodeId: "N", weight: 3 },
-  { id: "NF", startNodeId: "N", endNodeId: "F", weight: 7 },
-  { id: "aH", startNodeId: "a", endNodeId: "H", weight: 9 },
-  { id: "HF", startNodeId: "H", endNodeId: "F", weight: 6 },
-];
-
-function convertCanvasGraphOutput(graph: any): Graph {
-  let nodes = graph.nodes;
-  let edges = graph.edges;
-  let newGraph: Graph = {};
-
-  for (let i = 0; i < nodes.length; i++) {
-    const currentNodeId = nodes[i].id;
-    newGraph[currentNodeId] = {};
-  }
-
-  for (let j = 0; j < edges.length; j++) {
-    let currentEdge = edges[j];
-
-    newGraph[currentEdge.startNodeId][currentEdge.endNodeId] =
-      currentEdge.weight;
-    newGraph[currentEdge.endNodeId][currentEdge.startNodeId] =
-      currentEdge.weight;
-  }
-
-  return newGraph;
-}
-
-const dijkstraAlgorithm = (graph: any, startNode: string) => {
-  const convertedGraph = convertCanvasGraphOutput(graph);
-  return dijkstra(convertedGraph, startNode);
-};
-
-function calculateMinDistance(
-  queue: string[],
-  distances: { [key: string]: number }
-): string | undefined {
-  let min_distance = Infinity;
-  let min_node: string | undefined = undefined;
-
-  for (let node of queue) {
-    if (distances[node] < min_distance) {
-      min_node = node;
-      min_distance = distances[node];
-    }
-  }
-
-  return min_node;
-}
-
-function dijkstra_path_calculator(
-  startNode: string,
-  graph: Graph,
-  prev: { [key: string]: string | undefined }
-): string[] {
-  let path: string[] = [];
-
-  for (const node in graph) {
-    let path_string = ``;
-    if (node === startNode) {
-      path_string = node;
-    } else {
-      let temp_node = node;
-      path_string = ` ${temp_node} `;
-      while (startNode !== temp_node) {
-        temp_node = prev[temp_node]!;
-        if (temp_node === undefined) {
-          temp_node = startNode;
-        }
-        path_string += ` ${temp_node} `;
-      }
-    }
-    path.push(path_string);
-  }
-
-  return path;
-}
-
-function dijkstra(graph: Graph, startNode: string) {
-  let distances: { [key: string]: number } = {};
-  let visited: { [key: string]: boolean } = {};
-  let queue: string[] = [];
-  let prev: { [key: string]: string | undefined } = {};
-
-  let table: any[] = [];
-  let steps: { table: any[]; text: string }[] = [];
-
-  for (const node in graph) {
-    distances[node] = Infinity;
-    visited[node] = false;
-    prev[node] = undefined;
-    queue.push(node);
-  }
-  distances[startNode] = 0;
-
-  while (queue.length) {
-    let currentNode = calculateMinDistance(queue, distances)!;
-    queue.splice(queue.indexOf(currentNode), 1);
-
-    if (visited[currentNode]) continue;
-
-    visited[currentNode] = true;
-
-    let neighbor_text = ``;
-    for (let neighbor in graph[currentNode]) {
-      let distance = distances[currentNode] + graph[currentNode][neighbor];
-
-      if (distance < distances[neighbor]) {
-        neighbor_text +=
-          `We find that the distance from ${currentNode} to ${neighbor} is closer than` +
-          ` the value in the table therefore we changed value ${distances[neighbor]} to ${distance}. ` +
-          `Explanation: We do this ` +
-          `by comparing the shortest distance to ${neighbor} in the table compared to the closest distance ` +
-          `to ${neighbor} from ${currentNode} + distance to ${currentNode}.` +
-          `\n\n`;
-
-        distances[neighbor] = distance;
-        prev[neighbor] = currentNode;
-      }
-    }
-    table = [
-      Object.keys(distances),
-      Object.values(visited),
-      Object.values(distances),
-      Object.values(prev),
-    ];
-    let text =
-      `Currently, we are evaluating node ${currentNode} and we updated the table accordingly. We have ` +
-      `visited the neighbors of ${currentNode} which are ${Object.keys(
-        graph[currentNode]
-      )}. `;
-
-    if (neighbor_text.length > 0) {
-      text = text + `\n\n` + neighbor_text;
-    } else {
-      text =
-        text +
-        `\n\nWe did not find that the distance from ${currentNode} to its neighbors` +
-        ` (${Object.keys(
-          graph[currentNode]
-        )}) is closer than the values already in the table, therefore we ` +
-        `did not change any values in the table`;
-    }
-
-    steps.push({ table, text });
-  }
-
-  const path = dijkstra_path_calculator(startNode, graph, prev);
-
-  return { distances, path, prev, steps };
 }
 
 const DijkstrasAlgorithmCanvas: React.FC = () => {
@@ -335,10 +168,8 @@ const DijkstrasAlgorithmCanvas: React.FC = () => {
       }
     };
 
-    // Attach the event listener
     document.addEventListener("keydown", handleKeyDown);
 
-    // Detach the event listener when the component unmounts
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
     };
@@ -377,8 +208,6 @@ const DijkstrasAlgorithmCanvas: React.FC = () => {
   };
 
   useEffect(() => {
-    // ursa major, cause why not. I love stars
-
     setNodes(initialNodes);
     setEdges(initialEdges);
     setSelectedStartNode("S");
@@ -530,7 +359,6 @@ const DijkstrasAlgorithmCanvas: React.FC = () => {
   };
 
   const addNode = (event: React.MouseEvent<SVGSVGElement>) => {
-    // Check if the Ctrl key is pressed
     const ctrlKey = event.ctrlKey || event.metaKey;
 
     const newNodeId = String.fromCharCode(
@@ -615,10 +443,8 @@ const DijkstrasAlgorithmCanvas: React.FC = () => {
       }
     };
 
-    // Attach the event listener
     document.addEventListener("keydown", handleKeyDown);
 
-    // Detach the event listener when the component unmounts
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
     };
@@ -674,7 +500,10 @@ const DijkstrasAlgorithmCanvas: React.FC = () => {
               <p>Number of Nodes: {nodes.length}</p>
               <p>Number of Edges: {edges.length}</p>
               {selectedNodes.length > 0 && (
-                <p>Selected Nodes: {selectedNodes.length}</p>
+                <>
+                  <p>Selected Nodes: {selectedNodes.length}</p>
+                  <p>{selectedNodes.toString()}</p>
+                </>
               )}
             </div>
           </div>
@@ -795,7 +624,6 @@ const DijkstrasAlgorithmCanvas: React.FC = () => {
                     setDijkstraPath(path);
 
                     generateDeltaValues(steps[0].table, "forward");
-                    setSelectedStartNode("S");
                   }
                 }
               }}
@@ -859,43 +687,42 @@ const DijkstrasAlgorithmCanvas: React.FC = () => {
                 </button>
               </div>
 
+              <div className="button-container">
+                <button
+                  disabled={currentStep === 0}
+                  onClick={() => {
+                    setCurrentStep((prevStep) => Math.max(prevStep - 1, 0));
+                    generateDeltaValues(
+                      dijkstraResult[currentStep - 1].table,
+                      "backward"
+                    );
+                  }}
+                >
+                  <FaArrowLeft />
+                </button>
+                <label>
+                  {currentStep + 1} / {dijkstraResult.length}
+                </label>
+                <button
+                  disabled={currentStep === dijkstraResult.length - 1}
+                  onClick={() => {
+                    setCurrentStep((prevStep) =>
+                      Math.min(prevStep + 1, dijkstraResult.length - 1)
+                    );
+                    generateDeltaValues(
+                      dijkstraResult[currentStep + 1].table,
+                      "forward"
+                    );
+                  }}
+                >
+                  <FaArrowRight />
+                </button>
+              </div>
+
               <div>
                 {activeTable === "currentStep" && (
                   <div>
-                    <div className="d-flex justify-content-between mb-3">
-                      <button
-                        disabled={currentStep === 0}
-                        onClick={() => {
-                          setCurrentStep((prevStep) =>
-                            Math.max(prevStep - 1, 0)
-                          );
-                          generateDeltaValues(
-                            dijkstraResult[currentStep - 1].table,
-                            "backward"
-                          );
-                        }}
-                      >
-                        <FaArrowLeft />
-                      </button>
-                      <label>
-                        {currentStep + 1} / {dijkstraResult.length}
-                      </label>
-                      <button
-                        disabled={currentStep === dijkstraResult.length - 1}
-                        onClick={() => {
-                          setCurrentStep((prevStep) =>
-                            Math.min(prevStep + 1, dijkstraResult.length - 1)
-                          );
-                          generateDeltaValues(
-                            dijkstraResult[currentStep + 1].table,
-                            "forward"
-                          );
-                        }}
-                      >
-                        <FaArrowRight />
-                      </button>
-                    </div>
-                    <table className={"table"}>
+                    <table className={"table table-striped"}>
                       <thead>
                         <tr>
                           <th>Node</th>
@@ -967,7 +794,7 @@ const DijkstrasAlgorithmCanvas: React.FC = () => {
 
                 {activeTable === "finalPath" && (
                   <>
-                    <table className={"table"}>
+                    <table className={"table table-striped"}>
                       <thead>
                         <tr>
                           <th>Node</th>
@@ -1003,39 +830,6 @@ const DijkstrasAlgorithmCanvas: React.FC = () => {
 
                 {activeTable === "Algorithmstep" && (
                   <div>
-                    <div className="d-flex justify-content-between mb-3">
-                      <button
-                        disabled={currentStep === 0}
-                        onClick={() => {
-                          setCurrentStep((prevStep) =>
-                            Math.max(prevStep - 1, 0)
-                          );
-                          generateDeltaValues(
-                            dijkstraResult[currentStep - 1].table,
-                            "backward"
-                          );
-                        }}
-                      >
-                        <FaArrowLeft />
-                      </button>
-                      <label>
-                        {currentStep + 1} / {dijkstraResult.length}
-                      </label>
-                      <button
-                        disabled={currentStep === dijkstraResult.length - 1}
-                        onClick={() => {
-                          setCurrentStep((prevStep) =>
-                            Math.min(prevStep + 1, dijkstraResult.length - 1)
-                          );
-                          generateDeltaValues(
-                            dijkstraResult[currentStep + 1].table,
-                            "forward"
-                          );
-                        }}
-                      >
-                        <FaArrowRight />
-                      </button>
-                    </div>
                     <p>{dijkstraResult[currentStep].text}</p>
                   </div>
                 )}

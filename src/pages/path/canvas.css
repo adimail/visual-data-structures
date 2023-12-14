@@ -9,6 +9,9 @@
     fill: rgb(145, 105, 53);
 }
 
+.rowss{
+    background-color: rgb(115, 115, 115);
+}
 .canvas {
     width: 100%;
     height: 35rem;
@@ -46,3 +49,33 @@
     top: 375px;
     right: 17.5rem;
 }
+
+
+
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.button-container button {
+  align-items: center;
+  justify-content: center;
+  background-color: #4a4c4d;
+  color: #ffffff; 
+  border: none;
+  border-radius: 9px;
+  padding: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.button-container button:disabled {
+  background-color: #a3a3a3;
+  cursor: not-allowed;
+}
+
+.button-container button:hover:not(:disabled) {
+  background-color: #676767;
+}
+

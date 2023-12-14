@@ -1,21 +1,30 @@
-interface Graph {
-  [key: string]: { [key: string]: number };
-}
+import { Graph } from "./DijkstrasAlgorithmCanvas";
 
-interface DijkstraResult {
-  distances: { [key: string]: number };
-  path: string[];
-  prev: { [key: string]: string | undefined };
-  steps: { table: any[]; text: string }[];
-}
+function convertCanvasGraphOutput(graph: any): Graph {
+  let nodes = graph.nodes;
+  let edges = graph.edges;
+  let newGraph: Graph = {};
 
-// Update the distance vector for each node in the network
-const dijkstraAlgorithm = (graph: any, startNode: string): DijkstraResult => {
+  for (let i = 0; i < nodes.length; i++) {
+    const currentNodeId = nodes[i].id;
+    newGraph[currentNodeId] = {};
+  }
+
+  for (let j = 0; j < edges.length; j++) {
+    let currentEdge = edges[j];
+
+    newGraph[currentEdge.startNodeId][currentEdge.endNodeId] =
+      currentEdge.weight;
+    newGraph[currentEdge.endNodeId][currentEdge.startNodeId] =
+      currentEdge.weight;
+  }
+
+  return newGraph;
+}
+export const dijkstraAlgorithm = (graph: any, startNode: string) => {
   const convertedGraph = convertCanvasGraphOutput(graph);
   return dijkstra(convertedGraph, startNode);
 };
-
-// We calculate which of the node in the remaining graph has the minimum distance to already explored graph
 function calculateMinDistance(
   queue: string[],
   distances: { [key: string]: number }
@@ -23,7 +32,6 @@ function calculateMinDistance(
   let min_distance = Infinity;
   let min_node: string | undefined = undefined;
 
-  // loop over remaining nodes that are not visited
   for (let node of queue) {
     if (distances[node] < min_distance) {
       min_node = node;
@@ -33,9 +41,6 @@ function calculateMinDistance(
 
   return min_node;
 }
-
-// Function to find graph, the shortest path given a graph and start node and prev array.
-// Graph is in the form of adjacency list
 function dijkstra_path_calculator(
   startNode: string,
   graph: Graph,
@@ -43,8 +48,6 @@ function dijkstra_path_calculator(
 ): string[] {
   let path: string[] = [];
 
-  // loop all nodes and trace prev array from Dijkstra's algorithm to find the shortest path to all the nodes in
-  // the graph
   for (const node in graph) {
     let path_string = ``;
     if (node === startNode) {
@@ -65,9 +68,7 @@ function dijkstra_path_calculator(
 
   return path;
 }
-
-// Function to find graph, the shortest path given a graph and start node. Graph is in the form of adjacency list
-function dijkstra(graph: Graph, startNode: string): DijkstraResult {
+function dijkstra(graph: Graph, startNode: string) {
   let distances: { [key: string]: number } = {};
   let visited: { [key: string]: boolean } = {};
   let queue: string[] = [];
@@ -76,36 +77,27 @@ function dijkstra(graph: Graph, startNode: string): DijkstraResult {
   let table: any[] = [];
   let steps: { table: any[]; text: string }[] = [];
 
-  // init values of table
   for (const node in graph) {
     distances[node] = Infinity;
     visited[node] = false;
     prev[node] = undefined;
     queue.push(node);
   }
-  distances[startNode] = 0; // distance to startNode is 0 from startNode
+  distances[startNode] = 0;
 
-  // loop until all nodes are visited. Till queue is empty
   while (queue.length) {
-    // find and remove the node with the smallest distance from the queue
     let currentNode = calculateMinDistance(queue, distances)!;
     queue.splice(queue.indexOf(currentNode), 1);
 
-    // if visited currentNode then go to the next node
     if (visited[currentNode]) continue;
 
-    // mark currentNode visited
     visited[currentNode] = true;
 
     let neighbor_text = ``;
-    // loop over the current node's neighbors
     for (let neighbor in graph[currentNode]) {
-      // calculate the distance to the neighbor node from the currentNode
       let distance = distances[currentNode] + graph[currentNode][neighbor];
 
-      // if distance is less than the current known distance in the table then update the distance
       if (distance < distances[neighbor]) {
-        // auto-generated text to explain what the algorithm is doing for the user
         neighbor_text +=
           `We find that the distance from ${currentNode} to ${neighbor} is closer than` +
           ` the value in the table therefore we changed value ${distances[neighbor]} to ${distance}. ` +
@@ -130,7 +122,6 @@ function dijkstra(graph: Graph, startNode: string): DijkstraResult {
         graph[currentNode]
       )}. `;
 
-    // check for whether the algorithm has changed anything during this step
     if (neighbor_text.length > 0) {
       text = text + `\n\n` + neighbor_text;
     } else {
@@ -143,39 +134,10 @@ function dijkstra(graph: Graph, startNode: string): DijkstraResult {
         `did not change any values in the table`;
     }
 
-    // save each step
     steps.push({ table, text });
   }
 
-  // find the shortest path to each other node from a startNode
   const path = dijkstra_path_calculator(startNode, graph, prev);
 
   return { distances, path, prev, steps };
 }
-
-// Converts the graph's output from canvas-graph to the format that the algorithm expects
-export function convertCanvasGraphOutput(graph: any): Graph {
-  let nodes = graph.nodes;
-  let edges = graph.edges;
-  let newGraph: Graph = {};
-
-  for (let i = 0; i < nodes.length; i++) {
-    const currentNodeId = nodes[i].id;
-    newGraph[currentNodeId] = {}; // Initialize an empty object for the current node ID
-  }
-
-  for (let j = 0; j < edges.length; j++) {
-    let currentEdge = edges[j];
-
-    // Set the edge weight for both directions
-    newGraph[currentEdge.startNodeId][currentEdge.endNodeId] =
-      currentEdge.weight;
-    newGraph[currentEdge.endNodeId][currentEdge.startNodeId] =
-      currentEdge.weight;
-  }
-
-  return newGraph;
-}
-
-export type { DijkstraResult };
-export { dijkstraAlgorithm };

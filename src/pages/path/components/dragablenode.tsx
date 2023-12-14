@@ -95,7 +95,7 @@ const DraggableNode: React.FC<DraggableNodeProps> = ({
       }}
       draggable={!disableDragging}
     >
-      <span>{`${nodeId}`}</span>
+      <span>{nodeId}</span>
     </div>
   );
 };

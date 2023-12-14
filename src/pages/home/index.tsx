@@ -39,7 +39,7 @@ export const HomeMenu = () => {
           </p>
         </div>
         <div style={{ flex: 1 }}>
-          <img src="src\assets\logo.png" alt="" style={{ width: "100%" }} />
+          <img src="public\logo.png" alt="" style={{ width: "100%" }} />
           <span style={{ fontSize: "0.6rem", display: "flex" }}>
             Image Source: devgenius (medium)
           </span>

@@ -10,11 +10,15 @@ Tools used in building this project include React as the frontend framework, Boo
 
 Please excuse the poor structure of my code and components. I am a beginner who's learning-relearning-unlearning lot of things.
 
+## What's New?
+
+now you can see the steps of the Dijkstra's single source shortest path algorithm where it calculates the distance to all nodes in a graph through iterations. You can navigate the steps of the iterations
+
 ## Installation
 
 **Required:** Node.js Version 18+
 
-## Code Snippets
+## Webpage screenshots
 
 ![Home Page](src/assets/ss/home.png)
 ![Linked List](src/assets/ss/ll.png)
@@ -24,6 +28,12 @@ Please excuse the poor structure of my code and components. I am a beginner who'
 ![AVL Tree](src/assets/ss/avl.png)
 ![Dijkstra](src/assets/ss/dijkstra.png)
 ![PathFinding](src/assets/ss/path.png)
+
+### Dijkstra Algorithm Navigation Steps
+
+| Current Step Navigation                       | Algorithm Step Navigation                     | Final Path Navigation                         |
+| --------------------------------------------- | --------------------------------------------- | --------------------------------------------- |
+| ![PathFinding](src/assets/ss/path-Algo-1.png) | ![PathFinding](src/assets/ss/path-Algo-2.png) | ![PathFinding](src/assets/ss/path-Algo-3.png) |
 
 ## How to Use This Site
 
@@ -38,6 +48,8 @@ Please excuse the poor structure of my code and components. I am a beginner who'
 | Ctrl + Node select | Deselect all other nodes and select only single node      |
 | del                | Delete selected nodes                                     |
 | Ctrl + Enter       | Joins two selected nodes                                  |
+| Ctrl + Z           | Undo                                                      |
+| Ctrl + Y           | Redo                                                      |
 
 1. **Linked list:** Perform CRUD operations on a linked list and reverse it.
 2. **List ADT:** Visualize stacks and queues, and perform push-pop and enqueue-dequeue operations.

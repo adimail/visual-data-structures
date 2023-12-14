@@ -1,45 +1,47 @@
 import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.tsx";
-import ReloadConfirmationModal from "./components/ReloadConfirmationModal.tsx";
 import "bootstrap/dist/css/bootstrap.css";
 import { BrowserRouter } from "react-router-dom";
 
 const Main: React.FC = () => {
   const [showReloadConfirmation, setShowReloadConfirmation] = useState(false);
 
+  const askForConfirmation = () => {
+    return window.confirm("Are you sure you want to reload the page?");
+  };
+
   useEffect(() => {
-    const handleKeyPress = (event: KeyboardEvent) => {
-      if (event.ctrlKey && event.key === "r") {
-        setShowReloadConfirmation(true);
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      if (!askForConfirmation()) {
         event.preventDefault();
       }
     };
 
-    document.addEventListener("keydown", handleKeyPress);
+    const handleTouchStart = () => {
+      if (!askForConfirmation()) {
+        setShowReloadConfirmation(true);
+      }
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    document.addEventListener("touchstart", handleTouchStart);
 
     return () => {
-      document.removeEventListener("keydown", handleKeyPress);
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+      document.removeEventListener("touchstart", handleTouchStart);
     };
   }, []);
 
-  const handleCloseReloadConfirmation = () => {
-    setShowReloadConfirmation(false);
-  };
-
   const handleConfirmReload = () => {
-    window.location.reload();
+    setShowReloadConfirmation(false);
+    window.location.href = "https://adimail.github.io/visual-data-structures/";
   };
 
   return (
     <React.StrictMode>
       <BrowserRouter>
         <App />
-        <ReloadConfirmationModal
-          show={showReloadConfirmation}
-          onClose={handleCloseReloadConfirmation}
-          onConfirm={handleConfirmReload}
-        />
       </BrowserRouter>
     </React.StrictMode>
   );

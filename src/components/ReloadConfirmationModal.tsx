@@ -26,7 +26,13 @@ const ReloadConfirmationModal: React.FC<ReloadConfirmationModalProps> = ({
           Cancel
         </Button>
         <Button variant="btn btn-primary active" onClick={onConfirm} active>
-          Confirm
+          <a
+            href="https://adimail.github.io/visual-data-structures/"
+            style={{ color: "white", textDecoration: "none" }}
+          >
+            {" "}
+            Confirm{" "}
+          </a>
         </Button>
       </Modal.Footer>
     </Modal>

@@ -25,7 +25,6 @@
     width: 50px;
     height: 50px;
     border-radius: 50%;
-
     border: black solid 2px;
     display: flex;
     justify-content: center;
@@ -49,8 +48,6 @@
     top: 375px;
     right: 17.5rem;
 }
-
-
 
 .button-container {
   display: flex;

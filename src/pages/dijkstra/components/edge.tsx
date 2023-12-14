@@ -9,7 +9,7 @@ interface EdgeProps {
 
 const Edge: React.FC<EdgeProps> = ({ startNode, endNode, weight }) => {
   if (!startNode || !endNode) {
-    return null; // Skip rendering if startNode or endNode is undefined
+    return null;
   }
 
   const x1 = startNode.x + 25;
@@ -24,7 +24,7 @@ const Edge: React.FC<EdgeProps> = ({ startNode, endNode, weight }) => {
 
   return (
     <>
-      <line stroke="#ccc" strokeWidth="3" x1={x1} x2={x2} y1={y1} y2={y2} />
+      <line stroke="#BEBEBE" strokeWidth="3" x1={x1} x2={x2} y1={y1} y2={y2} />
       <g>
         <rect
           fill="white"
@@ -55,7 +55,7 @@ const Edge: React.FC<EdgeProps> = ({ startNode, endNode, weight }) => {
             angle * (180 / Math.PI)
           })`}
         >
-          <rect fill="transparent" height="20" width="20" x="-10" y="-10" />
+          <rect fill="black" height="20" width="20" x="-10" y="-10" />
         </g>
       )}
     </>

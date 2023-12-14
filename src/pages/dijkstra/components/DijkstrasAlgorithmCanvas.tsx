@@ -7,9 +7,10 @@ import Edge from "./edge";
 import "../canvas.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Modal } from "react-bootstrap";
-import { FaArrowRight, FaArrowLeft, IoArrowUndo } from "react-icons/fa";
+import { FaArrowRight, FaArrowLeft } from "react-icons/fa";
 import { initialNodes, initialEdges } from "./initialNodes";
 import { dijkstraAlgorithm } from "./dijkstraAlgorithm";
+import { FaUndo, FaRedoAlt } from "react-icons/fa";
 
 export interface Node {
   id: string;
@@ -36,13 +37,23 @@ export interface Graph {
 }
 
 const DijkstrasAlgorithmCanvas: React.FC = () => {
+  const [selectionBox, setSelectionBox] = useState<{
+    startX: number;
+    startY: number;
+    endX: number;
+    endY: number;
+  } | null>(null);
+  const [dragStart, setDragStart] = useState<{ x: number; y: number } | null>(
+    null
+  );
+  const [dragEnd, setDragEnd] = useState<{ x: number; y: number } | null>(null);
+
   const [showModal, setShowModal] = useState(true);
   const [nodes, setNodes] = useState<Node[]>([]);
   const [edges, setEdges] = useState<Edge[]>([]);
   const [selectedNodes, setSelectedNodes] = useState<string[]>([]);
   const [selectedWeight, setSelectedWeight] = useState<number | null>(null);
   const [selectedStartNode, setSelectedStartNode] = useState<string>("S");
-
   const [dijkstraResult, setDijkstraResult] = useState<DijkstraResult>({
     distances: {},
     path: [],
@@ -75,23 +86,53 @@ const DijkstrasAlgorithmCanvas: React.FC = () => {
     }[]
   >([]);
 
+  const undo = () => {
+    if (history.length > 1) {
+      const previousState = history[1];
+      setRedoHistory((prevRedoHistory) => [
+        {
+          nodes: JSON.parse(JSON.stringify(nodes)),
+          edges: JSON.parse(JSON.stringify(edges)),
+        },
+        ...prevRedoHistory,
+      ]);
+      setNodes(previousState.nodes);
+      setEdges(previousState.edges);
+      setHistory((prevHistory) => prevHistory.slice(1));
+    }
+  };
+
   const redo = () => {
-    if (redoHistory.length >= 0) {
+    if (redoHistory.length > 0) {
       const nextState = redoHistory[0];
+      setHistory((prevHistory) => [
+        {
+          nodes: JSON.parse(JSON.stringify(nodes)),
+          edges: JSON.parse(JSON.stringify(edges)),
+        },
+        ...prevHistory,
+      ]);
       setNodes(nextState.nodes);
       setEdges(nextState.edges);
       setRedoHistory((prevRedoHistory) => prevRedoHistory.slice(1));
-
-      // Update the history when redoing
-      setHistory((prevHistory) => [
-        ...prevHistory,
-        {
-          nodes: nextState.nodes,
-          edges: nextState.edges,
-        },
-      ]);
     }
   };
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.ctrlKey && event.key === "z") {
+        undo();
+      } else if (event.ctrlKey && event.key === "y") {
+        redo();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [undo, redo]);
 
   const addToHistory = () => {
     setHistory((prevHistory) => [
@@ -101,7 +142,7 @@ const DijkstrasAlgorithmCanvas: React.FC = () => {
       },
       ...prevHistory,
     ]);
-    setRedoHistory([]); // Clear redo history when a new state is added to the history
+    setRedoHistory([]); // Clear redo history when a new action is performed
   };
 
   const updateFreeNodesStatus = () => {
@@ -150,30 +191,6 @@ const DijkstrasAlgorithmCanvas: React.FC = () => {
   const graphEditingMode = () => {
     return Object.keys(dijkstraResult).length === 0;
   };
-
-  const undo = () => {
-    if (history.length > 1) {
-      const previousState = history[1];
-      setNodes(previousState.nodes);
-      setEdges(previousState.edges);
-      setHistory((prevHistory) => prevHistory.slice(1));
-    }
-  };
-
-  useEffect(() => {
-    // Handle Ctrl+Z for undo
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.ctrlKey && event.key === "z") {
-        undo();
-      }
-    };
-
-    document.addEventListener("keydown", handleKeyDown);
-
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [undo]);
 
   useEffect(() => {
     if (!graphEditingMode() && edges.length > 0) {
@@ -411,13 +428,22 @@ const DijkstrasAlgorithmCanvas: React.FC = () => {
   const connectNodes = () => {
     if (selectedNodes.length === 2) {
       const newEdgeId = selectedNodes.join("");
-      if (
-        !edges.some(
-          (edge) =>
-            edge.id === newEdgeId ||
-            edge.id === newEdgeId.split("").reverse().join("")
-        )
-      ) {
+      const reversedEdgeId = newEdgeId.split("").reverse().join("");
+
+      const existingEdge = edges.find(
+        (edge) => edge.id === newEdgeId || edge.id === reversedEdgeId
+      );
+
+      if (existingEdge) {
+        // If the edge already exists, update its weight
+        const updatedEdges = edges.map((edge) =>
+          edge.id === existingEdge.id
+            ? { ...edge, weight: selectedWeight || 1 }
+            : edge
+        );
+        setEdges(updatedEdges);
+      } else {
+        // If the edge doesn't exist, create a new one
         const newEdge: Edge = {
           endNodeId: selectedNodes[1],
           id: newEdgeId,
@@ -425,10 +451,11 @@ const DijkstrasAlgorithmCanvas: React.FC = () => {
           weight: selectedWeight || 1,
         };
         setEdges((prevEdges) => [...prevEdges, newEdge]);
-        setSelectedNodes([]);
-        setSelectedWeight(null);
-        addToHistory();
       }
+
+      setSelectedNodes([]);
+      setSelectedWeight(null);
+      addToHistory();
     } else {
       console.error("Please select two nodes to connect.");
     }
@@ -449,6 +476,63 @@ const DijkstrasAlgorithmCanvas: React.FC = () => {
       document.removeEventListener("keydown", handleKeyDown);
     };
   }, [connectNodes]);
+
+  const handleMouseDown = (event: React.MouseEvent<SVGSVGElement>) => {
+    setDragStart({
+      x: event.nativeEvent.offsetX,
+      y: event.nativeEvent.offsetY,
+    });
+    setDragEnd(null);
+    setSelectionBox({
+      startX: event.nativeEvent.offsetX,
+      startY: event.nativeEvent.offsetY,
+      endX: event.nativeEvent.offsetX,
+      endY: event.nativeEvent.offsetY,
+    });
+  };
+
+  const handleMouseMove = (event: React.MouseEvent<SVGSVGElement>) => {
+    if (dragStart) {
+      setDragEnd({
+        x: event.nativeEvent.offsetX,
+        y: event.nativeEvent.offsetY,
+      });
+
+      // Update the selection box
+      setSelectionBox({
+        startX: dragStart.x,
+        startY: dragStart.y,
+        endX: event.nativeEvent.offsetX,
+        endY: event.nativeEvent.offsetY,
+      });
+    }
+  };
+
+  const handleMouseUp = () => {
+    if (dragStart && dragEnd) {
+      const selectedNodes = nodes.filter((node) =>
+        isNodeInDragRegion(node, dragStart, dragEnd)
+      );
+      setSelectedNodes(selectedNodes.map((node) => node.id));
+    }
+
+    setDragStart(null);
+    setDragEnd(null);
+    setSelectionBox(null); // Reset selection box when mouse is released
+  };
+
+  const isNodeInDragRegion = (
+    node: Node,
+    start: { x: number; y: number },
+    end: { x: number; y: number }
+  ) => {
+    return (
+      node.x >= Math.min(start.x, end.x) &&
+      node.x <= Math.max(start.x, end.x) &&
+      node.y >= Math.min(start.y, end.y) &&
+      node.y <= Math.max(start.y, end.y)
+    );
+  };
 
   const generateDeltaValues = (
     table: any[],
@@ -508,41 +592,83 @@ const DijkstrasAlgorithmCanvas: React.FC = () => {
             </div>
           </div>
           <div className="d-flex gap-5" style={{ transform: "scale(0.9)" }}>
-            <div className="d-flex flex-column justify-content-center align-items-center">
-              <div
-                style={{
-                  height: "1.6rem",
-                  width: "1.6rem",
-                  backgroundColor: "white",
-                  borderRadius: "50%",
-                  border: "1px solid black",
-                }}
-              ></div>
-              <label>Idle Node</label>
+            <div className="d-flex gap-4">
+              <div className="d-flex flex-column justify-content-center align-items-center">
+                <div
+                  className="legend-button"
+                  style={{
+                    height: "1.6rem",
+                    width: "1.6rem",
+                    backgroundColor: "white",
+                    borderRadius: "50%",
+                    border: "1px solid black",
+                  }}
+                ></div>
+                <label>Idle Node</label>
+              </div>
+              <div className="d-flex flex-column justify-content-center align-items-center">
+                <div
+                  className="legend-button"
+                  style={{
+                    height: "1.6rem",
+                    width: "1.6rem",
+                    backgroundColor: "lightblue",
+                    borderRadius: "50%",
+                    border: "1px solid black",
+                  }}
+                ></div>
+                <label>Selected Node</label>
+              </div>
+              <div className="d-flex flex-column justify-content-center align-items-center">
+                <div
+                  className="legend-button"
+                  style={{
+                    height: "1.6rem",
+                    width: "1.6rem",
+                    backgroundColor: "orange",
+                    borderRadius: "50%",
+                    border: "1px solid black",
+                  }}
+                ></div>
+                <label>Starting Node</label>
+              </div>
             </div>
-            <div className="d-flex flex-column justify-content-center align-items-center">
+            <div
+              className="d-flex gap-3 px-3"
+              style={{ borderLeft: "1px solid black" }}
+            >
               <div
-                style={{
-                  height: "1.6rem",
-                  width: "1.6rem",
-                  backgroundColor: "lightblue",
-                  borderRadius: "50%",
-                  border: "1px solid black",
-                }}
-              ></div>
-              <label>Selected Node</label>
-            </div>
-            <div className="d-flex flex-column justify-content-center align-items-center">
+                onClick={undo}
+                className="d-flex flex-column justify-content-center align-items-center"
+              >
+                <div
+                  className=" undo-button"
+                  style={{
+                    height: "1.6rem",
+                    width: "1.6rem",
+                    backgroundColor: "white",
+                  }}
+                >
+                  <FaUndo />
+                </div>
+                <label>Undo</label>
+              </div>
               <div
-                style={{
-                  height: "1.6rem",
-                  width: "1.6rem",
-                  backgroundColor: "orange",
-                  borderRadius: "50%",
-                  border: "1px solid black",
-                }}
-              ></div>
-              <label>Starting Node</label>
+                onClick={redo}
+                className="d-flex flex-column justify-content-center align-items-center"
+              >
+                <div
+                  className=" undo-button"
+                  style={{
+                    height: "1.6rem",
+                    width: "1.6rem",
+                    backgroundColor: "white",
+                  }}
+                >
+                  <FaRedoAlt />
+                </div>
+                <label>Redo</label>
+              </div>
             </div>
           </div>
         </div>
@@ -551,7 +677,20 @@ const DijkstrasAlgorithmCanvas: React.FC = () => {
             ref={canvasRef}
             className="canvas"
             onClick={(event) => addNode(event)}
+            onMouseDown={handleMouseDown}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUp}
           >
+            {selectionBox && (
+              <rect
+                x={Math.min(selectionBox.startX, selectionBox.endX)}
+                y={Math.min(selectionBox.startY, selectionBox.endY)}
+                width={Math.abs(selectionBox.endX - selectionBox.startX)}
+                height={Math.abs(selectionBox.endY - selectionBox.startY)}
+                fill="rgba(173, 216, 230, 0.5)" // Light blue transparent color
+              />
+            )}
+
             {edges.map((edge) => {
               const startNode = nodes.find(
                 (node) => node.id === edge.startNodeId
@@ -568,6 +707,7 @@ const DijkstrasAlgorithmCanvas: React.FC = () => {
               );
             })}
           </svg>
+
           {nodes.map((node) => (
             <DraggableNode
               key={node.id}
@@ -630,29 +770,40 @@ const DijkstrasAlgorithmCanvas: React.FC = () => {
               Calculate Result
             </button>
           ) : (
-            <button
-              className="btn btn-secondary border border-dark btn-lg"
-              onClick={() => {
-                setIsAlgorithmRunning((prev) => !prev);
-                setDijkstraResult({
-                  distances: {},
-                  path: [],
-                  prev: {},
-                  steps: [],
-                });
-                setDijkstraPath([]);
-                setCurrentStep(0);
-                setSelectedEdgeIds([]);
-                setSelectedNodes([]);
-                setEdges(initialEdges);
-                setNodes(initialNodes);
-                setNodeSteps([]);
-                setDeltaValues([]);
-                setSelectedStartNode("S");
-              }}
-            >
-              Go back to editing mode
-            </button>
+            <div className="btn-group">
+              <button
+                className="btn btn-outline-danger border border-dark btn-lg"
+                onClick={() => {
+                  setIsAlgorithmRunning((prev) => !prev);
+                  setDijkstraResult({
+                    distances: {},
+                    path: [],
+                    prev: {},
+                    steps: [],
+                  });
+                  setDijkstraPath([]);
+                  setCurrentStep(0);
+                  setSelectedEdgeIds([]);
+                  setSelectedNodes([]);
+                  setEdges(initialEdges);
+                  setNodes(initialNodes);
+                  setNodeSteps([]);
+                  setDeltaValues([]);
+                  setSelectedStartNode("S");
+                  setHistory([]);
+                }}
+              >
+                Reset
+              </button>
+              <button
+                className="btn btn-outline-primary border border-dark btn-lg"
+                onClick={() => {
+                  setIsAlgorithmRunning((prev) => !prev);
+                }}
+              >
+                Edit Graph
+              </button>
+            </div>
           )}
 
           <hr />
@@ -893,7 +1044,14 @@ const DijkstrasAlgorithmCanvas: React.FC = () => {
                   title="Enter the weight between the edges"
                   disabled={!(selectedNodes.length === 2)}
                 >
-                  Connect Edges
+                  {edges.some(
+                    (edge) =>
+                      edge.id === selectedNodes.join("") ||
+                      edge.id ===
+                        selectedNodes.join("").split("").reverse().join("")
+                  )
+                    ? "Update Weight"
+                    : "Connect Nodes"}
                 </button>
                 <input
                   type="number"
@@ -908,13 +1066,25 @@ const DijkstrasAlgorithmCanvas: React.FC = () => {
               <button
                 className="btn btn-warning border border-dark btn-small"
                 onClick={() => deleteEdge(selectedNodes.join(""))}
-                disabled={selectedNodes.length !== 2}
+                disabled={
+                  !edges.some(
+                    (edge) =>
+                      edge.id === selectedNodes.join("") ||
+                      edge.id ===
+                        selectedNodes.join("").split("").reverse().join("")
+                  )
+                }
                 data-bs-toggle="tooltip"
                 data-bs-placement="left"
                 title={`Delete selected Edge`}
               >
                 Delete Edge{" "}
-                {selectedNodes.length === 2 && selectedNodes.join("")}
+                {edges.some(
+                  (edge) =>
+                    edge.id === selectedNodes.join("") ||
+                    edge.id ===
+                      selectedNodes.join("").split("").reverse().join("")
+                ) && selectedNodes.join("")}
               </button>
 
               <button
@@ -946,6 +1116,29 @@ const DijkstrasAlgorithmCanvas: React.FC = () => {
               >
                 About
               </button>
+
+              <button
+                className="btn btn-outline-danger border border-dark"
+                onClick={() => {
+                  setDijkstraResult({
+                    distances: {},
+                    path: [],
+                    prev: {},
+                    steps: [],
+                  });
+                  setDijkstraPath([]);
+                  setCurrentStep(0);
+                  setSelectedEdgeIds([]);
+                  setSelectedNodes([]);
+                  setEdges(initialEdges);
+                  setNodes(initialNodes);
+                  setNodeSteps([]);
+                  setDeltaValues([]);
+                  setHistory([]);
+                }}
+              >
+                Reset Graph
+              </button>
             </div>
           )}
         </div>
@@ -974,6 +1167,11 @@ const DijkstrasAlgorithmCanvas: React.FC = () => {
             process continues until the destination vertex is reached, or all
             reachable vertices have been visited.
           </p>
+          <img
+            src="https://ds055uzetaobb.cloudfront.net/image_optimizer/9e7d1e7f0beab28be5095491b4edcb51c22f9a6b.gif"
+            alt="Dijkstras Algorithm"
+            style={{ display: "block", margin: "auto", width: "60%" }}
+          />
           <hr />
           <h5>Dijkstra’s Algorithm Directed and Undirected graphs? </h5>
           <div>
@@ -1037,11 +1235,6 @@ const DijkstrasAlgorithmCanvas: React.FC = () => {
               </ul>
             </li>
           </ol>
-          <img
-            src="https://ds055uzetaobb.cloudfront.net/image_optimizer/9e7d1e7f0beab28be5095491b4edcb51c22f9a6b.gif"
-            alt="Dijkstras Algorithm"
-            style={{ display: "block", margin: "auto", width: "60%" }}
-          />
           <hr />
           <h5>Complexity Analysis</h5>
           <ul>

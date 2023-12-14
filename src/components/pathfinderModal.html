@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dijkstra's Algorithm</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+
+<body>
+
+    <!-- Bootstrap Modal -->
+    <div class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Dijkstra's Algorithm</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <p>
+                        Dijkstra's Algorithm is a graph search algorithm that solves the single-source shortest path
+                        problem for a
+                        graph with non-negative edge weights, producing a shortest path tree.
+                    </p>
+
+                    <p>
+                        Dijkstra's Algorithm is a graph search algorithm that solves the
+                        single-source shortest path problem for a graph with non-negative
+                        edge weights, producing a shortest path tree.
+                    </p>
+                    <p>
+                        The algorithm maintains a set of visited vertices and a set of
+                        unvisited vertices. It starts at the source vertex and iteratively
+                        selects the unvisited vertex with the smallest tentative distance
+                        from the source. It then visits the neighbors of this vertex and
+                        updates their tentative distances if a shorter path is found. This
+                        process continues until the destination vertex is reached, or all
+                        reachable vertices have been visited.
+                    </p>
+                    <hr />
+                    <h5>Dijkstra’s Algorithm Directed and Undirected graphs? </h5>
+                    <div>
+                        <p>
+                            Dijkstra’s algorithm can work on both directed graphs and
+                            undirected graphs as this algorithm is designed to work on any
+                            type of graph as long as it meets the requirements of having
+                            non-negative edge weights and being connected.
+                        </p>
+                        <ul>
+                            <li>
+                                <p>
+                                    In a <strong>directed graph,</strong> each edge has a
+                                    direction, indicating the direction of travel between the
+                                    vertices connected by the edge. In this case, the algorithm
+                                    follows the direction of the edges when searching for the
+                                    shortest path.
+                                </p>
+                            </li>
+                            <li>
+                                <p>
+                                    In an <strong>undirected graph,</strong> the edges have no
+                                    direction, and the algorithm can traverse both forward and
+                                    backward along the edges when searching for the shortest path.
+                                </p>
+                            </li>
+                        </ul>
+                        <p>
+                            There are several ways to Implement Dijkstra’s algorithm, but the
+                            most common ones are:
+                        </p>
+                        <ol>
+                            <li>Priority Queue (Heap-based Implementation)</li>
+                            <li>Array-based Implementation</li>
+                        </ol>
+                    </div>
+                    <hr />
+                    <h5>Algorithm for Dijkstra’s Algorithm</h5>
+                    <ol>
+                        <li>
+                            Mark the source node with a current distance of 0 and the rest
+                            with infinity.
+                        </li>
+                        <li>
+                            Set the non-visited node with the smallest current distance as the
+                            current node.
+                        </li>
+                        <li>
+                            For each neighbor, N of the current node:
+                            <ul>
+                                <li>
+                                    Add the current distance of the adjacent node with the weight
+                                    of the edge connecting 0-1.
+                                </li>
+                                <li>
+                                    If it is smaller than the current distance of Node, set it as
+                                    the new current distance of N.
+                                </li>
+                                <li>Mark the current node 1 as visited.</li>
+                                <li>Go to step 2 if there are any nodes that are unvisited.</li>
+                            </ul>
+                        </li>
+                    </ol>
+                    <img src="https://ds055uzetaobb.cloudfront.net/image_optimizer/9e7d1e7f0beab28be5095491b4edcb51c22f9a6b.gif"
+                        alt="Dijkstras Algorithm" style="display: block ; margin: auto ; width: 60%" />
+                    <hr />
+                    <h5>Complexity Analysis</h5>
+                    <ul>
+                        <li>
+                            <strong>Time complexity:</strong> O((V + E) log V), where V is the
+                            number of vertices and E is the number of edges.
+                        </li>
+                        <li>
+                            <strong>Auxiliary Space:</strong> O(V), where V is the number of
+                            vertices and E is the number of edges in the graph.
+                        </li>
+                    </ul>
+
+                    <!-- Iframe for external content -->
+                    <iframe title=" Dijkstra's Algorithm" src="path/to/your/external/document.html"
+                        style="width: 100%; height: 500px;"></iframe>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+
+</body>
+
+</html>

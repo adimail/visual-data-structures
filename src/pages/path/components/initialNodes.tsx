@@ -1,14 +1,14 @@
 import { Node, Edge } from "./DijkstrasAlgorithmCanvas";
 
 export const initialNodes: Node[] = [
-  { id: "A", x: 68, y: 68 },
   { id: "S", x: 239, y: 24 },
+  { id: "O", x: 546, y: 205 },
   { id: "N", x: 97, y: 340 },
   { id: "C", x: 543, y: 122 },
-  { id: "O", x: 546, y: 205 },
+  { id: "H", x: 963, y: 429 },
+  { id: "A", x: 68, y: 68 },
   { id: "F", x: 539, y: 289 },
   { id: "a", x: 1000, y: 52 },
-  { id: "H", x: 963, y: 429 },
 ];
 
 export const initialEdges: Edge[] = [

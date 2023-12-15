@@ -1,5 +1,7 @@
 import { Graph } from "./DijkstrasAlgorithmCanvas";
 
+// export let pathfinderSteps: string[] = [];
+
 function convertCanvasGraphOutput(graph: any): Graph {
   let nodes = graph.nodes;
   let edges = graph.edges;
@@ -18,13 +20,13 @@ function convertCanvasGraphOutput(graph: any): Graph {
     newGraph[currentEdge.endNodeId][currentEdge.startNodeId] =
       currentEdge.weight;
   }
-
   return newGraph;
 }
 export const dijkstraAlgorithm = (graph: any, startNode: string) => {
   const convertedGraph = convertCanvasGraphOutput(graph);
   return dijkstra(convertedGraph, startNode);
 };
+
 function calculateMinDistance(
   queue: string[],
   distances: { [key: string]: number }
@@ -73,6 +75,7 @@ function dijkstra(graph: Graph, startNode: string) {
   let visited: { [key: string]: boolean } = {};
   let queue: string[] = [];
   let prev: { [key: string]: string | undefined } = {};
+  let pathfinderSteps: string[] = [];
 
   let table: any[] = [];
   let steps: { table: any[]; text: string }[] = [];
@@ -86,7 +89,7 @@ function dijkstra(graph: Graph, startNode: string) {
   distances[startNode] = 0;
 
   while (queue.length) {
-    let currentNode = calculateMinDistance(queue, distances)!;
+    let currentNode: string = calculateMinDistance(queue, distances)!;
     queue.splice(queue.indexOf(currentNode), 1);
 
     if (visited[currentNode]) continue;
@@ -117,7 +120,7 @@ function dijkstra(graph: Graph, startNode: string) {
       Object.values(prev),
     ];
     let text =
-      `Currently, we are evaluating node ${currentNode} and we updated the table accordingly. We have ` +
+      `We are currently evaluating node ${currentNode} and we updated the table accordingly. We have ` +
       `visited the neighbors of ${currentNode} which are ${Object.keys(
         graph[currentNode]
       )}. `;
@@ -135,9 +138,9 @@ function dijkstra(graph: Graph, startNode: string) {
     }
 
     steps.push({ table, text });
+    pathfinderSteps.push(currentNode);
   }
 
   const path = dijkstra_path_calculator(startNode, graph, prev);
-
-  return { distances, path, prev, steps };
+  return { distances, path, prev, steps, pathfinderSteps };
 }

@@ -119,5 +119,22 @@ const insertAfter = (head: SLHead, setHead: SLSetHead, targetValue: number, valu
   console.error(`Target element with value ${targetValue} not found in the linked list.`);
 };
 
+const getByIndexValue = (head: SLHead, index: number): number | null => {
+  let current = head;
+  let currentIndex = 0;
 
-export { size, push, pop, pushFront, popFront, reverse, listToArray, removeElement, insertAfter };
+  while (current !== null) {
+    if (currentIndex === index) {
+      return current.value;
+    }
+
+    currentIndex++;
+    current = current.next;
+  }
+
+  return null; // Return null if index is out of bounds
+};
+
+
+
+export { size, push, pop, pushFront, popFront, reverse, listToArray, removeElement, insertAfter, getByIndexValue };

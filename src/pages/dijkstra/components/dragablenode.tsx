@@ -10,6 +10,7 @@ interface DraggableNodeProps {
   onClick: (selected: boolean, ctrlKey: boolean) => void;
   disableDragging?: boolean;
   startingNode: boolean;
+  visited: boolean;
 }
 
 const DraggableNode: React.FC<DraggableNodeProps> = ({
@@ -21,6 +22,7 @@ const DraggableNode: React.FC<DraggableNodeProps> = ({
   onClick,
   disableDragging = false,
   startingNode,
+  visited,
 }) => {
   const nodeRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -85,6 +87,8 @@ const DraggableNode: React.FC<DraggableNodeProps> = ({
       style={{
         backgroundColor: startingNode
           ? "orange"
+          : visited
+          ? "#25d282"
           : selected
           ? "lightblue"
           : "#fff",

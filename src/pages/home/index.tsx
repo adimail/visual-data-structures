@@ -10,8 +10,8 @@ export const HomeMenu = () => {
     >
       <h3>Home</h3>
       <hr />
-      <div className="d-flex align-items-center">
-        <div style={{ flex: 4 }}>
+      <div>
+        <div>
           <p>
             Welcome to the Data Structure Playground. You can use this static
             site as a simulator to visualize Data Structures and Algorithms,
@@ -38,33 +38,27 @@ export const HomeMenu = () => {
             TypeScript; it is a visualization of how these data structures work.
           </p>
         </div>
-        <div style={{ flex: 1 }}>
-          <img src="public\logo.png" alt="" style={{ width: "100%" }} />
-          <span style={{ fontSize: "0.6rem", display: "flex" }}>
-            Image Source: devgenius (medium)
-          </span>
-        </div>
-      </div>
 
-      <hr />
-      <h6>Developer's Note</h6>
-      <p>
-        This project is my attempt to learn TypeScript and the React framework
-        for building interactive web applications.
-      </p>
-      <p>
-        Tools used in building this include React as the frontend framework,
-        Bootstrap for UI (modals, tooltips, buttons, progress-bars, and icons),
-        Framer Motion for animations, Anime.js, and Immer.
-      </p>
-      <p>
-        You can report any notable issues{" "}
-        <a href="https://github.com/adimail/visual-data-structures/issues">
-          here
-        </a>{" "}
-        and contribute to this project.
-      </p>
-      <p></p>
+        <hr />
+        <h6>Developer's Note</h6>
+        <p>
+          This project is my attempt to learn TypeScript and the React framework
+          for building interactive web applications.
+        </p>
+        <p>
+          Tools used in building this include React as the frontend framework,
+          Bootstrap for UI (modals, tooltips, buttons, progress-bars, and
+          icons), Framer Motion for animations, Anime.js, and Immer.
+        </p>
+        <p>
+          You can report any notable issues{" "}
+          <a href="https://github.com/adimail/visual-data-structures/issues">
+            here
+          </a>{" "}
+          and contribute to this project.
+        </p>
+        <p></p>
+      </div>
     </motion.div>
   );
 };

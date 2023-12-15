@@ -5,9 +5,15 @@ interface EdgeProps {
   startNode?: { x: number; y: number };
   endNode?: { x: number; y: number };
   weight: number;
+  observing: boolean;
 }
 
-const Edge: React.FC<EdgeProps> = ({ startNode, endNode, weight }) => {
+const Edge: React.FC<EdgeProps> = ({
+  startNode,
+  endNode,
+  weight,
+  observing,
+}) => {
   if (!startNode || !endNode) {
     return null; // Skip rendering if startNode or endNode is undefined
   }
@@ -24,23 +30,30 @@ const Edge: React.FC<EdgeProps> = ({ startNode, endNode, weight }) => {
 
   return (
     <>
-      <line stroke="#ccc" strokeWidth="3" x1={x1} x2={x2} y1={y1} y2={y2} />
+      <line
+        stroke={observing ? "green" : "#ccc"}
+        strokeWidth={observing ? "5" : "4"}
+        x1={x1}
+        x2={x2}
+        y1={y1}
+        y2={y2}
+      />
       <g>
         <rect
           fill="white"
-          height="32"
+          height="25"
+          width="25"
           rx="4"
           ry="4"
           stroke="black"
           strokeWidth="1"
-          width="32"
-          x={cx - 16}
-          y={cy - 16}
+          x={cx - 11}
+          y={cy - 17}
+          className="align-items-center justify-content-center"
         />
         <text
           cursor="pointer"
-          dy=".3em"
-          fontSize={"1.2em"}
+          fontSize={"1em"}
           fontWeight={"600"}
           textAnchor="middle"
           x={cx}

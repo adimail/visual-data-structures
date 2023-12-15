@@ -18,12 +18,14 @@ interface AlgorithmNavigationProps {
   onClear: () => void;
   onRemove: () => void;
   onInsertAfter: (targetValue: number, valueToInsert: number) => void;
+  onEnqueue: () => void;
+  onDequeue: () => void;
+  addrand: () => void;
   userInput: string;
   setUserInput: React.Dispatch<React.SetStateAction<string>>;
   listType: "Stack" | "Queue";
   setListType: React.Dispatch<React.SetStateAction<"Stack" | "Queue">>;
-  onEnqueue: () => void;
-  onDequeue: () => void;
+  size: number;
 }
 
 export function AlgorithmNavigation({
@@ -35,6 +37,8 @@ export function AlgorithmNavigation({
   setUserInput,
   listType,
   setListType,
+  size,
+  addrand,
 }: AlgorithmNavigationProps) {
   useEffect(() => {
     var tooltipTriggerList = [].slice.call(
@@ -67,6 +71,15 @@ export function AlgorithmNavigation({
       </div>
       <hr />
       <nav className="gap-2 d-flex flex-column">
+        {size === 8 ? (
+          <>
+            <p>Maximum size reached</p>
+          </>
+        ) : (
+          <>
+            <p>Items Left {8 - size}</p>
+          </>
+        )}
         <div className="input-group w-80">
           <input
             className="form-control w-50 border-dark"
@@ -81,10 +94,18 @@ export function AlgorithmNavigation({
           <button
             className="btn btn-outline-success p-2 flex-fill w-30"
             onClick={onPushFront}
+            disabled={size > 7}
           >
             {listType === "Stack" ? "Push" : "Enqueue"}
           </button>
         </div>
+        <button
+          className="btn btn-success p-2 flex-fill w-30"
+          onClick={addrand}
+          disabled={size > 7}
+        >
+          {listType === "Stack" ? "Push" : "Enqueue"} Random Number (1-30)
+        </button>
         <button
           className="btn btn-outline-danger p-2 flex-fill"
           onClick={listType === "Stack" ? onPopFront : onPop}

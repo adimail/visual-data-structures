@@ -9,6 +9,7 @@ import {
   reverse,
   removeElement,
   insertAfter,
+  getByIndexValue,
 } from "./algorithms";
 import { ListADTStack, ListADTQueue } from "./listadt";
 
@@ -25,7 +26,7 @@ type SLNode = {
 };
 type SLHead = SLNode | null;
 
-const LinkedList = () => {
+const ListADT = () => {
   const [listType, setListType] = useState<"Stack" | "Queue">("Stack");
 
   const [userInput, setUserInput] = useState<string>("");
@@ -87,6 +88,11 @@ const LinkedList = () => {
     } else {
       console.error("Invalid input. Please enter a valid number.");
     }
+  };
+
+  const handleAddRandomNumber = () => {
+    const randomValue = Math.floor(Math.random() * 30) + 1;
+    pushFront(head, setHead, randomValue);
   };
 
   const handleInsertAfter = () => {
@@ -159,22 +165,49 @@ const LinkedList = () => {
 
       <div className="d-flex col-12">
         <div className="col-10 gap-3">
-          <p className="d-flex gap-4">
+          <p className="d-flex gap-5">
             <div>
               {size === 0 ? (
                 <>
                   Data structure is empty.
                   <br />
                   Add elements using the control panel to the right of the page.
+                  <br />
+                  Max Size: 8 Elements
                 </>
               ) : (
-                `Size of the ${listType}: ${size}`
+                <div>
+                  <p>Maximum Size: 8 Elements</p>
+                  <p>
+                    Size of the {listType}: {size}
+                  </p>
+                </div>
               )}
             </div>
-            {listType === "Stack" && `Top: ${head?.value}`}
+
+            {listType === "Stack" ? (
+              `Top: ${getByIndexValue(head, 0) ?? "Null Pointer"}`
+            ) : (
+              <div>
+                <p>
+                  Front: {getByIndexValue(head, size - 1) ?? "Null Pointer"}
+                </p>
+                <p>Rear: {getByIndexValue(head, 0) ?? "Null Pointer"}</p>
+              </div>
+            )}
+
+            <p>
+              {size === 8 && (
+                <>
+                  <strong>Maximum size reached</strong>
+                </>
+              )}
+            </p>
           </p>
-          {listType === "Stack" && <ListADTStack head={head} />}
-          {listType === "Queue" && <ListADTQueue head={head} />}
+          <div className="container d-flex aligh-items-center justify-content-center">
+            {listType === "Stack" && <ListADTStack head={head} />}
+            {listType === "Queue" && <ListADTQueue head={head} />}
+          </div>
         </div>
         <div
           className="mw-30 col-2"
@@ -203,6 +236,8 @@ const LinkedList = () => {
             onDequeue={handleDequeue}
             listType={listType}
             setListType={setListType}
+            size={size}
+            addrand={handleAddRandomNumber}
           />
         </div>
       </div>
@@ -210,4 +245,4 @@ const LinkedList = () => {
   );
 };
 
-export default LinkedList;
+export default ListADT;

@@ -25,7 +25,7 @@ type SLNode = {
 };
 type SLHead = SLNode | null;
 
-const LinkedList = () => {
+export const LinkedListPage = () => {
   const [userInput, setUserInput] = useState<string>("");
   const [insertValue, setInsertValue] = useState<number | undefined>(undefined);
   const [removeValue, setRemoveValue] = useState<number | undefined>(undefined);
@@ -177,5 +177,3 @@ const LinkedList = () => {
     </motion.div>
   );
 };
-
-export default LinkedList;

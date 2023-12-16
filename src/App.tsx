@@ -1,93 +1,164 @@
 import "./App.css";
-import { Menu } from "antd";
-import { useLocation, useNavigate } from "react-router-dom";
-import { useEffect, useRef } from "react";
+import { Menu, Button } from "antd";
 import PageFooter from "./components/pagefooter";
-import AnimatedRouts from "./components/AnimatedRouts";
+import { useState } from "react";
+import { MenuOutlined } from "@ant-design/icons";
+import { motion, AnimatePresence } from "framer-motion";
+import { Offcanvas } from "react-bootstrap";
+
+import HomeMenu from "./pages/home";
+import ListADT from "./pages/list-adt";
+import { LinkedListPage } from "./pages/ll";
+import AVLTreePage from "./pages/avl";
+import PathFinder from "./pages/path";
+import Sorting from "./pages/sort";
+import Hashing from "./pages/hashing";
+import BinarySearchTreePage from "./pages/bst";
+import Dijkstra from "./pages/dijkstra";
 
 interface MenuItem {
-  key: string;
   label: string;
 }
 
 function App() {
-  return (
-    <>
-      <h2 className="text-primary py-2 text-center bg-dark">
-        Data structure visualizer
-      </h2>
-
-      <div className="d-flex flex-column flex-grow-1">
-        <div className="flex-grow-1 d-flex">
-          <SideMenu />
-          <Content />
-        </div>
-      </div>
-      <PageFooter />
-    </>
+  const [selectedPage, setSelectedPage] = useState<React.ReactNode>(
+    <HomeMenu />
   );
-}
+  const [showMenu, setShowMenu] = useState<boolean>(false);
+  const [currentPageIndex, setCurrentPageIndex] = useState<number>(0);
 
-function SideMenu() {
-  const navigate = useNavigate();
+  const handleNextPage = () => {
+    const newIndex = Math.min(currentPageIndex + 1, menuItems.length - 1);
+    handleMenuClick(menuItems[newIndex]);
+    setCurrentPageIndex(newIndex);
+  };
+
+  const handlePreviousPage = () => {
+    const newIndex = Math.max(currentPageIndex - 1, 0);
+    handleMenuClick(menuItems[newIndex]);
+    setCurrentPageIndex(newIndex);
+  };
 
   const menuItems: MenuItem[] = [
-    { key: "/visual-data-structures/", label: "Home" },
-    { key: "/visual-data-structures/ll", label: "Linked List" },
-    { key: "/visual-data-structures/list-adt", label: "List ADT" },
-    { key: "/visual-data-structures/sort", label: "Sorting" },
-    { key: "/visual-data-structures/bst", label: "Binary search tree" },
-    { key: "/visual-data-structures/avl", label: "Avl Tree" },
-    { key: "/visual-data-structures/dijkstra", label: "Dijkstra's algorithm" },
-    { key: "/visual-data-structures/path", label: "Path finding" },
-    { key: "/visual-data-structures/hashing", label: "Hashing Algoithm" },
+    { label: "Home" },
+    { label: "Linked List" },
+    { label: "List ADT" },
+    { label: "Sorting" },
+    { label: "Binary search tree" },
+    { label: "Avl Tree" },
+    { label: "Dijkstra's algorithm" },
+    { label: "Path finding" },
+    { label: "Hashing Algorithm" },
   ];
 
-  return (
-    <div>
-      <Menu onClick={(e) => navigate(e.key)} mode="vertical" className="gap-5">
-        {menuItems.map((item) => (
-          <Menu.Item
-            key={item.key}
-            className={
-              item.key === "/visual-data-structures/" ? "home-button" : ""
-            }
-          >
-            {item.label}
-          </Menu.Item>
-        ))}
-      </Menu>
-    </div>
-  );
-}
-
-function Content() {
-  const location = useLocation();
-  const contentRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (contentRef.current) {
-      contentRef.current.scrollTop = 0;
+  const handleMenuClick = (item: MenuItem) => {
+    switch (item.label) {
+      case "Home":
+        setSelectedPage(<HomeMenu />);
+        break;
+      case "List ADT":
+        setSelectedPage(<ListADT />);
+        break;
+      case "Linked List":
+        setSelectedPage(<LinkedListPage />);
+        break;
+      case "Sorting":
+        setSelectedPage(<Sorting />);
+        break;
+      case "Binary search tree":
+        setSelectedPage(<BinarySearchTreePage />);
+        break;
+      case "Avl Tree":
+        setSelectedPage(<AVLTreePage />);
+        break;
+      case "Dijkstra's algorithm":
+        setSelectedPage(<Dijkstra />);
+        break;
+      case "Path finding":
+        setSelectedPage(<PathFinder />);
+        break;
+      case "Hashing Algorithm":
+        setSelectedPage(<Hashing />);
+        break;
+      default:
+        setSelectedPage(null);
     }
-  }, [location.pathname]);
+  };
 
-  const is404 =
-    location.pathname !== "/visual-data-structures/" &&
-    !location.pathname.startsWith("/visual-data-structures/");
+  const toggleMenu = () => {
+    setShowMenu(!showMenu);
+  };
 
-  if (is404) {
-    return (
-      <div>
-        <p>Page you are looking for does not exist</p>
+  return (
+    <>
+      <motion.div
+        initial={{ opacity: 0, y: -50 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -50 }} // Exit animation configuration
+        transition={{ duration: 0.5 }}
+        className="text-primary align-items-center justifycontent-center text-center bg-dark d-flex"
+      >
+        <Button
+          type="primary"
+          icon={<MenuOutlined />}
+          onClick={toggleMenu}
+          className="menu-toggle-button bg-dark"
+          style={{ padding: "0" }}
+        />
+        <h2 className="text-primary py-2 text-center w-100">
+          Data structure visualizer
+        </h2>
+      </motion.div>
+
+      <div className="d-flex flex-column flex-grow-1" style={{ width: "100%" }}>
+        <div className="d-flex">
+          {showMenu && (
+            <Offcanvas show={showMenu} onHide={toggleMenu} placement="start">
+              <Offcanvas.Header closeButton>
+                <Offcanvas.Title>Data Structure Visualizer</Offcanvas.Title>
+              </Offcanvas.Header>
+              <Offcanvas.Body>
+                <Menu mode="vertical" className="gap-5">
+                  {menuItems.map((item) => (
+                    <Menu.Item
+                      key={item.label}
+                      className={item.label === "Home" ? "home-button" : ""}
+                      onClick={() => {
+                        handleMenuClick(item);
+                        toggleMenu();
+                      }}
+                    >
+                      {item.label}
+                    </Menu.Item>
+                  ))}
+                </Menu>
+              </Offcanvas.Body>
+            </Offcanvas>
+          )}
+
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={selectedPage ? "page" : "empty"}
+              initial={{ opacity: 0, y: -50 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -50 }}
+              transition={{ duration: 0.5 }}
+              className="mx-4 pt-3"
+              style={{ width: "100%" }}
+            >
+              {selectedPage}
+            </motion.div>
+          </AnimatePresence>
+        </div>
       </div>
-    );
-  } else {
-    return (
-      <div className="w-100 mx-4 fade-transition">
-        <AnimatedRouts />
-      </div>
-    );
-  }
+      <PageFooter
+        onNextPage={handleNextPage}
+        onPreviousPage={handlePreviousPage}
+        isPreviousDisabled={currentPageIndex === 0}
+        isNextDisabled={currentPageIndex === menuItems.length - 1}
+      />
+    </>
+  );
 }
 
 export default App;

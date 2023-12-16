@@ -3,7 +3,6 @@ import ReactDOM from "react-dom/client";
 import App from "./App.tsx";
 import ReloadConfirmationModal from "./components/ReloadConfirmationModal.tsx";
 import "bootstrap/dist/css/bootstrap.css";
-import { BrowserRouter } from "react-router-dom";
 
 const Main: React.FC = () => {
   const [showReloadConfirmation, setShowReloadConfirmation] = useState(false);
@@ -33,14 +32,12 @@ const Main: React.FC = () => {
 
   return (
     <React.StrictMode>
-      <BrowserRouter>
-        <App />
-        <ReloadConfirmationModal
-          show={showReloadConfirmation}
-          onClose={handleCloseReloadConfirmation}
-          onConfirm={handleConfirmReload}
-        />
-      </BrowserRouter>
+      <App />
+      <ReloadConfirmationModal
+        show={showReloadConfirmation}
+        onClose={handleCloseReloadConfirmation}
+        onConfirm={handleConfirmReload}
+      />
     </React.StrictMode>
   );
 };

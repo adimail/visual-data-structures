@@ -1,7 +1,7 @@
 import React, { ChangeEvent, FormEvent, useState } from "react";
 import "./TreeTraversalVisualizer.css";
 import TreeBackEnd from "./TraversalLogic/Tree";
-
+import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Modal } from "react-bootstrap";
 
@@ -61,6 +61,7 @@ interface TreeTraversalVisualizerState {
   inOrderTraversal: number[];
   preOrderTraversal: number[];
   postOrderTraversal: number[];
+  showcontrols: boolean;
 }
 
 class TreeTraversalVisualizer extends React.Component<
@@ -84,6 +85,7 @@ class TreeTraversalVisualizer extends React.Component<
       inOrderTraversal: [],
       preOrderTraversal: [],
       postOrderTraversal: [],
+      showcontrols: true,
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -288,7 +290,7 @@ class TreeTraversalVisualizer extends React.Component<
     return (
       <div>
         <div className="d-flex col-12">
-          <div className="col-10">
+          <div className={`col-${this.state.showcontrols ? "10" : "12"}`}>
             <div
               className="d-flex gap-5 justify-content-between"
               style={{ paddingRight: "2rem" }}
@@ -303,7 +305,21 @@ class TreeTraversalVisualizer extends React.Component<
                 Note: The UI for this page is unstable, you may have to minimise
                 the screen at times
               </i>
+
+              <button
+                className="gap-3 align-items-center d-flex btn"
+                style={{ height: "fit-content" }}
+                onClick={() =>
+                  this.setState((prevState) => ({
+                    showcontrols: !prevState.showcontrols,
+                  }))
+                }
+              >
+                {!this.state.showcontrols && <FaArrowLeft />}
+                {this.state.showcontrols && <FaArrowRight />}
+              </button>
             </div>
+
             <div className="d-flex align-items=center justify-content-center">
               {this.state.tree.head && (
                 <div className="tree">
@@ -321,123 +337,125 @@ class TreeTraversalVisualizer extends React.Component<
             </div>
           </div>
 
-          <div className="query-component gap-2 d-flex flex-column col-2">
-            <div className="input-group w-80">
-              <button
-                type="button"
-                className="w-50 btn btn-secondary border border-dark "
-                onClick={this.handleSubmit}
-              >
-                Insert Array
-              </button>
-              <input
-                className="w-30 form-control border border-dark "
-                type="text"
-                placeholder="Integers separated by comma"
-                value={this.state.arrayInput}
-                onChange={(e) => this.handleChangeArray(e)}
-              />
-            </div>
-
-            <div className="input-group w-80">
-              <button
-                type="button"
-                className="w-50 btn btn-secondary border border-dark "
-                onClick={this.handleSubmit}
-              >
-                Insert
-              </button>
-              <input
-                className="w-30 form-control border border-dark "
-                type="number"
-                placeholder="Integer"
-                value={this.state.lastAddedToTree}
-                onChange={this.handleChange}
-              />
-            </div>
-
-            <div className="input-group w-80">
-              <button
-                type="button"
-                className="w-50 btn btn-secondary border border-dark "
-                onClick={() => this.removeNode()}
-              >
-                Remove
-              </button>
-              <input
-                className="w-30 form-control border border-dark "
-                type="number"
-                placeholder="Integer"
-                value={this.state.lastAddedToTree}
-                onChange={this.handleChange}
-              />
-            </div>
-            <hr />
-            <div className="btn-group-vertical">
-              <button
-                className="btn btn-outline-success"
-                onClick={() => this.sendTraversalRequest("in")}
-              >
-                Inorder Transversal
-              </button>
-              <button
-                className="btn btn-outline-success"
-                onClick={() => this.sendTraversalRequest("pre")}
-              >
-                Pre-Order Transversal
-              </button>
-              <button
-                className="btn btn-outline-success"
-                onClick={() => this.sendTraversalRequest("post")}
-              >
-                Post-Order Transversal
-              </button>
-              <button
-                className="btn btn-outline-success"
-                onClick={() => this.sendTraversalRequest("dfs")}
-              >
-                Depth First Search
-              </button>
-              <button
-                className="btn btn-outline-success"
-                onClick={() => this.sendTraversalRequest("bfs")}
-              >
-                Breadth First Search
-              </button>
-            </div>
-            <div className="d-flex flex-column">
-              <div className="d-flex justify-content-between">
-                <p>Max Nodes: {this.state.maxNodes}</p>
+          {this.state.showcontrols && (
+            <div className="query-component gap-2 d-flex flex-column col-2">
+              <div className="input-group w-80">
+                <button
+                  type="button"
+                  className="w-50 btn btn-secondary border border-dark "
+                  onClick={this.handleSubmit}
+                >
+                  Insert Array
+                </button>
+                <input
+                  className="w-30 form-control border border-dark "
+                  type="text"
+                  placeholder="Integers separated by comma"
+                  value={this.state.arrayInput}
+                  onChange={(e) => this.handleChangeArray(e)}
+                />
               </div>
-              <input
-                className={`form-range ${
-                  this.state.maxNodes > 17 ? "slider-red" : ""
-                }`}
-                type="range"
-                min={5}
-                max={35}
-                step={1}
-                value={this.state.maxNodes}
-                onChange={this.handleMaxNodesChange}
-              />
+
+              <div className="input-group w-80">
+                <button
+                  type="button"
+                  className="w-50 btn btn-secondary border border-dark "
+                  onClick={this.handleSubmit}
+                >
+                  Insert
+                </button>
+                <input
+                  className="w-30 form-control border border-dark "
+                  type="number"
+                  placeholder="Integer"
+                  value={this.state.lastAddedToTree}
+                  onChange={this.handleChange}
+                />
+              </div>
+
+              <div className="input-group w-80">
+                <button
+                  type="button"
+                  className="w-50 btn btn-secondary border border-dark "
+                  onClick={() => this.removeNode()}
+                >
+                  Remove
+                </button>
+                <input
+                  className="w-30 form-control border border-dark "
+                  type="number"
+                  placeholder="Integer"
+                  value={this.state.lastAddedToTree}
+                  onChange={this.handleChange}
+                />
+              </div>
+              <hr />
+              <div className="btn-group-vertical">
+                <button
+                  className="btn btn-outline-success"
+                  onClick={() => this.sendTraversalRequest("in")}
+                >
+                  Inorder Transversal
+                </button>
+                <button
+                  className="btn btn-outline-success"
+                  onClick={() => this.sendTraversalRequest("pre")}
+                >
+                  Pre-Order Transversal
+                </button>
+                <button
+                  className="btn btn-outline-success"
+                  onClick={() => this.sendTraversalRequest("post")}
+                >
+                  Post-Order Transversal
+                </button>
+                <button
+                  className="btn btn-outline-success"
+                  onClick={() => this.sendTraversalRequest("dfs")}
+                >
+                  Depth First Search
+                </button>
+                <button
+                  className="btn btn-outline-success"
+                  onClick={() => this.sendTraversalRequest("bfs")}
+                >
+                  Breadth First Search
+                </button>
+              </div>
+              <div className="d-flex flex-column">
+                <div className="d-flex justify-content-between">
+                  <p>Max Nodes: {this.state.maxNodes}</p>
+                </div>
+                <input
+                  className={`form-range ${
+                    this.state.maxNodes > 17 ? "slider-red" : ""
+                  }`}
+                  type="range"
+                  min={5}
+                  max={35}
+                  step={1}
+                  value={this.state.maxNodes}
+                  onChange={this.handleMaxNodesChange}
+                />
+              </div>
+              <hr />
+              <button
+                className="btn btn-success"
+                onClick={() => this.generateTree()}
+              >
+                Generate new Tree
+              </button>
+              <button className="btn btn-success" onClick={this.toggleModal}>
+                About
+              </button>
+              <button
+                className="btn btn-outline-danger"
+                onClick={() => this.deleteTree()}
+              >
+                Delete Tree
+              </button>
             </div>
-            <hr />
-            <button
-              className="btn btn-success"
-              onClick={() => this.generateTree()}
-            >
-              Generate new Tree
-            </button>
-            <button className="btn btn-success" onClick={this.toggleModal}>
-              About
-            </button>
-            <button
-              className="btn btn-outline-danger"
-              onClick={() => this.deleteTree()}
-            >
-              Delete Tree
-            </button>
-          </div>
+          )}
         </div>
         <Modal
           className="modal-xl modal-dialog-scrollable"

@@ -11,6 +11,7 @@ import { defaultSettings } from "./internals/util/constants";
 import { TraceEntry, generateRandomNumbers } from "./internals/util/Trace";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Modal } from "react-bootstrap";
+import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 
 export const Sorting = () => {
   const [step, setStep] = useState(0);
@@ -35,6 +36,7 @@ export const Sorting = () => {
 
   const currentAlgorithmKey = algorithm;
   const currentAlgorithm = algorithmDisplayNames[currentAlgorithmKey];
+  const [showAlgorithmNavigation, setShowAlgorithmNavigation] = useState(true);
 
   const handleForwardClick = () => {
     setAlgorithm((prevAlgorithm) => {
@@ -69,11 +71,22 @@ export const Sorting = () => {
       {/* Algorithm content */}
       <hr />
       <div className="d-flex col-12">
-        <div className="col-10 border-none">
+        <div className={`col-${showAlgorithmNavigation ? "10" : "12"}`}>
           <div>
-            <div>
-              {"Total number of comparisms: "}
-              {step} / {trace?.length - 1}
+            <div className="d-flex w-100 justify-content-between">
+              <div>
+                {"Total number of comparisms: "}
+                {step} / {trace?.length - 1}
+              </div>
+              <button
+                className="gap-3 align-items-center d-flex btn"
+                onClick={() =>
+                  setShowAlgorithmNavigation((prevState) => !prevState)
+                }
+              >
+                {!showAlgorithmNavigation && <FaArrowLeft />}
+                {showAlgorithmNavigation && <FaArrowRight />}
+              </button>
             </div>
             <BarChart
               trace={trace?.[step]}
@@ -100,106 +113,111 @@ export const Sorting = () => {
           </div>
           <br />
         </div>
-        <div
-          className="mw-30 col-2"
-          style={{ maxWidth: "400px", minWidth: "150px" }}
-        >
-          <br />
-          <Controls
-            step={step}
-            setStep={setStep}
-            algorithm={algorithm}
-            setAlgorithm={setAlgorithm}
-            numbers={numbers}
-            setNumbers={setNumbers}
-            trace={trace}
-            setTrace={setTrace}
-            animation={animation}
-            setAnimation={setAnimation}
-            setShowModal={setShowModal}
-            currentAlgorithm={currentAlgorithm.displayName}
-          />
 
-          <button
-            className="btn btn-success w-100 mt-5"
-            onClick={() => setShowModal(true)}
+        {showAlgorithmNavigation && (
+          <div
+            className="mw-30 col-2"
+            style={{ maxWidth: "400px", minWidth: "150px" }}
           >
-            About
-          </button>
-
-          <Modal
-            className="modal-xl"
-            show={showModal}
-            onHide={() => setShowModal(false)}
-          >
-            <Modal.Header closeButton>
-              <Modal.Title>{"Sorting Algorithms"}</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              <p>
-                <i>
-                  Note: Use Space key to toggle play and pause, and use Arrow
-                  keys to skip steps forward and backwards.
-                </i>
-              </p>
-              <p>
-                A Sorting Algorithm is used to rearrange a given array or list
-                of elements according to a comparison operator on the elements.
-                The comparison operator is used to decide the new order of
-                elements in the respective data structure.
-              </p>
-              <img
-                src="https://www.researchgate.net/profile/Paul-Sambo/publication/279464781/figure/tbl1/AS:669518414237712@1536637037508/shows-a-comparison-of-Sorting-Algorithms.png" // Replace with the actual URL to your image
-                alt="Sorting Algorithm Image"
-                style={{ display: "block", margin: "auto", width: "60%" }}
+            <br />
+            <div className="algorithmNavigation">
+              <Controls
+                step={step}
+                setStep={setStep}
+                algorithm={algorithm}
+                setAlgorithm={setAlgorithm}
+                numbers={numbers}
+                setNumbers={setNumbers}
+                trace={trace}
+                setTrace={setTrace}
+                animation={animation}
+                setAnimation={setAnimation}
+                setShowModal={setShowModal}
+                currentAlgorithm={currentAlgorithm.displayName}
               />
-              <div className="d-flex justify-content-between mx-auto">
-                <Modal.Title>{currentAlgorithm.displayName}</Modal.Title>
 
-                <BsForwardFill
-                  className="button"
-                  onClick={handleForwardClick}
-                />
-              </div>
-              <hr />
-              <div className="d-flex gap-3 flex-column">
-                <h5>Description</h5>
-                {`${currentAlgorithm.description}`}
-                <hr />
-                <h5>Algorithm</h5>
-                {currentAlgorithm.algorithm}
-              </div>
-              <hr />
-              <h5>
-                Time Complexity of {currentAlgorithm.displayName}:{" "}
-                {currentAlgorithm.timeComplexity}
-              </h5>
-              <div className="d-flex align-items-center">
-                <div>
-                  <ul>
-                    {Object.entries(algorithmDisplayNames).map(
-                      ([algorithmName, algorithm]) => (
-                        <li
-                          key={algorithmName}
-                          className={
-                            algorithm === currentAlgorithm ? "fw-bolder" : ""
-                          }
-                        >
-                          {algorithm.displayName}: {algorithm.timeComplexity}
-                        </li>
-                      )
-                    )}
-                  </ul>
-                </div>
+              <button
+                className="btn btn-success w-100 mt-5"
+                onClick={() => setShowModal(true)}
+              >
+                About
+              </button>
+            </div>
+
+            <Modal
+              className="modal-xl"
+              show={showModal}
+              onHide={() => setShowModal(false)}
+            >
+              <Modal.Header closeButton>
+                <Modal.Title>{"Sorting Algorithms"}</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                <p>
+                  <i>
+                    Note: Use Space key to toggle play and pause, and use Arrow
+                    keys to skip steps forward and backwards.
+                  </i>
+                </p>
+                <p>
+                  A Sorting Algorithm is used to rearrange a given array or list
+                  of elements according to a comparison operator on the
+                  elements. The comparison operator is used to decide the new
+                  order of elements in the respective data structure.
+                </p>
                 <img
-                  src="https://webrewrite.com/wp-content/uploads/2017/06/Screen-Shot-2017-06-06-at-5.57.57-AM.png" // Replace with the actual URL to your image
+                  src="https://www.researchgate.net/profile/Paul-Sambo/publication/279464781/figure/tbl1/AS:669518414237712@1536637037508/shows-a-comparison-of-Sorting-Algorithms.png" // Replace with the actual URL to your image
                   alt="Sorting Algorithm Image"
                   style={{ display: "block", margin: "auto", width: "60%" }}
                 />
-              </div>
-            </Modal.Body>
-          </Modal>
-        </div>
+                <div className="d-flex justify-content-between mx-auto">
+                  <Modal.Title>{currentAlgorithm.displayName}</Modal.Title>
+
+                  <BsForwardFill
+                    className="button"
+                    onClick={handleForwardClick}
+                  />
+                </div>
+                <hr />
+                <div className="d-flex gap-3 flex-column">
+                  <h5>Description</h5>
+                  {`${currentAlgorithm.description}`}
+                  <hr />
+                  <h5>Algorithm</h5>
+                  {currentAlgorithm.algorithm}
+                </div>
+                <hr />
+                <h5>
+                  Time Complexity of {currentAlgorithm.displayName}:{" "}
+                  {currentAlgorithm.timeComplexity}
+                </h5>
+                <div className="d-flex align-items-center">
+                  <div>
+                    <ul>
+                      {Object.entries(algorithmDisplayNames).map(
+                        ([algorithmName, algorithm]) => (
+                          <li
+                            key={algorithmName}
+                            className={
+                              algorithm === currentAlgorithm ? "fw-bolder" : ""
+                            }
+                          >
+                            {algorithm.displayName}: {algorithm.timeComplexity}
+                          </li>
+                        )
+                      )}
+                    </ul>
+                  </div>
+                  <img
+                    src="https://webrewrite.com/wp-content/uploads/2017/06/Screen-Shot-2017-06-06-at-5.57.57-AM.png" // Replace with the actual URL to your image
+                    alt="Sorting Algorithm Image"
+                    style={{ display: "block", margin: "auto", width: "60%" }}
+                  />
+                </div>
+              </Modal.Body>
+            </Modal>
+          </div>
+        )}
       </div>
     </motion.div>
   );

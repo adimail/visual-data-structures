@@ -11,6 +11,7 @@ import {
   insertAfter,
 } from "./algorithms";
 import LinkedListComponent from "./LinkedList";
+import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 
 const initialHead: SLHead = {
   id: "1",
@@ -26,6 +27,7 @@ type SLNode = {
 type SLHead = SLNode | null;
 
 export const LinkedListPage = () => {
+  const [showAlgorithmNavigation, setShowAlgorithmNavigation] = useState(true);
   const [userInput, setUserInput] = useState<string>("");
   const [insertValue, setInsertValue] = useState<number | undefined>(undefined);
   const [removeValue, setRemoveValue] = useState<number | undefined>(undefined);
@@ -143,36 +145,52 @@ export const LinkedListPage = () => {
       <h5>Linked List</h5>
       <hr />
       <div className="d-flex col-12">
-        <div className="col-10">
-          <p>Size of the Linked List: {size}</p>
+        <div
+          className={`col-${showAlgorithmNavigation ? "10" : "12"}`}
+          style={{ height: "20vw" }}
+        >
+          <div className="d-flex justify-content-between">
+            <p>Size of the Linked List: {size}</p>
+            <button
+              className="gap-3 align-items-center d-flex btn"
+              onClick={() =>
+                setShowAlgorithmNavigation((prevState) => !prevState)
+              }
+            >
+              {!showAlgorithmNavigation && <FaArrowLeft />}
+              {showAlgorithmNavigation && <FaArrowRight />}
+            </button>
+          </div>
           <LinkedListComponent head={head} />
         </div>
-        <div
-          className="mw-30 col-2"
-          style={{ maxWidth: "400px", minWidth: "150px" }}
-        >
-          <AlgorithmNavigation
-            head={head}
-            setHead={setHead}
-            insertValue={insertValue}
-            setInsertValue={setInsertValue}
-            removeValue={removeValue}
-            setRemoveValue={setRemoveValue}
-            randomValue={randomValue}
-            setRandomValue={setRandomValue}
-            onPush={handlePush}
-            onPop={handlePop}
-            onRemove={handleRemove}
-            onPushFront={handlePushFront}
-            onPopFront={handlePopFront}
-            onReverse={handleReverse}
-            onClear={handleClear}
-            onAddMultipleValues={handleAddMultipleValues}
-            onInsertAfter={handleInsertAfter}
-            userInput={userInput}
-            setUserInput={setUserInput}
-          />
-        </div>
+        {showAlgorithmNavigation && (
+          <div
+            className="mw-30 col-2"
+            style={{ maxWidth: "400px", minWidth: "150px" }}
+          >
+            <AlgorithmNavigation
+              head={head}
+              setHead={setHead}
+              insertValue={insertValue}
+              setInsertValue={setInsertValue}
+              removeValue={removeValue}
+              setRemoveValue={setRemoveValue}
+              randomValue={randomValue}
+              setRandomValue={setRandomValue}
+              onPush={handlePush}
+              onPop={handlePop}
+              onRemove={handleRemove}
+              onPushFront={handlePushFront}
+              onPopFront={handlePopFront}
+              onReverse={handleReverse}
+              onClear={handleClear}
+              onAddMultipleValues={handleAddMultipleValues}
+              onInsertAfter={handleInsertAfter}
+              userInput={userInput}
+              setUserInput={setUserInput}
+            />
+          </div>
+        )}
       </div>
     </motion.div>
   );

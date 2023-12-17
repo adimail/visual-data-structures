@@ -12,6 +12,7 @@ import {
   getByIndexValue,
 } from "./algorithms";
 import { ListADTStack, ListADTQueue } from "./listadt";
+import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 
 const initialHead: SLHead = {
   id: "1",
@@ -28,7 +29,7 @@ type SLHead = SLNode | null;
 
 const ListADT = () => {
   const [listType, setListType] = useState<"Stack" | "Queue">("Stack");
-
+  const [showAlgorithmNavigation, setShowAlgorithmNavigation] = useState(true);
   const [userInput, setUserInput] = useState<string>("");
   const [insertValue, setInsertValue] = useState<number | undefined>(undefined);
   const [removeValue, setRemoveValue] = useState<number | undefined>(undefined);
@@ -164,82 +165,98 @@ const ListADT = () => {
       <hr />
 
       <div className="d-flex col-12">
-        <div className="col-10 gap-3">
-          <p className="d-flex gap-5">
-            <div>
-              {size === 0 ? (
-                <>
-                  Data structure is empty.
-                  <br />
-                  Add elements using the control panel to the right of the page.
-                  <br />
-                  Max Size: 8 Elements
-                </>
+        <div className={`col-${showAlgorithmNavigation ? "10" : "12"} gap-3`}>
+          <div className="d-flex justify-content-between">
+            <p className="d-flex gap-5">
+              <div>
+                {size === 0 ? (
+                  <>
+                    Data structure is empty.
+                    <br />
+                    Add elements using the control panel to the right of the
+                    page.
+                    <br />
+                    Max Size: 8 Elements
+                  </>
+                ) : (
+                  <div>
+                    <p>Maximum Size: 8 Elements</p>
+                    <p>
+                      Size of the {listType}: {size}
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              {listType === "Stack" ? (
+                `Top: ${getByIndexValue(head, 0) ?? "Null Pointer"}`
               ) : (
                 <div>
-                  <p>Maximum Size: 8 Elements</p>
                   <p>
-                    Size of the {listType}: {size}
+                    Front: {getByIndexValue(head, size - 1) ?? "Null Pointer"}
                   </p>
+                  <p>Rear: {getByIndexValue(head, 0) ?? "Null Pointer"}</p>
                 </div>
               )}
-            </div>
 
-            {listType === "Stack" ? (
-              `Top: ${getByIndexValue(head, 0) ?? "Null Pointer"}`
-            ) : (
-              <div>
-                <p>
-                  Front: {getByIndexValue(head, size - 1) ?? "Null Pointer"}
-                </p>
-                <p>Rear: {getByIndexValue(head, 0) ?? "Null Pointer"}</p>
-              </div>
-            )}
-
-            <p>
-              {size === 8 && (
-                <>
-                  <strong>Maximum size reached</strong>
-                </>
-              )}
+              <p>
+                {size === 8 && (
+                  <>
+                    <strong>Maximum size reached</strong>
+                  </>
+                )}
+              </p>
             </p>
-          </p>
+
+            <button
+              className="gap-3 align-items-center d-flex btn"
+              onClick={() =>
+                setShowAlgorithmNavigation((prevState) => !prevState)
+              }
+              style={{ height: "fit-content" }}
+            >
+              {!showAlgorithmNavigation && <FaArrowLeft />}
+              {showAlgorithmNavigation && <FaArrowRight />}
+            </button>
+          </div>
           <div className="container d-flex aligh-items-center justify-content-center">
             {listType === "Stack" && <ListADTStack head={head} />}
             {listType === "Queue" && <ListADTQueue head={head} />}
           </div>
         </div>
-        <div
-          className="mw-30 col-2"
-          style={{ maxWidth: "400px", minWidth: "150px" }}
-        >
-          <AlgorithmNavigation
-            head={head}
-            setHead={setHead}
-            insertValue={insertValue}
-            setInsertValue={setInsertValue}
-            removeValue={removeValue}
-            setRemoveValue={setRemoveValue}
-            randomValue={randomValue}
-            setRandomValue={setRandomValue}
-            onPush={handlePush}
-            onPop={handlePop}
-            onRemove={handleRemove}
-            onPushFront={handlePushFront}
-            onPopFront={handlePopFront}
-            onReverse={handleReverse}
-            onClear={handleClear}
-            onInsertAfter={handleInsertAfter}
-            userInput={userInput}
-            setUserInput={setUserInput}
-            onEnqueue={handleEnqueue}
-            onDequeue={handleDequeue}
-            listType={listType}
-            setListType={setListType}
-            size={size}
-            addrand={handleAddRandomNumber}
-          />
-        </div>
+        {showAlgorithmNavigation && (
+          <div
+            className="mw-30 col-2"
+            style={{ maxWidth: "400px", minWidth: "150px" }}
+          >
+            <AlgorithmNavigation
+              head={head}
+              setHead={setHead}
+              insertValue={insertValue}
+              setInsertValue={setInsertValue}
+              removeValue={removeValue}
+              setRemoveValue={setRemoveValue}
+              randomValue={randomValue}
+              setRandomValue={setRandomValue}
+              onPush={handlePush}
+              onPop={handlePop}
+              onRemove={handleRemove}
+              onPushFront={handlePushFront}
+              onPopFront={handlePopFront}
+              onReverse={handleReverse}
+              onClear={handleClear}
+              onInsertAfter={handleInsertAfter}
+              userInput={userInput}
+              setUserInput={setUserInput}
+              onEnqueue={handleEnqueue}
+              onDequeue={handleDequeue}
+              listType={listType}
+              setListType={setListType}
+              size={size}
+              addrand={handleAddRandomNumber}
+            />
+          </div>
+        )}
       </div>
     </motion.div>
   );

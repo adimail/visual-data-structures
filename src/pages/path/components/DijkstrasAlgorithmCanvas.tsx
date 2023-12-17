@@ -39,6 +39,7 @@ export interface Graph {
 }
 
 const DijkstrasAlgorithmCanvas: React.FC = () => {
+  const [showAlgorithmNavigation, setShowAlgorithmNavigation] = useState(true);
   const [selectionBox, setSelectionBox] = useState<{
     startX: number;
     startY: number;
@@ -86,6 +87,41 @@ const DijkstrasAlgorithmCanvas: React.FC = () => {
       edges: Edge[];
     }[]
   >([]);
+  const [autoStepEnabled, setAutoStepEnabled] = useState(false);
+
+  // Create a function for automatic stepping
+  const autoStep = () => {
+    if (
+      currentStep < Object.keys(dijkstraResult).length - 1 &&
+      isAlgorithmRunning
+    ) {
+      setCurrentStep((prevStep) => prevStep + 1);
+      setvisitednodesID([...visitednodesID, pathsteps[currentStep]]);
+    } else {
+      // Disable automatic stepping when the last step is reached
+      setAutoStepEnabled(false);
+      setActiveTable("finalPath");
+      setShowAlgorithmNavigation(true);
+    }
+  };
+
+  // Function to reset the algorithm
+  const resetAlgorithm = () => {
+    setCurrentStep(0);
+    setvisitednodesID([]);
+    setUnderObservation([]);
+  };
+
+  useEffect(() => {
+    let intervalId: NodeJS.Timeout;
+
+    if (autoStepEnabled) {
+      intervalId = setInterval(autoStep, 2000);
+    }
+
+    // Clear the interval when the component unmounts or when algorithm is reset
+    return () => clearInterval(intervalId);
+  }, [autoStepEnabled, currentStep, dijkstraResult, isAlgorithmRunning]);
 
   function filterEdgesByLetter(edges: Edge[], targetLetter: string): string[] {
     const filteredEdges: string[] = [];
@@ -598,11 +634,12 @@ const DijkstrasAlgorithmCanvas: React.FC = () => {
 
   return (
     <div className="d-flex col-12">
-      <div className="canvas-container col-10">
-        <div
-          className="d-flex gap-5 justify-content-between"
-          style={{ paddingRight: "2rem" }}
-        >
+      <div
+        className={`canvas-container col-${
+          showAlgorithmNavigation ? "10" : "12"
+        }`}
+      >
+        <div className="d-flex gap-5 justify-content-between">
           <div className="d-flex gap-5">
             <div className="d-flex flex-row gap-5">
               <p>Number of Nodes: {nodes.length}</p>
@@ -613,13 +650,25 @@ const DijkstrasAlgorithmCanvas: React.FC = () => {
                   ? "Not Selected"
                   : selectedStartNode}{" "}
               </p>
-              {selectedNodes.length > 0 && (
-                <>
-                  <p>Selected Nodes: {selectedNodes.length}</p>
-                </>
-              )}
             </div>
           </div>
+          {isAlgorithmRunning && !showAlgorithmNavigation && (
+            <p
+              className="text-white bg-dark p-2"
+              style={{
+                height: "fit-content",
+                borderRadius: "10px",
+                fontSize: "large",
+              }}
+            >
+              Current Step: {pathsteps[currentStep]}
+            </p>
+          )}
+          {selectedNodes.length > 0 && (
+            <>
+              <p>Selected Nodes: {selectedNodes.length}</p>
+            </>
+          )}
           <div className="d-flex gap-5" style={{ transform: "scale(0.9)" }}>
             <div className="d-flex gap-4">
               <div className="d-flex flex-column justify-content-center align-items-center">
@@ -715,9 +764,21 @@ const DijkstrasAlgorithmCanvas: React.FC = () => {
                 <label>Visited Node</label>
               </div>
             )}
+            <button
+              className="gap-3 align-items-center d-flex btn"
+              onClick={() =>
+                setShowAlgorithmNavigation((prevState) => !prevState)
+              }
+            >
+              {!showAlgorithmNavigation && <FaArrowLeft />}
+              {showAlgorithmNavigation && <FaArrowRight />}
+            </button>
           </div>
         </div>
-        <div className="DroppableArea">
+        <div
+          className="DroppableArea"
+          style={{ width: "100%", paddingRight: "20px" }}
+        >
           <svg
             ref={canvasRef}
             className="canvas"
@@ -725,6 +786,7 @@ const DijkstrasAlgorithmCanvas: React.FC = () => {
             onMouseDown={handleMouseDown}
             onMouseMove={handleMouseMove}
             onMouseUp={handleMouseUp}
+            style={{ width: "100%" }}
           >
             {selectionBox && (
               <rect
@@ -732,7 +794,7 @@ const DijkstrasAlgorithmCanvas: React.FC = () => {
                 y={Math.min(selectionBox.startY, selectionBox.endY)}
                 width={Math.abs(selectionBox.endX - selectionBox.startX)}
                 height={Math.abs(selectionBox.endY - selectionBox.startY)}
-                fill="rgba(173, 216, 230, 0.5)" // Light blue transparent color
+                fill="rgba(173, 216, 230, 0.5)"
               />
             )}
 
@@ -787,441 +849,473 @@ const DijkstrasAlgorithmCanvas: React.FC = () => {
         </div>
       </div>
 
-      <div className=" col-2" style={{ maxWidth: "400px", minWidth: "150px" }}>
-        <div className=" d-flex flex-column">
-          {!isAlgorithmRunning ? (
-            <div className=" d-flex flex-column">
-              <span>
-                {connectedGraph ? (
-                  <span>Connected Graph</span>
-                ) : (
-                  <span>Disconnected Graph</span>
-                )}
-              </span>
-              <span>
-                {selectedStartNode === null
-                  ? "Start Node Not Selected"
-                  : `Start Node Selected: ${selectedStartNode}`}
-              </span>
-              <button
-                className="btn btn-outline-success border border-dark btn-lg"
-                disabled={!connectedGraph || selectedStartNode === null}
-                onClick={() => {
-                  setSelectedNodes([]);
-                  setIsAlgorithmRunning((prev) => !prev);
-                  if (selectedStartNode !== null) {
-                    const result = dijkstraAlgorithm(
-                      { edges, nodes },
-                      selectedStartNode
-                    );
-                    setDijkstraResult(result.steps);
-                    setDijkstraPath(result.path);
-                    setpathsteps(result.pathfinderSteps);
-                  }
-                }}
-              >
-                Calculate Result
-              </button>
-            </div>
-          ) : (
-            <div className="btn-group">
-              <button
-                className="btn btn-outline-danger border border-dark btn-lg"
-                onClick={() => {
-                  setIsAlgorithmRunning((prev) => !prev);
-                  setDijkstraResult({
-                    distances: {},
-                    path: [],
-                    prev: {},
-                    steps: [],
-                  });
-                  setDijkstraPath([]);
-                  setCurrentStep(0);
-                  setSelectedNodes([]);
-                  setEdges(initialEdges);
-                  setNodes(initialNodes);
-                  setSelectedStartNode("S");
-                  setHistory([]);
-                  setpathsteps([]);
-                  setvisitednodesID([]);
-                  setSelectedEdgeIds([]);
-                  setUnderObservation([]);
-                }}
-              >
-                Reset
-              </button>
-              <button
-                className="btn btn-outline-primary border border-dark btn-lg"
-                onClick={() => {
-                  setIsAlgorithmRunning((prev) => !prev);
-                  setSelectedNodes([]);
-                  setCurrentStep(0);
-                  setpathsteps([]);
-                  setvisitednodesID([]);
-                  setUnderObservation([]);
-                }}
-              >
-                Edit Graph
-              </button>
-            </div>
-          )}
-
-          <hr />
-
-          {!graphEditingMode() && isAlgorithmRunning ? (
-            <div className="d-flex flex-column gap-4">
-              <div className="btn-group-vertical">
+      {showAlgorithmNavigation && (
+        <div
+          className=" col-2"
+          style={{ maxWidth: "400px", minWidth: "150px" }}
+        >
+          <div className=" d-flex flex-column">
+            {!isAlgorithmRunning ? (
+              <div className=" d-flex flex-column">
+                <span>
+                  {connectedGraph ? (
+                    <span>Connected Graph</span>
+                  ) : (
+                    <span>Disconnected Graph</span>
+                  )}
+                </span>
+                <span>
+                  {selectedStartNode === null
+                    ? "Start Node Not Selected"
+                    : `Start Node Selected: ${selectedStartNode}`}
+                </span>
                 <button
-                  className={`btn btn-outline-success ${
-                    activeTable === "currentStep" ? "active" : ""
-                  }`}
-                  onClick={() => setActiveTable("currentStep")}
-                >
-                  Current Step
-                </button>
-                <button
-                  className={`btn btn-outline-success ${
-                    activeTable === "Algorithmstep" ? "active" : ""
-                  }`}
-                  onClick={() => setActiveTable("Algorithmstep")}
-                >
-                  Algorithm Step
-                </button>
-                <button
-                  className={`btn btn-outline-success ${
-                    activeTable === "finalPath" ? "active" : ""
-                  }`}
-                  onClick={() => setActiveTable("finalPath")}
-                >
-                  Final Path
-                </button>
-              </div>
-
-              <div className="button-container">
-                <button
-                  disabled={currentStep === 0}
+                  className="btn btn-outline-success border border-dark btn-lg"
+                  disabled={!connectedGraph || selectedStartNode === null}
                   onClick={() => {
-                    setCurrentStep((prevStep) => Math.max(prevStep - 1, 0));
-
-                    // Update visited nodes
-                    setvisitednodesID((prevSelectedNodes) =>
-                      prevSelectedNodes.filter(
-                        (id) => id !== pathsteps[currentStep]
-                      )
-                    );
-
-                    // Update visited edges
-                    setUnderObservation((prevUnderObservation) =>
-                      prevUnderObservation.filter(
-                        (edgeId) => !edgeId.includes(pathsteps[currentStep])
-                      )
-                    );
+                    setSelectedNodes([]);
+                    setIsAlgorithmRunning((prev) => !prev);
+                    if (selectedStartNode !== null) {
+                      const result = dijkstraAlgorithm(
+                        { edges, nodes },
+                        selectedStartNode
+                      );
+                      setDijkstraResult(result.steps);
+                      setDijkstraPath(result.path);
+                      setpathsteps(result.pathfinderSteps);
+                    }
                   }}
                 >
-                  <FaArrowLeft />
+                  Calculate Result
                 </button>
-                <div className="d-flex flex-column align-items-center">
-                  <i>
-                    {currentStep + 1} / {Object.keys(dijkstraResult).length}
-                  </i>
-                  <i>Current Node: {pathsteps[currentStep]}</i>
+              </div>
+            ) : (
+              <div className="btn-group">
+                <button
+                  className="btn btn-outline-danger border border-dark btn-lg"
+                  onClick={() => {
+                    setIsAlgorithmRunning((prev) => !prev);
+                    setDijkstraResult({
+                      distances: {},
+                      path: [],
+                      prev: {},
+                      steps: [],
+                    });
+                    setDijkstraPath([]);
+                    setCurrentStep(0);
+                    setSelectedNodes([]);
+                    setEdges(initialEdges);
+                    setNodes(initialNodes);
+                    setSelectedStartNode("S");
+                    setHistory([]);
+                    setpathsteps([]);
+                    setvisitednodesID([]);
+                    setSelectedEdgeIds([]);
+                    setUnderObservation([]);
+                  }}
+                >
+                  Reset
+                </button>
+                <button
+                  className="btn btn-outline-primary border border-dark btn-lg"
+                  onClick={() => {
+                    setIsAlgorithmRunning((prev) => !prev);
+                    setSelectedNodes([]);
+                    setCurrentStep(0);
+                    setpathsteps([]);
+                    setvisitednodesID([]);
+                    setUnderObservation([]);
+                  }}
+                >
+                  Edit Graph
+                </button>
+              </div>
+            )}
+
+            <hr />
+
+            {!graphEditingMode() && isAlgorithmRunning ? (
+              <div className="d-flex flex-column gap-4">
+                <div className="btn-group-vertical">
+                  <button
+                    className={`btn btn-outline-success ${
+                      activeTable === "currentStep" ? "active" : ""
+                    }`}
+                    onClick={() => setActiveTable("currentStep")}
+                  >
+                    Current Step
+                  </button>
+                  <button
+                    className={`btn btn-outline-success ${
+                      activeTable === "Algorithmstep" ? "active" : ""
+                    }`}
+                    onClick={() => setActiveTable("Algorithmstep")}
+                  >
+                    Algorithm Step
+                  </button>
+                  <button
+                    className={`btn btn-outline-success ${
+                      activeTable === "finalPath" ? "active" : ""
+                    }`}
+                    onClick={() => setActiveTable("finalPath")}
+                  >
+                    Final Path
+                  </button>
                 </div>
-                <button
-                  disabled={
-                    currentStep === Object.keys(dijkstraResult).length - 1
-                  }
-                  onClick={() => {
-                    setCurrentStep((prevStep) =>
-                      Math.min(
-                        prevStep + 1,
-                        Object.keys(dijkstraResult).length - 1
-                      )
-                    );
-                    setvisitednodesID([
-                      ...visitednodesID,
-                      pathsteps[currentStep],
-                    ]);
-                  }}
-                >
-                  <FaArrowRight />
-                </button>
-              </div>
-              <div>
-                {activeTable === "currentStep" && (
-                  <div>
-                    <table className={"table"}>
-                      <thead>
-                        <tr>
-                          <th>Node</th>
-                          <th>Visited?</th>
-                          <th>Distance</th>
-                          <th>Previous</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {dijkstraResult[currentStep].table[0].map(
-                          (_: any, index: number) => {
-                            if (dijkstraResult[currentStep].table[3][index]) {
-                              selectEdge(
-                                dijkstraResult[currentStep].table[0][index] +
-                                  dijkstraResult[currentStep].table[3][index]
+
+                <div>
+                  <div className="button-container">
+                    <button
+                      disabled={currentStep === 0 || autoStepEnabled}
+                      onClick={() => {
+                        setCurrentStep((prevStep) => Math.max(prevStep - 1, 0));
+                        setvisitednodesID((prevSelectedNodes) =>
+                          prevSelectedNodes.filter(
+                            (id) => id !== pathsteps[currentStep]
+                          )
+                        );
+                        setAutoStepEnabled(false); // Disable automatic stepping when manually navigating
+                      }}
+                    >
+                      <FaArrowLeft />
+                    </button>
+                    <div className="d-flex flex-column align-items-center">
+                      <i>
+                        {currentStep + 1} / {Object.keys(dijkstraResult).length}
+                      </i>
+                      <i>Current Node: {pathsteps[currentStep]}</i>
+                    </div>
+                    <button
+                      disabled={
+                        currentStep ===
+                          Object.keys(dijkstraResult).length - 1 ||
+                        autoStepEnabled
+                      }
+                      onClick={() => {
+                        setCurrentStep((prevStep) =>
+                          Math.min(
+                            prevStep + 1,
+                            Object.keys(dijkstraResult).length - 1
+                          )
+                        );
+                        setvisitednodesID([
+                          ...visitednodesID,
+                          pathsteps[currentStep],
+                        ]);
+                        setAutoStepEnabled(false); // Disable automatic stepping when manually navigating
+                      }}
+                    >
+                      <FaArrowRight />
+                    </button>
+                  </div>
+                  <div className="d-flex justify-content-center">
+                    <button
+                      className="btn"
+                      onClick={() => {
+                        resetAlgorithm();
+                        setAutoStepEnabled((prev) => !prev);
+                        setShowAlgorithmNavigation(false);
+                      }}
+                    >
+                      Toggle Auto Step
+                    </button>
+                  </div>
+                </div>
+                <div>
+                  {activeTable === "currentStep" && (
+                    <div>
+                      <table className={"table"}>
+                        <thead>
+                          <tr>
+                            <th>Node</th>
+                            <th>Visited?</th>
+                            <th>Distance</th>
+                            <th>Previous</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {dijkstraResult[currentStep].table[0].map(
+                            (_: any, index: number) => {
+                              if (dijkstraResult[currentStep].table[3][index]) {
+                                selectEdge(
+                                  dijkstraResult[currentStep].table[0][index] +
+                                    dijkstraResult[currentStep].table[3][index]
+                                );
+                              }
+
+                              return (
+                                <tr key={index}>
+                                  <td
+                                    className={
+                                      dijkstraResult[currentStep].table[1][
+                                        index
+                                      ] && "bg-success text-white"
+                                    }
+                                  >
+                                    {
+                                      dijkstraResult[currentStep].table[0][
+                                        index
+                                      ]
+                                    }
+                                  </td>
+                                  <td
+                                    className={
+                                      dijkstraResult[currentStep].table[1][
+                                        index
+                                      ] && "bg-success text-white"
+                                    }
+                                  >
+                                    {dijkstraResult[currentStep].table[1][index]
+                                      ? "Yes"
+                                      : "No"}
+                                  </td>
+                                  <td
+                                    className={
+                                      dijkstraResult[currentStep].table[1][
+                                        index
+                                      ] && "bg-success text-white"
+                                    }
+                                  >
+                                    {
+                                      dijkstraResult[currentStep].table[2][
+                                        index
+                                      ]
+                                    }
+                                  </td>
+                                  <td
+                                    className={
+                                      dijkstraResult[currentStep].table[1][
+                                        index
+                                      ] && "bg-success text-white"
+                                    }
+                                  >
+                                    {dijkstraResult[currentStep].table[3][
+                                      index
+                                    ] ?? "none"}
+                                  </td>
+                                </tr>
                               );
                             }
+                          )}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
 
-                            return (
-                              <tr key={index}>
-                                <td
-                                  className={
-                                    dijkstraResult[currentStep].table[1][
-                                      index
-                                    ] && "bg-success text-white"
-                                  }
-                                >
-                                  {dijkstraResult[currentStep].table[0][index]}
-                                </td>
-                                <td
-                                  className={
-                                    dijkstraResult[currentStep].table[1][
-                                      index
-                                    ] && "bg-success text-white"
-                                  }
-                                >
-                                  {dijkstraResult[currentStep].table[1][index]
-                                    ? "Yes"
-                                    : "No"}
-                                </td>
-                                <td
-                                  className={
-                                    dijkstraResult[currentStep].table[1][
-                                      index
-                                    ] && "bg-success text-white"
-                                  }
-                                >
-                                  {dijkstraResult[currentStep].table[2][index]}
-                                </td>
-                                <td
-                                  className={
-                                    dijkstraResult[currentStep].table[1][
-                                      index
-                                    ] && "bg-success text-white"
-                                  }
-                                >
-                                  {dijkstraResult[currentStep].table[3][
-                                    index
-                                  ] ?? "none"}
-                                </td>
-                              </tr>
-                            );
-                          }
-                        )}
-                      </tbody>
-                    </table>
-                  </div>
-                )}
+                  {activeTable === "finalPath" && (
+                    <>
+                      <table className={"table"}>
+                        <thead>
+                          <tr>
+                            <th>Node</th>
+                            <th>Final Path</th>
+                            <th>Distance</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {dijkstraResult[currentStep].table[0].map(
+                            (_: any, index: number) => {
+                              return (
+                                <tr key={index}>
+                                  <td>
+                                    {
+                                      dijkstraResult[currentStep].table[0][
+                                        index
+                                      ]
+                                    }
+                                  </td>
+                                  <td>
+                                    {dijkstraPath[index]
+                                      .split("")
+                                      .reverse()
+                                      .join("")}
+                                  </td>
+                                  <td>
+                                    {
+                                      dijkstraResult[currentStep].table[2][
+                                        index
+                                      ]
+                                    }
+                                  </td>
+                                </tr>
+                              );
+                            }
+                          )}
+                        </tbody>
+                      </table>
+                    </>
+                  )}
 
-                {activeTable === "finalPath" && (
-                  <>
-                    <table className={"table"}>
-                      <thead>
-                        <tr>
-                          <th>Node</th>
-                          <th>Final Path</th>
-                          <th>Distance</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {dijkstraResult[currentStep].table[0].map(
-                          (_: any, index: number) => {
-                            return (
-                              <tr key={index}>
-                                <td>
-                                  {dijkstraResult[currentStep].table[0][index]}
-                                </td>
-                                <td>
-                                  {dijkstraPath[index]
-                                    .split("")
-                                    .reverse()
-                                    .join("")}
-                                </td>
-                                <td>
-                                  {dijkstraResult[currentStep].table[2][index]}
-                                </td>
-                              </tr>
-                            );
-                          }
-                        )}
-                      </tbody>
-                    </table>
-                  </>
-                )}
-
-                {activeTable === "Algorithmstep" && (
-                  <div>
-                    <p>{dijkstraResult[currentStep].text}</p>
-                  </div>
-                )}
-              </div>
-            </div>
-          ) : (
-            <div className="gap-2 d-flex flex-column">
-              <div className="select">
-                <label>Select Starting Node:</label>
-                <div className="select">
-                  <select
-                    id="starting-node"
-                    onChange={(e) => setSelectedStartNode(e.target.value)}
-                    required={true}
-                    value={selectedStartNode || "Select Start Node"}
-                    className="form-select"
-                  >
-                    <option disabled value="">
-                      Select starting node
-                    </option>
-                    {nodes.map((node) => (
-                      <option key={node.id} value={node.id}>
-                        {node.id}
-                      </option>
-                    ))}
-                  </select>
+                  {activeTable === "Algorithmstep" && (
+                    <div>
+                      <p>{dijkstraResult[currentStep].text}</p>
+                    </div>
+                  )}
                 </div>
               </div>
+            ) : (
+              <div className="gap-2 d-flex flex-column">
+                <div className="select">
+                  <label>Select Starting Node:</label>
+                  <div className="select">
+                    <select
+                      id="starting-node"
+                      onChange={(e) => setSelectedStartNode(e.target.value)}
+                      required={true}
+                      value={selectedStartNode || "Select Start Node"}
+                      className="form-select"
+                    >
+                      <option disabled value="">
+                        Select starting node
+                      </option>
+                      {nodes.map((node) => (
+                        <option key={node.id} value={node.id}>
+                          {node.id}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
 
-              <button
-                className="btn btn-success border border-dark"
-                onClick={addRandomNode}
-              >
-                Add Random node
-              </button>
-
-              <hr />
-              <button
-                className="btn btn-primary border border-dark"
-                onClick={connectNodes}
-                data-bs-toggle="tooltip"
-                data-bs-placement="left"
-                title="Enter the weight between the edges"
-                disabled={!(selectedNodes.length === 2)}
-              >
-                Connect (ctrl+Enter)
-              </button>
-
-              {selectedNodes.length === 2 ? (
-                <label>Edge {selectedNodes.join("")}</label>
-              ) : (
-                <label>No edge detected</label>
-              )}
-
-              <div className="input-group w-80">
                 <button
-                  type="button"
-                  className="w-40 btn btn-primary border border-dark "
-                  onClick={() => connectNodes()}
+                  className="btn btn-success border border-dark"
+                  onClick={addRandomNode}
+                >
+                  Add Random node
+                </button>
+
+                <hr />
+                <button
+                  className="btn btn-primary border border-dark"
+                  onClick={connectNodes}
                   data-bs-toggle="tooltip"
                   data-bs-placement="left"
                   title="Enter the weight between the edges"
                   disabled={!(selectedNodes.length === 2)}
                 >
+                  Connect (ctrl+Enter)
+                </button>
+
+                {selectedNodes.length === 2 ? (
+                  <label>Edge {selectedNodes.join("")}</label>
+                ) : (
+                  <label>No edge detected</label>
+                )}
+
+                <div className="input-group w-80">
+                  <button
+                    type="button"
+                    className="w-40 btn btn-primary border border-dark "
+                    onClick={() => connectNodes()}
+                    data-bs-toggle="tooltip"
+                    data-bs-placement="left"
+                    title="Enter the weight between the edges"
+                    disabled={!(selectedNodes.length === 2)}
+                  >
+                    {edges.some(
+                      (edge) =>
+                        edge.id === selectedNodes.join("") ||
+                        edge.id ===
+                          selectedNodes.join("").split("").reverse().join("")
+                    )
+                      ? "Update Weight"
+                      : "Connect Nodes"}
+                  </button>
+                  <input
+                    type="number"
+                    aria-label="node-1"
+                    placeholder="weight"
+                    className="w-30 form-control border border-dark"
+                    value={selectedWeight || ""}
+                    onChange={(e) =>
+                      setSelectedWeight(parseInt(e.target.value))
+                    }
+                  />
+                </div>
+                <hr />
+                <button
+                  className="btn btn-warning border border-dark btn-small"
+                  onClick={() => deleteEdge(selectedNodes.join(""))}
+                  disabled={
+                    !edges.some(
+                      (edge) =>
+                        edge.id === selectedNodes.join("") ||
+                        edge.id ===
+                          selectedNodes.join("").split("").reverse().join("")
+                    )
+                  }
+                  data-bs-toggle="tooltip"
+                  data-bs-placement="left"
+                  title={`Delete selected Edge`}
+                >
+                  Delete Edge{" "}
                   {edges.some(
                     (edge) =>
                       edge.id === selectedNodes.join("") ||
                       edge.id ===
                         selectedNodes.join("").split("").reverse().join("")
-                  )
-                    ? "Update Weight"
-                    : "Connect Nodes"}
+                  ) && selectedNodes.join("")}
                 </button>
-                <input
-                  type="number"
-                  aria-label="node-1"
-                  placeholder="weight"
-                  className="w-30 form-control border border-dark"
-                  value={selectedWeight || ""}
-                  onChange={(e) => setSelectedWeight(parseInt(e.target.value))}
-                />
+
+                <button
+                  className="btn btn-warning border border-dark btn-small"
+                  onClick={() => deleteSelectedNodes()}
+                  disabled={selectedNodes.length === 0}
+                  data-bs-toggle="tooltip"
+                  data-bs-placement="left"
+                  title={`Delete ${selectedNodes.length} ${
+                    selectedNodes.length > 1 ? "nodes" : "node"
+                  }`}
+                >
+                  Delete {selectedNodes.length > 0 && selectedNodes.length} Node
+                  {selectedNodes.length !== 1 && "s"}
+                </button>
+
+                <button
+                  className="btn btn-danger border border-dark"
+                  onClick={() => {
+                    deleteGraph();
+                    setSelectedStartNode(null);
+                  }}
+                >
+                  Delete Graph
+                </button>
+
+                <hr />
+
+                <button
+                  className="btn btn-success border border-dark"
+                  onClick={toggleModal}
+                >
+                  About
+                </button>
+
+                <button
+                  className="btn btn-outline-danger border border-dark"
+                  onClick={() => {
+                    setDijkstraResult({
+                      distances: {},
+                      path: [],
+                      prev: {},
+                      steps: [],
+                    });
+                    setDijkstraPath([]);
+                    setCurrentStep(0);
+                    setSelectedEdgeIds([]);
+                    setSelectedNodes([]);
+                    setEdges(initialEdges);
+                    setNodes(initialNodes);
+                    setHistory([]);
+                    setvisitednodesID([]);
+                  }}
+                >
+                  Reset Graph
+                </button>
               </div>
-              <hr />
-              <button
-                className="btn btn-warning border border-dark btn-small"
-                onClick={() => deleteEdge(selectedNodes.join(""))}
-                disabled={
-                  !edges.some(
-                    (edge) =>
-                      edge.id === selectedNodes.join("") ||
-                      edge.id ===
-                        selectedNodes.join("").split("").reverse().join("")
-                  )
-                }
-                data-bs-toggle="tooltip"
-                data-bs-placement="left"
-                title={`Delete selected Edge`}
-              >
-                Delete Edge{" "}
-                {edges.some(
-                  (edge) =>
-                    edge.id === selectedNodes.join("") ||
-                    edge.id ===
-                      selectedNodes.join("").split("").reverse().join("")
-                ) && selectedNodes.join("")}
-              </button>
-
-              <button
-                className="btn btn-warning border border-dark btn-small"
-                onClick={() => deleteSelectedNodes()}
-                disabled={selectedNodes.length === 0}
-                data-bs-toggle="tooltip"
-                data-bs-placement="left"
-                title={`Delete ${selectedNodes.length} ${
-                  selectedNodes.length > 1 ? "nodes" : "node"
-                }`}
-              >
-                Delete {selectedNodes.length > 0 && selectedNodes.length} Node
-                {selectedNodes.length !== 1 && "s"}
-              </button>
-
-              <button
-                className="btn btn-danger border border-dark"
-                onClick={() => {
-                  deleteGraph();
-                  setSelectedStartNode(null);
-                }}
-              >
-                Delete Graph
-              </button>
-
-              <hr />
-
-              <button
-                className="btn btn-success border border-dark"
-                onClick={toggleModal}
-              >
-                About
-              </button>
-
-              <button
-                className="btn btn-outline-danger border border-dark"
-                onClick={() => {
-                  setDijkstraResult({
-                    distances: {},
-                    path: [],
-                    prev: {},
-                    steps: [],
-                  });
-                  setDijkstraPath([]);
-                  setCurrentStep(0);
-                  setSelectedEdgeIds([]);
-                  setSelectedNodes([]);
-                  setEdges(initialEdges);
-                  setNodes(initialNodes);
-                  setHistory([]);
-                  setvisitednodesID([]);
-                }}
-              >
-                Reset Graph
-              </button>
-            </div>
-          )}
+            )}
+          </div>
         </div>
-      </div>
+      )}
 
       <Modal
         className="modal-xl modal-dialog-scrollable"
@@ -1247,7 +1341,7 @@ const DijkstrasAlgorithmCanvas: React.FC = () => {
             reachable vertices have been visited.
           </p>
           <img
-            src="https://miro.medium.com/v2/resize:fit:1400/1*3aibaGt1-zimnwreliwX0A.gif"
+            src="https://ds055uzetaobb.cloudfront.net/image_optimizer/9e7d1e7f0beab28be5095491b4edcb51c22f9a6b.gif"
             alt="Dijkstras Algorithm"
             style={{ display: "block", margin: "auto", width: "60%" }}
           />

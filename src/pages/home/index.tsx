@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import MyCardGrid from "../../components/grid";
 
 export const HomeMenu = () => {
   return (
@@ -10,28 +11,24 @@ export const HomeMenu = () => {
     >
       <h3>Home</h3>
       <hr />
+      <p>
+        Welcome to the Data Structure Playground. You can use this static site
+        as a simulator to visualize Data Structures and Algorithms
+      </p>
+      <MyCardGrid />
+      <hr />
       <div>
         <div>
-          <p>
-            Welcome to the Data Structure Playground. You can use this static
-            site as a simulator to visualize Data Structures and Algorithms,
-            such as{" "}
-            <i>
-              Linked lists, list ADTs, Sorting Algorithms, binary search trees,
-              AVL trees, B+ trees, pathfinding Algorithms, and Hashing
-              Algorithms{" "}
-            </i>
-          </p>
-          <p>
-            For more references, you can find my classroom notes containing
-            content from my engineering syllabus{" "}
-            <a href="https://github.com/adimail/classroom">here</a>.
-          </p>
           <p>
             To get a better experience, you can zoom out using{" "}
             <code>ctrl + -</code> so that all content can fit on a single page,
             including the navigation bar and control panel. Use a desktop for
             the best experience.
+          </p>
+          <p>
+            For more references, you can find my classroom notes containing the
+            programs I wrote during my engineering{" "}
+            <a href="https://github.com/adimail/classroom">here</a>.
           </p>
           <p>
             NOTE: This is not an implementation of the data structure itself in

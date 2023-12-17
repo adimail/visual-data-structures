@@ -39,18 +39,6 @@ function App() {
     setCurrentPageIndex(newIndex);
   };
 
-  const menuItems: MenuItem[] = [
-    { label: "Home" },
-    { label: "Linked List" },
-    { label: "List ADT" },
-    { label: "Sorting" },
-    { label: "Binary search tree" },
-    { label: "Avl Tree" },
-    { label: "Dijkstra's algorithm" },
-    { label: "Path finding" },
-    { label: "Hashing Algorithm" },
-  ];
-
   const handleMenuClick = (item: MenuItem) => {
     switch (item.label) {
       case "Home":
@@ -85,6 +73,18 @@ function App() {
     }
   };
 
+  const menuItems: MenuItem[] = [
+    { label: "Home" },
+    { label: "Linked List" },
+    { label: "List ADT" },
+    { label: "Sorting" },
+    { label: "Binary search tree" },
+    { label: "Avl Tree" },
+    { label: "Dijkstra's algorithm" },
+    { label: "Path finding" },
+    { label: "Hashing Algorithm" },
+  ];
+
   const toggleMenu = () => {
     setShowMenu(!showMenu);
   };
@@ -94,7 +94,7 @@ function App() {
       <motion.div
         initial={{ opacity: 0, y: -50 }}
         animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -50 }} // Exit animation configuration
+        exit={{ opacity: 0, y: -50 }}
         transition={{ duration: 0.5 }}
         className="text-primary align-items-center justifycontent-center text-center bg-dark d-flex"
       >
@@ -102,15 +102,18 @@ function App() {
           type="primary"
           icon={<MenuOutlined />}
           onClick={toggleMenu}
-          className="menu-toggle-button bg-dark"
+          className="menu-toggle-button bg-dark mx-3"
           style={{ padding: "0" }}
         />
-        <h2 className="text-primary py-2 text-center w-100">
+        <h2 className="text-primary text-center w-100">
           Data structure visualizer
         </h2>
       </motion.div>
 
-      <div className="d-flex flex-column flex-grow-1" style={{ width: "100%" }}>
+      <div
+        className="d-flex flex-column flex-grow-1"
+        style={{ width: "100%", marginBottom: "100px" }}
+      >
         <div className="d-flex">
           {showMenu && (
             <Offcanvas show={showMenu} onHide={toggleMenu} placement="start">
@@ -156,6 +159,8 @@ function App() {
         onPreviousPage={handlePreviousPage}
         isPreviousDisabled={currentPageIndex === 0}
         isNextDisabled={currentPageIndex === menuItems.length - 1}
+        menuItems={menuItems}
+        currentPageIndex={currentPageIndex}
       />
     </>
   );

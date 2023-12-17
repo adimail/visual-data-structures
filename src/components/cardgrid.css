@@ -1,0 +1,28 @@
+.my-card {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .card-image-container {
+    position: relative;
+  }
+  
+  .card-image {
+    transition: transform 0.5s;
+  }
+  
+  .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    opacity: 0;
+    transition: opacity 0.5s;
+  }
+  
+  .my-card:hover .card-image,
+  .my-card:hover .overlay {
+    cursor: pointer;
+  }

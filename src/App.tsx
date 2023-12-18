@@ -15,12 +15,14 @@ import Sorting from "./pages/sort";
 import Hashing from "./pages/hashing";
 import BinarySearchTreePage from "./pages/bst";
 import Dijkstra from "./pages/dijkstra";
+import { MdFullscreen, MdFullscreenExit } from "react-icons/md";
 
 interface MenuItem {
   label: string;
 }
 
 function App() {
+  const [isfullscreen, setIsFullscreen] = useState(false);
   const [selectedPage, setSelectedPage] = useState<React.ReactNode>(
     <HomeMenu />
   );
@@ -73,6 +75,30 @@ function App() {
     }
   };
 
+  const toggleFullscreen = () => {
+    const elem = document.documentElement;
+
+    if (!isfullscreen) {
+      if (elem.requestFullscreen) {
+        elem.requestFullscreen();
+      } else if (elem.requestFullscreen) {
+        elem.requestFullscreen();
+      } else if (elem.requestFullscreen) {
+        elem.requestFullscreen();
+      }
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      } else if (document.exitFullscreen) {
+        document.exitFullscreen();
+      } else if (document.exitFullscreen) {
+        document.exitFullscreen();
+      }
+    }
+
+    setIsFullscreen(!isfullscreen);
+  };
+
   const menuItems: MenuItem[] = [
     { label: "Home" },
     { label: "Linked List" },
@@ -96,7 +122,8 @@ function App() {
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -50 }}
         transition={{ duration: 0.5 }}
-        className="text-primary align-items-center justifycontent-center text-center bg-dark d-flex"
+        className="w-100 text-primary align-items-center justifycontent-center text-center bg-dark d-flex py-2"
+        style={{ position: "fixed", zIndex: "1000" }}
       >
         <Button
           type="primary"
@@ -106,8 +133,11 @@ function App() {
           style={{ padding: "0" }}
         />
         <h2 className="text-primary text-center w-100">
-          Data structure visualizer
+          Data Structure Visualizer
         </h2>
+        <div className="d-flex px-3 align-items-center gap-3">
+          <Button onClick={toggleFullscreen}>Toggle Fullscreen</Button>
+        </div>
       </motion.div>
 
       <div
@@ -147,7 +177,7 @@ function App() {
               exit={{ opacity: 0, y: -50 }}
               transition={{ duration: 0.5 }}
               className="mx-4 pt-3"
-              style={{ width: "100%" }}
+              style={{ width: "100%", marginTop: "60px" }}
             >
               {selectedPage}
             </motion.div>

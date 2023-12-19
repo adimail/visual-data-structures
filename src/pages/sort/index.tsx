@@ -14,6 +14,7 @@ import { Modal } from "react-bootstrap";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import { Button } from "react-bootstrap";
 import CodeModal from "../../components/COdeModal";
+import { cppFileText, pyFileText } from "./files";
 
 export const Sorting = () => {
   const [step, setStep] = useState(0);
@@ -168,7 +169,8 @@ export const Sorting = () => {
               title="Sorting Algorithm"
               show={CodeModalShow}
               handleClose={handleModalClose}
-              filename="sort"
+              cppFile={cppFileText}
+              pyFile={pyFileText}
             />
 
             <Modal

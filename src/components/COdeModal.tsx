@@ -9,15 +9,17 @@ import "./toggle.css";
 interface CodeModalProps {
   show: boolean;
   handleClose: () => void;
-  filename: string;
   title: string;
+  cppFile: string;
+  pyFile: string;
 }
 
 const CodeModal: React.FC<CodeModalProps> = ({
   show,
   title,
   handleClose,
-  filename,
+  cppFile,
+  pyFile,
 }) => {
   const [code, setCode] = useState<string>("");
   const [showToast, setShowToast] = useState(false);
@@ -27,35 +29,18 @@ const CodeModal: React.FC<CodeModalProps> = ({
     setShowToast(false);
   };
 
-  useEffect(() => {
-    const fetchCode = async () => {
-      try {
-        const response = await getCodeFromFile(selectedLanguage);
-        setCode(response);
-      } catch (error) {
-        console.error(`Error loading ${selectedLanguage} code:`, error);
-      }
-    };
-
-    fetchCode();
-  }, [selectedLanguage, filename]);
-
-  const getCodeFromFile = async (language: string): Promise<string> => {
+  const fetchCode = () => {
     try {
-      let fileExtension = language;
-      if (language === "python") {
-        fileExtension = "py";
-      }
-
-      const response = await fetch(
-        `/visual-data-structures/src/programs/${filename}.${fileExtension}`
-      );
-      const code = await response.text();
-      return code;
+      const response = selectedLanguage === "cpp" ? cppFile : pyFile;
+      setCode(response);
     } catch (error) {
-      throw error;
+      console.error(`Error loading ${selectedLanguage} code:`, error);
     }
   };
+
+  useEffect(() => {
+    fetchCode();
+  }, [selectedLanguage]);
 
   const handleCopy = () => {
     copy(code);
@@ -164,6 +149,10 @@ const CodeModal: React.FC<CodeModalProps> = ({
               Create a pull request from your forked repository to the original
               repository.
               <br />
+            </li>
+            <li>
+              Code files are located in the directory: <br />
+              <code>src\programs</code>
             </li>
           </ol>
         </Modal.Body>

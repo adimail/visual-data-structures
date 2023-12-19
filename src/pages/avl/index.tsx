@@ -3,6 +3,7 @@ import { useState } from "react";
 import TreeTraversalVisualizer from "./internals/TreeTraversalVisualizer";
 import { Button } from "react-bootstrap";
 import CodeModal from "../../components/COdeModal";
+import { cppFileText, pyFileText } from "./files";
 
 export const AVLTreePage = () => {
   const [CodeModalShow, setCodeModalShow] = useState(false);
@@ -39,7 +40,8 @@ export const AVLTreePage = () => {
         title="AVL Tree"
         show={CodeModalShow}
         handleClose={handleModalClose}
-        filename="avl"
+        cppFile={cppFileText}
+        pyFile={pyFileText}
       />
       <TreeTraversalVisualizer />
     </motion.div>

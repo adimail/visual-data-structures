@@ -15,6 +15,7 @@ import { ListADTStack, ListADTQueue } from "./listadt";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import { Button } from "react-bootstrap";
 import CodeModal from "../../components/COdeModal";
+import { cppFileText, pyFileText } from "./files";
 
 const initialHead: SLHead = {
   id: "1",
@@ -238,7 +239,8 @@ const ListADT = () => {
                   title="List ADT"
                   show={modalShow}
                   handleClose={handleModalClose}
-                  filename="list-adt"
+                  cppFile={cppFileText}
+                  pyFile={pyFileText}
                 />
                 <button
                   className="gap-3 d-flex btn"

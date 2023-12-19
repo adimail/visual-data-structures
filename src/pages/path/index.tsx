@@ -3,6 +3,7 @@ import DijkstrasAlgorithmCanvas from "./components/DijkstrasAlgorithmCanvas.tsx"
 import { Button } from "react-bootstrap";
 import { useState } from "react";
 import CodeModal from "../../components/COdeModal.tsx";
+import { cppFileText, pyFileText } from "./files.tsx";
 
 export const Dijkstra = () => {
   const [CodeModalShow, setCodeModalShow] = useState(false);
@@ -40,7 +41,8 @@ export const Dijkstra = () => {
         title="Path Finding Algorithm"
         show={CodeModalShow}
         handleClose={handleModalClose}
-        filename="path"
+        cppFile={cppFileText}
+        pyFile={pyFileText}
       />
     </motion.div>
   );

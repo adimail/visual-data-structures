@@ -138,7 +138,7 @@ function App() {
         </h2>
         <div className="d-flex px-3 align-items-center gap-3">
           <button className="fullscreen-button" onClick={toggleFullscreen}>
-            {isfullscreen ? <MdFullscreen /> : <MdFullscreenExit />}
+            {!isfullscreen ? <MdFullscreen /> : <MdFullscreenExit />}
           </button>
         </div>
       </motion.div>

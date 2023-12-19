@@ -238,7 +238,7 @@ class TreeTraversalVisualizer extends React.Component<
 
   mount() {
     let newTree = new TreeBackEnd();
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < 6; i++) {
       newTree.insert(Math.floor(Math.random() * 100));
     }
     const treeHeight = newTree.calculateTreeHeight(newTree.head);
@@ -260,34 +260,39 @@ class TreeTraversalVisualizer extends React.Component<
       <div>
         <div className="d-flex col-12">
           <div className={`col-${this.state.showcontrols ? "10" : "12"}`}>
-            <div
-              className="d-flex gap-5 justify-content-between"
-              style={{ paddingRight: "2rem" }}
-            >
-              <div className="d-flex flex-row gap-3">
-                <p>{`Size: ${this.state.treeSize}`}</p>
-                <p>{`Leaf Nodes: ${this.state.leafNodes}`}</p>
-                <p>{`Tree Height: ${this.state.treeHeight}`}</p>{" "}
-                <p>{`${this.state.displayTraversal.toString()}`}</p>
-              </div>
-              <i>
-                Note: The UI for this page is unstable, you may have to minimise
-                the screen at times
-              </i>
-
-              <button
-                className="gap-3 align-items-center d-flex btn"
-                style={{ height: "fit-content" }}
-                onClick={() =>
-                  this.setState((prevState) => ({
-                    showcontrols: !prevState.showcontrols,
-                  }))
-                }
+            <div>
+              <div
+                className="d-flex gap-5 justify-content-between"
+                style={{ paddingRight: "2rem" }}
               >
-                {!this.state.showcontrols && <FaArrowLeft />}
-                {this.state.showcontrols && <FaArrowRight />}
-              </button>
+                <div className="d-flex flex-row gap-3">
+                  <p>{`Size: ${this.state.treeSize}`}</p>
+                  <p>{`Leaf Nodes: ${this.state.leafNodes}`}</p>
+                  <p>{`Tree Height: ${this.state.treeHeight}`}</p>{" "}
+                </div>
+                <div className="d-flex gap-3">
+                  <i>
+                    Note: The UI for this page is unstable, you may have to
+                    minimise the screen at times
+                  </i>
+
+                  <button
+                    className="gap-3 align-items-center d-flex btn"
+                    style={{ height: "fit-content" }}
+                    onClick={() =>
+                      this.setState((prevState) => ({
+                        showcontrols: !prevState.showcontrols,
+                      }))
+                    }
+                  >
+                    {!this.state.showcontrols && <FaArrowLeft />}
+                    {this.state.showcontrols && <FaArrowRight />}
+                  </button>
+                </div>
+              </div>
+              <p>{`${this.state.displayTraversal.toString()}`}</p>
             </div>
+
             <div className="d-flex align-items=center justify-content-center">
               {this.state.tree.head && (
                 <div className="tree">

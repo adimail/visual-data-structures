@@ -3,6 +3,7 @@ import { useState } from "react";
 import CodeModal from "../../components/COdeModal";
 import AlgorithmNavigation from "./algorithmNavigation";
 import { Button } from "react-bootstrap";
+import { cppFileText, pyFileText } from "./files";
 
 export const Hashing = () => {
   const [CodeModalShow, setCodeModalShow] = useState(false);
@@ -58,7 +59,8 @@ export const Hashing = () => {
         title="Hashing Algorithm"
         show={CodeModalShow}
         handleClose={handleModalClose}
-        filename="hash"
+        cppFile={cppFileText}
+        pyFile={pyFileText}
       />
     </motion.div>
   );

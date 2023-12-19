@@ -14,6 +14,7 @@ import {
 import LinkedListComponent from "./LinkedList";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import CodeModal from "../../components/COdeModal";
+import { cppFileText, pyFileText } from "./files";
 
 const initialHead: SLHead = {
   id: "1",
@@ -179,7 +180,8 @@ export const LinkedListPage = () => {
                 title="Linked List"
                 show={CodeModalShow}
                 handleClose={handleModalClose}
-                filename="linked-list"
+                cppFile={cppFileText}
+                pyFile={pyFileText}
               />
               <button
                 className="gap-3 align-items-center d-flex btn"

@@ -13,6 +13,8 @@ import {
 } from "./algorithms";
 import { ListADTStack, ListADTQueue } from "./listadt";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
+import { Button } from "react-bootstrap";
+import CodeModal from "../../components/COdeModal";
 
 const initialHead: SLHead = {
   id: "1",
@@ -39,6 +41,10 @@ const ListADT = () => {
   const [head, setHead] = useState<SLHead>(initialHead);
   const targetValueInputRef = useRef<HTMLInputElement>(null);
   const valueToInsertInputRef = useRef<HTMLInputElement>(null);
+  const [modalShow, setModalShow] = useState(false);
+
+  const handleModalClose = () => setModalShow(false);
+  const handleModalShow = () => setModalShow(true);
 
   const calculateSize = (head: SLHead): number => {
     let headCopy = head;
@@ -161,7 +167,24 @@ const ListADT = () => {
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.8, ease: [0.68, -0.55, 0.27, 1.55] }}
     >
-      <h5>List ADT - Abstract Data Type</h5>
+      <div className="d-flex justify-content-between">
+        <h5>List ADT - Abstract Data Type</h5>
+        <Button
+          onClick={handleModalShow}
+          style={{
+            textAlign: "center",
+            padding: "0",
+            paddingLeft: "10px",
+            paddingRight: "10px",
+            height: "30px",
+            borderRadius: "20px",
+            border: "none",
+            margin: "0",
+          }}
+        >
+          View code
+        </Button>
+      </div>
       <hr />
 
       <div className="d-flex col-12">
@@ -208,16 +231,26 @@ const ListADT = () => {
               </p>
             </p>
 
-            <button
-              className="gap-3 align-items-center d-flex btn"
-              onClick={() =>
-                setShowAlgorithmNavigation((prevState) => !prevState)
-              }
-              style={{ height: "fit-content" }}
-            >
-              {!showAlgorithmNavigation && <FaArrowLeft />}
-              {showAlgorithmNavigation && <FaArrowRight />}
-            </button>
+            <div className="d-flex justify-content-between gap-5">
+              <p>Size of the Linked List: {size}</p>
+              <div style={{ height: "100%" }}>
+                <CodeModal
+                  title="List ADT"
+                  show={modalShow}
+                  handleClose={handleModalClose}
+                  filename="list-adt"
+                />
+                <button
+                  className="gap-3 d-flex btn"
+                  onClick={() =>
+                    setShowAlgorithmNavigation((prevState) => !prevState)
+                  }
+                >
+                  {!showAlgorithmNavigation && <FaArrowLeft />}
+                  {showAlgorithmNavigation && <FaArrowRight />}
+                </button>
+              </div>
+            </div>
           </div>
           <div className="container d-flex aligh-items-center justify-content-center">
             {listType === "Stack" && <ListADTStack head={head} />}

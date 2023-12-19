@@ -5,6 +5,27 @@
     text-align: center;
 }
 
+.fullscreen-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent ;
+  color: #ffffff;
+  border: none;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.05s ease-in-out;
+  margin: 0;
+  padding: 0;
+  padding-right: 10px;
+  scale: 1.5;
+}
+
+.fullscreen-button:hover {
+  transform: scale(1.2); 
+}
+
+
 .fade-transition {
     transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out, height 0.5s ease-in-out;
     transform: translateZ(0);

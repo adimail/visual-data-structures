@@ -1,0 +1,12 @@
+.custom-toggle-switch {
+    margin-top: 10px;
+  }
+  
+  .custom-toggle-switch label {
+    font-size: 16px; 
+  }
+  
+  .custom-toggle-switch .custom-control-input:checked~.custom-control-label::before {
+    background-color: #28a745; 
+  }
+  

@@ -69,6 +69,7 @@ const MyCardGrid = () => {
                 variant="top"
                 src={card.imageUrl}
                 className="card-image"
+                onClick={() => console.log(card.title)}
               />
               <div className="overlay"></div>
             </div>

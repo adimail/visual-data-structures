@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import MyCardGrid from "../../components/grid";
 
-export const HomeMenu = () => {
+const HomeMenu = () => {
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.5, x: -50 }}
@@ -12,22 +12,29 @@ export const HomeMenu = () => {
       <h3>Home</h3>
       <hr />
       <p>
-        Welcome to the Data Structure Playground. You can use this static site
-        as a simulator to visualize Data Structures and Algorithms
+        Welcome to the Data Structure Playground. Use this static site to
+        visualize Data Structures and Algorithms as a simulator.
       </p>
+      <h6>
+        <i>
+          To access the C++ and Python implementations of all concepts from my
+          side, click "View Code" in the top-right corner of the page. Feel free
+          to contribute by forking the GitHub repository and creating a pull
+          request.
+        </i>
+      </h6>
+
       <MyCardGrid />
       <hr />
       <div>
         <div>
           <p>
-            To get a better experience, you can zoom out using{" "}
-            <code>ctrl + -</code> so that all content can fit on a single page,
-            including the navigation bar and control panel. Use a desktop for
-            the best experience.
+            For a better experience, zoom out using <code>ctrl + -</code> to fit
+            all content on a single page, including the navigation bar and
+            control panel. Desktop usage is recommended.
           </p>
           <p>
-            For more references, you can find my classroom notes containing the
-            programs I wrote during my engineering{" "}
+            Find my classroom notes with engineering programs{" "}
             <a href="https://github.com/adimail/classroom">here</a>.
           </p>
           <p>
@@ -43,12 +50,12 @@ export const HomeMenu = () => {
           for building interactive web applications.
         </p>
         <p>
-          Tools used in building this include React as the frontend framework,
-          Bootstrap for UI (modals, tooltips, buttons, progress-bars, and
-          icons), Framer Motion for animations, Anime.js, and Immer.
+          Tools used include React for the frontend, Bootstrap for UI, Framer
+          Motion for animations, react-syntax-highlighter for code highlighting
+          in plain text, Anime.js, and Immer.
         </p>
         <p>
-          You can report any notable issues{" "}
+          Report issues{" "}
           <a href="https://github.com/adimail/visual-data-structures/issues">
             here
           </a>{" "}

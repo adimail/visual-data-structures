@@ -1,0 +1,14 @@
+/* ButtonComponent.css */
+
+.code-button {
+    height: 40px;
+    border-radius: 20px;
+    background: #8c9144;
+    border: none;
+    color: #fff; 
+    cursor: pointer;
+    &:hover {
+      background: #6e7234;
+    }
+  }
+  

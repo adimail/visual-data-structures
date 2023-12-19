@@ -5,6 +5,7 @@ import { useState } from "react";
 import { MenuOutlined } from "@ant-design/icons";
 import { motion, AnimatePresence } from "framer-motion";
 import { Offcanvas } from "react-bootstrap";
+import { FaGithub } from "react-icons/fa";
 
 import HomeMenu from "./pages/home";
 import ListADT from "./pages/list-adt";
@@ -136,13 +137,18 @@ function App() {
           Data Structure Visualizer
         </h2>
         <div className="d-flex px-3 align-items-center gap-3">
-          <Button onClick={toggleFullscreen}>Toggle Fullscreen</Button>
+          <button className="fullscreen-button" onClick={toggleFullscreen}>
+            {isfullscreen ? <MdFullscreen /> : <MdFullscreenExit />}
+          </button>
         </div>
       </motion.div>
 
       <div
-        className="d-flex flex-column flex-grow-1"
-        style={{ width: "100%", marginBottom: "100px" }}
+        className="d-flex flex-column flex-grow-1 justify-content-center"
+        style={{
+          width: "100%",
+          marginBottom: "100px",
+        }}
       >
         <div className="d-flex">
           {showMenu && (
@@ -166,6 +172,14 @@ function App() {
                   ))}
                 </Menu>
               </Offcanvas.Body>
+              <div className="d-flex w-100 justify-content-center p-5">
+                <a
+                  style={{ color: "black" }}
+                  href="https://github.com/adimail/visual-data-structures"
+                >
+                  <FaGithub size={30} />
+                </a>
+              </div>
             </Offcanvas>
           )}
 

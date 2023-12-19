@@ -12,6 +12,8 @@ import { TraceEntry, generateRandomNumbers } from "./internals/util/Trace";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Modal } from "react-bootstrap";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
+import { Button } from "react-bootstrap";
+import CodeModal from "../../components/COdeModal";
 
 export const Sorting = () => {
   const [step, setStep] = useState(0);
@@ -22,6 +24,10 @@ export const Sorting = () => {
   const [algorithm, setAlgorithm] = useState(defaultSettings.algorithm);
   const [trace, setTrace] = useState<TraceEntry[]>([]);
   const [showModal, setShowModal] = useState(true);
+  const [CodeModalShow, setCodeModalShow] = useState(false);
+
+  const handleModalClose = () => setCodeModalShow(false);
+  const handleCodeModalShow = () => setCodeModalShow(true);
 
   useEffect(() => {
     if (numbers) {
@@ -55,20 +61,33 @@ export const Sorting = () => {
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.8, ease: [0.68, -0.55, 0.27, 1.55] }}
     >
-      <div className="d-flex justify-content-between">
+      <div className="d-flex justify-content-between align-items-center">
         <div className="d-flex gap-3 align">
           <h5>Sorting Algorithms</h5>
         </div>
-        <div className="d-flex gap-3">
-          <h5>{`${currentAlgorithm.displayName}`}</h5>
-          <h5>
+        <div className="d-flex gap-3 align-items-center">
+          <h5
+            style={{ marginBottom: "0" }}
+          >{`${currentAlgorithm.displayName}`}</h5>
+          <h5 style={{ marginBottom: "0" }}>
             <strong>|</strong>
           </h5>
-          <h5>{`Time Complexity: ${currentAlgorithm.timeComplexity}`}</h5>
+          <h5
+            style={{ marginBottom: "0" }}
+          >{`Time Complexity: ${currentAlgorithm.timeComplexity}`}</h5>
+          <Button
+            onClick={handleCodeModalShow}
+            style={{
+              height: "40px",
+              borderRadius: "20px",
+              border: "none",
+            }}
+          >
+            code
+          </Button>
         </div>
       </div>
 
-      {/* Algorithm content */}
       <hr />
       <div className="d-flex col-12">
         <div className={`col-${showAlgorithmNavigation ? "10" : "12"}`}>
@@ -85,6 +104,7 @@ export const Sorting = () => {
                 }
               >
                 {!showAlgorithmNavigation && <FaArrowLeft />}
+                Toggle Controls
                 {showAlgorithmNavigation && <FaArrowRight />}
               </button>
             </div>
@@ -143,6 +163,13 @@ export const Sorting = () => {
                 About
               </button>
             </div>
+
+            <CodeModal
+              title="Sorting Algorithm"
+              show={CodeModalShow}
+              handleClose={handleModalClose}
+              filename="sort"
+            />
 
             <Modal
               className="modal-xl"

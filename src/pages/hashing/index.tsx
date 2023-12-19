@@ -1,13 +1,39 @@
 import { motion } from "framer-motion";
+import { useState } from "react";
+import CodeModal from "../../components/COdeModal";
+import AlgorithmNavigation from "./algorithmNavigation";
+import { Button } from "react-bootstrap";
 
 export const Hashing = () => {
+  const [CodeModalShow, setCodeModalShow] = useState(false);
+
+  const handleModalClose = () => setCodeModalShow(false);
+  const handleCodeModalShow = () => setCodeModalShow(true);
+
   return (
     <motion.div
       initial={{ opacity: 0, x: -50 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.8, ease: [0.68, -0.55, 0.27, 1.55] }}
     >
-      <h5>Hashing Algorithm</h5>
+      <div className="d-flex justify-content-between">
+        <h5>Hashing Algorithm</h5>
+        <Button
+          onClick={handleCodeModalShow}
+          style={{
+            textAlign: "center",
+            padding: "0",
+            paddingLeft: "10px",
+            paddingRight: "10px",
+            height: "30px",
+            borderRadius: "20px",
+            border: "none",
+            margin: "0",
+          }}
+        >
+          View code
+        </Button>
+      </div>
       <hr />
       <div className="d-flex col-12">
         <div className="col-10">
@@ -27,80 +53,15 @@ export const Hashing = () => {
           <AlgorithmNavigation />
         </div>
       </div>
+
+      <CodeModal
+        title="Hashing Algorithm"
+        show={CodeModalShow}
+        handleClose={handleModalClose}
+        filename="hash"
+      />
     </motion.div>
   );
 };
 
-import { useEffect } from "react";
-import "bootstrap/dist/js/bootstrap.bundle.min.js";
-import { Tooltip } from "bootstrap";
-
-function AlgorithmNavigation() {
-  useEffect(() => {
-    var tooltipTriggerList = [].slice.call(
-      document.querySelectorAll('[data-bs-toggle="tooltip"]')
-    );
-    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-      return new Tooltip(tooltipTriggerEl);
-    });
-
-    return () => {
-      tooltipList.forEach((tooltip) => tooltip.dispose());
-    };
-  }, []);
-
-  return (
-    <div className="gap-2 d-flex flex-column">
-      <div className="input-group w-80">
-        <button
-          type="button"
-          className="w-50 btn btn-secondary border border-dark "
-          data-bs-toggle="tooltip"
-          data-bs-placement="left"
-          title="Insert a node to the binary tree"
-        >
-          Insert
-        </button>
-        <input
-          type="number"
-          aria-label="node-1"
-          className="w-30 form-control border border-dark "
-        />
-      </div>
-
-      <div className="input-group w-80">
-        <button
-          type="button"
-          className="w-50 btn btn-secondary border border-dark "
-          data-bs-toggle="tooltip"
-          data-bs-placement="left"
-          title="Remove a node from the binary tree"
-        >
-          Remove
-        </button>
-        <input
-          type="number"
-          aria-label="node-1"
-          className="w-30 form-control border border-dark "
-        />
-      </div>
-      <div className="input-group w-80">
-        <button
-          type="button"
-          className="w-50 btn btn-primary border border-dark "
-          data-bs-toggle="tooltip"
-          data-bs-placement="left"
-          title="Generate a binary tree consisting of given number of nodes"
-        >
-          Random
-        </button>
-        <input
-          type="number"
-          aria-label="node-1"
-          className="w-30 form-control border border-dark "
-        />
-      </div>
-    </div>
-  );
-}
 export default Hashing;

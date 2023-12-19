@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { AlgorithmNavigation } from "./AlgorithmNavigation";
 import { useState, useRef, useEffect } from "react";
+import { Button } from "react-bootstrap";
 import {
   pop,
   push,
@@ -12,6 +13,7 @@ import {
 } from "./algorithms";
 import LinkedListComponent from "./LinkedList";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
+import CodeModal from "../../components/COdeModal";
 
 const initialHead: SLHead = {
   id: "1",
@@ -37,6 +39,10 @@ export const LinkedListPage = () => {
   const [head, setHead] = useState<SLHead>(initialHead);
   const targetValueInputRef = useRef<HTMLInputElement>(null);
   const valueToInsertInputRef = useRef<HTMLInputElement>(null);
+  const [CodeModalShow, setCodeModalShow] = useState(false);
+
+  const handleModalClose = () => setCodeModalShow(false);
+  const handleCodeModalShow = () => setCodeModalShow(true);
 
   const calculateSize = (head: SLHead): number => {
     let headCopy = head;
@@ -142,7 +148,24 @@ export const LinkedListPage = () => {
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.8, ease: [0.68, -0.55, 0.27, 1.55] }}
     >
-      <h5>Linked List</h5>
+      <div className="d-flex justify-content-between">
+        <h5>Linked List</h5>
+        <Button
+          onClick={handleCodeModalShow}
+          style={{
+            textAlign: "center",
+            padding: "0",
+            paddingLeft: "10px",
+            paddingRight: "10px",
+            height: "30px",
+            borderRadius: "20px",
+            border: "none",
+            margin: "0",
+          }}
+        >
+          View code
+        </Button>
+      </div>
       <hr />
       <div className="d-flex col-12">
         <div
@@ -151,18 +174,28 @@ export const LinkedListPage = () => {
         >
           <div className="d-flex justify-content-between">
             <p>Size of the Linked List: {size}</p>
-            <button
-              className="gap-3 align-items-center d-flex btn"
-              onClick={() =>
-                setShowAlgorithmNavigation((prevState) => !prevState)
-              }
-            >
-              {!showAlgorithmNavigation && <FaArrowLeft />}
-              {showAlgorithmNavigation && <FaArrowRight />}
-            </button>
+            <div className="d-flex gap-3">
+              <CodeModal
+                title="Linked List"
+                show={CodeModalShow}
+                handleClose={handleModalClose}
+                filename="linked-list"
+              />
+              <button
+                className="gap-3 align-items-center d-flex btn"
+                onClick={() =>
+                  setShowAlgorithmNavigation((prevState) => !prevState)
+                }
+              >
+                {!showAlgorithmNavigation && <FaArrowLeft />}
+                Toggle Sidebar
+                {showAlgorithmNavigation && <FaArrowRight />}
+              </button>
+            </div>
           </div>
           <LinkedListComponent head={head} />
         </div>
+
         {showAlgorithmNavigation && (
           <div
             className="mw-30 col-2"

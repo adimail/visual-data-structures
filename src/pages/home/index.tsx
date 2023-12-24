@@ -12,15 +12,13 @@ const HomeMenu = () => {
       <h3>Home</h3>
       <hr />
       <p>
-        Welcome to the Data Structure Playground. Use this static site to
-        visualize Data Structures and Algorithms as a simulator.
+        Welcome to the Data Structure Visualizer. Use this static site to
+        visualize common Data Structures and Algorithms.
       </p>
       <h6>
         <i>
           To access the C++ and Python implementations of all concepts from my
-          side, click "View Code" in the top-right corner of the page. Feel free
-          to contribute by forking the GitHub repository and creating a pull
-          request.
+          side, click "View Code" in the top-right corner of algorithm page.
         </i>
       </h6>
 

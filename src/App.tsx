@@ -13,7 +13,7 @@ import { LinkedListPage } from "./pages/ll";
 import AVLTreePage from "./pages/avl";
 import PathFinder from "./pages/path";
 import Sorting from "./pages/sort";
-import Hashing from "./pages/hashing";
+// import Hashing from "./pages/hashing";
 import BinarySearchTreePage from "./pages/bst";
 import Dijkstra from "./pages/dijkstra";
 import { MdFullscreen, MdFullscreenExit } from "react-icons/md";
@@ -68,8 +68,8 @@ function App() {
       case "Path finding":
         setSelectedPage(<PathFinder />);
         break;
-      case "Hashing Algorithm":
-        setSelectedPage(<Hashing />);
+        // case "Hashing Algorithm":
+        //   setSelectedPage(<Hashing />);
         break;
       default:
         setSelectedPage(null);
@@ -109,7 +109,7 @@ function App() {
     { label: "Avl Tree" },
     { label: "Dijkstra's algorithm" },
     { label: "Path finding" },
-    { label: "Hashing Algorithm" },
+    // { label: "Hashing Algorithm" },
   ];
 
   const toggleMenu = () => {

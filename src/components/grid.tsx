@@ -47,12 +47,12 @@ const MyCardGrid = () => {
       title: "Pathfinding Algorithm",
       text: "Algorithms like A* and Dijkstra's used to find the optimal path between points in a graph or grid.",
     },
-    {
-      id: 8,
-      imageUrl: "https://visualgo.net/img/gif/hashtable.gif",
-      title: "Hashing Algorithm",
-      text: "Techniques like open addressing and chaining for efficiently mapping data to a fixed-size array.",
-    },
+    // {
+    //   id: 8,
+    //   imageUrl: "https://visualgo.net/img/gif/hashtable.gif",
+    //   title: "Hashing Algorithm",
+    //   text: "Techniques like open addressing and chaining for efficiently mapping data to a fixed-size array.",
+    // },
   ];
 
   return (

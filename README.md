@@ -21,19 +21,15 @@ now you can see the steps of the Dijkstra's single source shortest path algorith
 ## Webpage screenshots
 
 ![Home Page](src/assets/ss/home.png)
+![Code](src/assets/ss/code.png)
 ![Linked List](src/assets/ss/ll.png)
 ![List ADT](src/assets/ss/l-adt.png)
 ![Sorting Algorithm](src/assets/ss/sort.png)
 ![Binary Search Tree](src/assets/ss/bst.png)
 ![AVL Tree](src/assets/ss/avl.png)
-![Dijkstra](src/assets/ss/dijkstra.png)
-![PathFinding](src/assets/ss/path.png)
-
-### Dijkstra Algorithm Navigation Steps
-
-| Current Step Navigation                       | Algorithm Step Navigation                     | Final Path Navigation                         |
-| --------------------------------------------- | --------------------------------------------- | --------------------------------------------- |
-| ![PathFinding](src/assets/ss/path-Algo-1.png) | ![PathFinding](src/assets/ss/path-Algo-2.png) | ![PathFinding](src/assets/ss/path-Algo-3.png) |
+![PathFinding](src/assets/ss/path-1.png)
+![PathFinding](src/assets/ss/path-2.png)
+![PathFinding](src/assets/ss/path-3.png)
 
 ## How to Use This Site
 

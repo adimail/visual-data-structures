@@ -1341,7 +1341,7 @@ const DijkstrasAlgorithmCanvas: React.FC = () => {
             reachable vertices have been visited.
           </p>
           <img
-            src="https://ds055uzetaobb.cloudfront.net/image_optimizer/9e7d1e7f0beab28be5095491b4edcb51c22f9a6b.gif"
+            src="https://miro.medium.com/v2/resize:fit:1400/1*3aibaGt1-zimnwreliwX0A.gif"
             alt="Dijkstras Algorithm"
             style={{ display: "block", margin: "auto", width: "60%" }}
           />

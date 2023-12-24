@@ -115,10 +115,9 @@ const CodeModal: React.FC<CodeModalProps> = ({
             If you wish to contribute to the programs, fork this repository from
             GitHub using{" "}
             <a href="https://github.com/adimail/visual-data-structures">this</a>{" "}
-            link. Feel free to add or modify the programs featured on this
-            website.
+            link. Make your changes and create a pull request.
           </p>
-          <h6>Steps to modify these C++ and Python codes:</h6>
+          <h6>Steps to contribute to the project:</h6>
           <ol>
             <li>
               Fork this repository using GitHub Desktop or the CLI with the
@@ -128,8 +127,9 @@ const CodeModal: React.FC<CodeModalProps> = ({
                 git clone https://github.com/adimail/visual-data-structures.git
               </code>
             </li>
-            <li>Open the cloned repository in your preferred code editor.</li>
-            <li>Make the necessary changes to the C++ and Python codes.</li>
+            <li>
+              Make the necessary changes to the C++ and Python program files.
+            </li>
             <li>Test your changes locally to confirm they work as expected.</li>
             <li>
               Commit your changes with a clear and concise commit message.

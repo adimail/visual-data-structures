@@ -120,7 +120,7 @@ const CodeModal: React.FC<CodeModalProps> = ({
           <h6>Steps to contribute to the project:</h6>
           <ol>
             <li>
-              Fork this repository using GitHub Desktop or the CLI with the
+              Clone this repository using GitHub Desktop or the CLI with the
               following command:
               <br />
               <code>

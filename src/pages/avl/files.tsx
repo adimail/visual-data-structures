@@ -1,6 +1,8 @@
 export const cppFileText: string = `// C++ Program for AVL tree
 
-// Author: Aditya Godse (https://github.com/adimail)
+// Authors: 
+// Aditya Godse (https://github.com/adimail) 
+// Jaydeep Tayshete(https://github.com/Chefjdeep)
 
 #include <iostream>
 using namespace std;
@@ -120,7 +122,67 @@ public:
         else
             return search(node->right, key);
     }
+    //Delete code
 
+        AVLNode *findmin(AVLNode *node){
+            while(node -> left != nullptr){
+                node = node -> left;
+            }
+            return node;
+        }
+
+        AVLNode *deleteNode(AVLNode *node, int key){
+        if(node == NULL){
+            return node;
+        }
+        if(key < node -> key){
+            node -> left = deleteNode(node -> left, key);
+        }
+        else if(key > node -> key){
+            node -> right = deleteNode(node -> right, key);
+        }
+
+        else{
+            if(node -> left == NULL){
+                AVLNode *temp = node -> right;
+                delete node;
+                return temp;
+            }
+            else if(node -> right == NULL){
+                AVLNode *temp = node -> left;
+                delete node;
+                return temp;
+            }
+
+            AVLNode *temp = findmin(node -> right);
+            node -> key = temp -> key;
+            node -> right = deleteNode(node -> right, temp -> key);
+        }
+
+        node -> height = 1 + max(height(node -> left), height(node -> right));
+        int bf = balance(node);
+
+        if(bf > 1 && key < node -> left -> key){
+            return rotateRight(node);
+        }
+        if(bf < -1 && key > node -> right -> key){
+            return rotateLeft(node);
+        }
+        if(bf > 1 && key > node -> left -> key){
+            node -> left = rotateLeft(node -> left);
+            return rotateRight(node);
+        }
+        if(bf < -1 && key < node -> right -> key){
+            node -> right = rotateRight(node -> right);
+            return rotateLeft(node);
+        }
+        return node;
+    }
+
+    void deleteNode(int key){
+        root = deleteNode(root, key);
+    }
+    //end
     void displayRoot()
     {
         if (root)
@@ -210,6 +272,9 @@ int main()
         cout << "Element " << elementToSearch << " is present in the AVL tree" << endl;
     else
         cout << "Element " << elementToSearch << " is not present in the AVL tree" << endl;
+
+    avlTree.deleteNode(16);
+    avlTree.preorder();
 
     return 0;
 }
